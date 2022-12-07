@@ -134,7 +134,7 @@ class MoviePage extends StatelessWidget {
                 ),
               ),
 
-              // custom lists, Tends
+              // custom lists, Trends
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
