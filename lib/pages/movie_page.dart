@@ -1,8 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/models/trendins_movie.dart';
 
-class MoviePage extends StatelessWidget {
+class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
+
+  @override
+  State<MoviePage> createState() => _MoviePageState();
+}
+
+class _MoviePageState extends State<MoviePage> {
   final double myRadius = 12.0;
 
   @override
@@ -69,24 +78,38 @@ class MoviePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Top trend movies slider
-              CarouselSlider(
-                items: [
-                  createTopSliderItem(
-                      "assets/black_adam_backdrop.jpg", "Black Adam 1"),
-                  createTopSliderItem(
-                      "assets/black_adam_backdrop.jpg", "Black Adam 2"),
-                  createTopSliderItem(
-                      "assets/black_adam_backdrop.jpg", "Black Adam 3")
-                ],
-                options: CarouselOptions(
-                  autoPlay: true,
-                  aspectRatio: 1.9,
-                  enlargeCenterPage: true,
-                ),
+              FutureBuilder(
+                future: ApiClient().upComingData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData &&
+                      snapshot.data != null) {
+                    var data = snapshot.data as List<Result?>;
+                    debugPrint(data[0]?.posterPath.toString());
+                    return CarouselSlider.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index, realIndex) {
+                        return createTopSliderItem(
+                          (data[index]?.originalTitle ??
+                              data[index]?.title ??
+                              "--"),
+                          (data[index]?.backdropPath ?? "--"),
+                        );
+                      },
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        aspectRatio: 1.9,
+                        enlargeCenterPage: true,
+                      ),
+                    );
+                  } else {
+                    return const Text("Yükleniyor...");
+                  }
+                },
               ),
 
               // categories part, red boxes
-              Container(
+              /* SizedBox(
                 width: double.infinity,
                 height: categoryItemWidht / 2.2,
                 child: ListView.builder(
@@ -96,6 +119,150 @@ class MoviePage extends StatelessWidget {
                   itemCount: categoriesItemList.length,
                   itemBuilder: (BuildContext context, int index) =>
                       categoriesItemList[index],
+                ),
+              ), */
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "En Çok Oy Alan Filmler",
+                          textScaleFactor: 1.2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.arrow_forward),
+                        )
+                      ],
+                    ),
+                    FutureBuilder(
+                      future: ApiClient().topRatedData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData &&
+                            snapshot.data != null) {
+                          var data = snapshot.data as List<Result?>;
+                          debugPrint(data[0]?.posterPath.toString());
+                          return SizedBox(
+                            width: double.infinity,
+                            height: (widht / 3) * 1.5,
+                            child: ListView.builder(
+                              clipBehavior: Clip.none,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  margin: const EdgeInsets.only(right: 8),
+                                  child: Image.network(
+                                    "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return buildLastProcessCardEffect(
+                            SizedBox(
+                              width: double.infinity,
+                              height: (widht / 3) * 1.5,
+                              child: ListView.builder(
+                                clipBehavior: Clip.none,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: Image.asset(
+                                      "assets/black_adam_brochure.jpg",
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            context,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Trend Filmler",
+                          textScaleFactor: 1.2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.arrow_forward),
+                        )
+                      ],
+                    ),
+                    FutureBuilder(
+                      future: ApiClient().trendData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData &&
+                            snapshot.data != null) {
+                          var data = snapshot.data as List<Result?>;
+                          debugPrint(data[0]?.posterPath.toString());
+                          return SizedBox(
+                            width: double.infinity,
+                            height: (widht / 3) * 1.5,
+                            child: ListView.builder(
+                              clipBehavior: Clip.none,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  margin: const EdgeInsets.only(right: 8),
+                                  child: Image.network(
+                                    "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return buildLastProcessCardEffect(
+                            SizedBox(
+                              width: double.infinity,
+                              height: (widht / 3) * 1.5,
+                              child: ListView.builder(
+                                clipBehavior: Clip.none,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: Image.asset(
+                                      "assets/black_adam_brochure.jpg",
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            context,
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
 
@@ -108,7 +275,7 @@ class MoviePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          "My List",
+                          "Popüler Filmler",
                           textScaleFactor: 1.2,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
@@ -118,56 +285,64 @@ class MoviePage extends StatelessWidget {
                         )
                       ],
                     ),
-                    Container(
-                      width: double.infinity,
-                      height: (widht / 3) * 1.5,
-                      child: ListView.builder(
-                        clipBehavior: Clip.none,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: brochureItemList.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            brochureItemList[index],
-                      ),
+                    FutureBuilder(
+                      future: ApiClient().popularData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData &&
+                            snapshot.data != null) {
+                          var data = snapshot.data as List<Result?>;
+                          debugPrint(data[0]?.posterPath.toString());
+                          return SizedBox(
+                            width: double.infinity,
+                            height: (widht / 3) * 1.5,
+                            child: ListView.builder(
+                              clipBehavior: Clip.none,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  margin: const EdgeInsets.only(right: 8),
+                                  child: Image.network(
+                                    "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return buildLastProcessCardEffect(
+                            SizedBox(
+                              width: double.infinity,
+                              height: (widht / 3) * 1.5,
+                              child: ListView.builder(
+                                clipBehavior: Clip.none,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: Image.asset(
+                                      "assets/black_adam_brochure.jpg",
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            context,
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
               ),
 
               // custom lists, Trends
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Trends",
-                          textScaleFactor: 1.2,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_forward),
-                        )
-                      ],
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: (widht / 3) * 1.5,
-                      child: ListView.builder(
-                        clipBehavior: Clip.none,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: brochureItemList.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            brochureItemList[index],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+
+              const SizedBox(height: 200),
             ],
           ),
         ),
@@ -247,10 +422,10 @@ class MoviePage extends StatelessWidget {
     );
   }
 
-  createTopSliderItem(String movieBannerUrl, String movieName) {
+  createTopSliderItem(String? movieName, String? pathImage) {
     return GestureDetector(
       onTap: () {
-        print("$movieBannerUrl , $movieName");
+        print("$pathImage , $movieName");
       },
       child: Container(
         margin: const EdgeInsets.all(5),
@@ -259,11 +434,12 @@ class MoviePage extends StatelessWidget {
           elevation: 12,
           color: Colors.transparent,
           child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(myRadius)),
+            borderRadius: BorderRadius.all(Radius.circular(myRadius / 2)),
             child: Stack(
               children: [
                 // image.network
-                Image.asset(movieBannerUrl, fit: BoxFit.cover, width: 1000.0),
+                Image.network("https://image.tmdb.org/t/p/w500$pathImage",
+                    fit: BoxFit.cover, width: 1000.0),
                 Positioned(
                   bottom: 0.0,
                   left: 0.0,
@@ -284,10 +460,10 @@ class MoviePage extends StatelessWidget {
                       horizontal: 20.0,
                     ),
                     child: Text(
-                      movieName,
+                      movieName ?? "---",
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 26.0,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
