@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/trendins_movie.dart';
+import 'package:movie_app/pages/movie_detail_page.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
@@ -94,6 +95,8 @@ class _MoviePageState extends State<MoviePage> {
                               data[index]?.title ??
                               "--"),
                           (data[index]?.backdropPath ?? "--"),
+                          data,
+                          index,
                         );
                       },
                       options: CarouselOptions(
@@ -146,7 +149,7 @@ class _MoviePageState extends State<MoviePage> {
                             snapshot.hasData &&
                             snapshot.data != null) {
                           var data = snapshot.data as List<Result?>;
-                          debugPrint(data[0]?.posterPath.toString());
+                          debugPrint(data[0]?.id.toString());
                           return SizedBox(
                             width: double.infinity,
                             height: (widht / 3) * 1.5,
@@ -156,10 +159,20 @@ class _MoviePageState extends State<MoviePage> {
                               scrollDirection: Axis.horizontal,
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  child: Image.network(
-                                    "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                return GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MovieDetailPage(
+                                        movieId: (data[index]?.id ?? 0),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: Image.network(
+                                      "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                    ),
                                   ),
                                 );
                               },
@@ -228,10 +241,20 @@ class _MoviePageState extends State<MoviePage> {
                               scrollDirection: Axis.horizontal,
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  child: Image.network(
-                                    "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                return GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MovieDetailPage(
+                                        movieId: (data[index]?.id ?? 0),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: Image.network(
+                                      "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                    ),
                                   ),
                                 );
                               },
@@ -302,10 +325,20 @@ class _MoviePageState extends State<MoviePage> {
                               scrollDirection: Axis.horizontal,
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  child: Image.network(
-                                    "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                return GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MovieDetailPage(
+                                        movieId: (data[index]?.id ?? 0),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: Image.network(
+                                      "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                                    ),
                                   ),
                                 );
                               },
@@ -422,11 +455,17 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createTopSliderItem(String? movieName, String? pathImage) {
+  createTopSliderItem(
+      String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
-      onTap: () {
-        print("$pathImage , $movieName");
-      },
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MovieDetailPage(
+            movieId: (data[index]?.id ?? 0),
+          ),
+        ),
+      ),
       child: Container(
         margin: const EdgeInsets.all(5),
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),

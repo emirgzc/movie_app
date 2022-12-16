@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/models/detail_movie.dart';
+import 'package:movie_app/models/images.dart';
 
-class MovieDetailPage extends StatelessWidget {
-  const MovieDetailPage({super.key});
+class MovieDetailPage extends StatefulWidget {
+  const MovieDetailPage({super.key, required this.movieId});
+  final int? movieId;
+
+  @override
+  State<MovieDetailPage> createState() => _MovieDetailPageState();
+}
+
+class _MovieDetailPageState extends State<MovieDetailPage> {
   final double myRadius = 12.0;
 
   @override
@@ -57,16 +68,34 @@ class MovieDetailPage extends StatelessWidget {
                         bottomLeft: Radius.elliptical(widht, 60),
                         bottomRight: Radius.elliptical(widht, 60),
                       ),
-                      child: Image.asset(
-                        "assets/black_adam_backdrop.jpg",
-                        fit: BoxFit.cover,
-                        width: 1000.0,
-                        height: 300,
+                      child: FutureBuilder(
+                        future:
+                            ApiClient().detailMovieData(widget.movieId ?? 0),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                                  ConnectionState.done &&
+                              snapshot.hasData &&
+                              snapshot.data != null) {
+                            var data = snapshot.data as DetailMovie;
+                            /* debugPrint(
+                                "----${data.backdrops![0].filePath.toString()}"); */
+                            return Image.network(
+                              "https://image.tmdb.org/t/p/w500${data.backdropPath.toString()}",
+                              width: 1000,
+                              height: 300,
+                              fit: BoxFit.cover,
+                            );
+                          } else {
+                            return buildLastProcessCardEffect(
+                              const Text("Yükleniyor..."),
+                              context,
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
                 ),
-
                 // appbar
                 Positioned(
                   // yoksa ortalarda kalıyor
@@ -78,9 +107,11 @@ class MovieDetailPage extends StatelessWidget {
                     children: [
                       // menu icon
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         icon: const Icon(
-                          Icons.menu,
+                          Icons.keyboard_arrow_left_outlined,
                           color: Colors.white,
                         ),
                       ),
@@ -110,7 +141,7 @@ class MovieDetailPage extends StatelessWidget {
                 Positioned(
                   left: widht / 2 - 35,
                   bottom: 0,
-                  child: Container(
+                  child: SizedBox(
                     width: 70,
                     height: 70,
                     child: RawMaterialButton(
@@ -313,187 +344,268 @@ class MovieDetailPage extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-
-                // movie name
-                SizedBox(
-                  width: widht / 1.8,
-                  child: const Text(
-                    "THE NUTCRACKER AND THE OUR REALMS",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
+                FutureBuilder(
+                  future: ApiClient().detailMovieData(widget.movieId ?? 0),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData &&
+                        snapshot.data != null) {
+                      var data = snapshot.data as DetailMovie;
+                      /* debugPrint(
+                                "----${data.backdrops![0].filePath.toString()}"); */
+                      return detailMovieData(widht, backdropItemList, data);
+                    } else {
+                      return buildLastProcessCardEffect(
+                        const Text("Yükleniyor..."),
+                        context,
+                      );
+                    }
+                  },
                 ),
-
                 const SizedBox(
-                  height: 10,
+                  height: 100,
                 ),
+                // movie name
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-                // categories
-                SizedBox(
-                  width: widht / 1.8,
-                  child: const Text(
-                    "Adventure, Family, Fantasy",
+  Column detailMovieData(
+      double widht, List<Widget> backdropItemList, DetailMovie? data) {
+    return Column(
+      children: [
+        SizedBox(
+          width: widht / 1.8,
+          child: Text(
+            data?.tagline.toString() ?? "--",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black.withOpacity(0.6),
+            ),
+          ),
+        ),
+
+        SizedBox(
+          width: widht / 1.8,
+          child: Text(
+            data?.title.toString() ?? "--",
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ),
+
+        const SizedBox(
+          height: 10,
+        ),
+
+        // categories
+        SizedBox(
+          height: widht / 20,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: data?.genres?.length ?? 0,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Text(
+                      "${data?.genres?[index].name.toString() ?? "---"},",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(
+          height: 20,
+        ),
+
+        // rating
+        RatingBar.builder(
+          itemSize: 28,
+          glowColor: Colors.red,
+          unratedColor: Colors.black,
+          initialRating: 7.291 / 2,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+          itemBuilder: (context, _) => const Icon(
+            Icons.star,
+            color: Colors.red,
+          ),
+          onRatingUpdate: (rating) {
+            print(rating);
+          },
+        ),
+
+        const SizedBox(
+          height: 10,
+        ),
+
+        // year, country, lenght
+        SizedBox(
+          width: widht / 1.6,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Text(
+                    "Yıl",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
                     ),
                   ),
-                ),
-
-                const SizedBox(
-                  height: 20,
-                ),
-
-                // rating
-                RatingBar.builder(
-                  itemSize: 28,
-                  glowColor: Colors.red,
-                  unratedColor: Colors.black,
-                  initialRating: 7.291 / 2,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                  itemBuilder: (context, _) => const Icon(
-                    Icons.star,
-                    color: Colors.red,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                  },
-                ),
-
-                const SizedBox(
-                  height: 10,
-                ),
-
-                // year, country, lenght
-                SizedBox(
-                  width: widht / 1.6,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: const [
-                          Text(
-                            "Year",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            "2022",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: const [
-                          Text(
-                            "Country",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            "USA",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: const [
-                          Text(
-                            "Lenght",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            "112 min",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // movie description
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Text(
-                    "Nearly 5,000 years after he was bestowed with the almighty powers of the Egyptian gods and imprisoned just as quickly Black Adam is freed from his earthly tomb, ready to unleash his unique form of justice on the modern world. Nearly 5,000 years after he was bestowed with the almighty powers of the Egyptian gods and imprisoned just as quickly Black Adam is freed from his earthly tomb, ready to unleash his unique form of justice on the modern world",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 6,
+                  Text(
+                    data?.releaseDate.toString().split("-")[0] ?? "--",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  const Text(
+                    "Ülke",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.black.withOpacity(0.6),
+                      color: Colors.grey,
                       fontSize: 14,
                     ),
                   ),
-                ),
-
-                // screenshot list
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: Column(
-                    children: [
-                      // Screenshots text and button
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Screenshots",
-                            textScaleFactor: 1.2,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.arrow_forward),
-                          )
-                        ],
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: (widht / 2.2) * (281 / 500),
-                        child: ListView.builder(
-                          clipBehavior: Clip.none,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: backdropItemList.length,
-                          itemBuilder: (BuildContext context, int index) =>
-                              backdropItemList[index],
-                        ),
-                      ),
-                    ],
+                  Text(
+                    data?.productionCountries?[0].name.toString() ?? "--",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  const Text(
+                    "Süre",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ],
+                  Text(
+                    "${data?.runtime.toString() ?? "--"} dk",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        // movie description
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: Text(
+            data?.overview.toString() ?? "--",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 6,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black.withOpacity(0.6),
+              fontSize: 14,
             ),
           ),
         ),
-      ),
+
+        // screenshot list
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+          child: Column(
+            children: [
+              // Screenshots text and button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Screenshots",
+                    textScaleFactor: 1.2,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.arrow_forward),
+                  )
+                ],
+              ),
+              FutureBuilder(
+                future: ApiClient().getImages(widget.movieId ?? 0),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData &&
+                      snapshot.data != null) {
+                    var data = snapshot.data as Images;
+                    /* debugPrint(
+                                "----${data.backdrops![0].filePath.toString()}"); */
+                    return SizedBox(
+                      width: double.infinity,
+                      height: (widht / 2.2) * (281 / 500),
+                      child: ListView.builder(
+                          clipBehavior: Clip.none,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data.backdrops?.length ?? 0,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              margin: const EdgeInsets.only(right: 8),
+                              child: Image.network(
+                                "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath.toString()}",
+                                width: 150,
+                                height: 300,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          }),
+                    );
+                  } else {
+                    return buildLastProcessCardEffect(
+                      const Text("Yükleniyor..."),
+                      context,
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
