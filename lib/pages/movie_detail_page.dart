@@ -344,7 +344,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                   ),
                   Text(
-                    data?.releaseDate.toString().split("-")[0] ?? "--",
+                    data.releaseDate.toString().split("-")[0],
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -365,7 +365,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                   ),
                   Text(
-                    data?.productionCountries?[0].name.toString() ?? "--",
+                    data.productionCountries?[0].name.toString() ?? "--",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -387,7 +387,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                   ),
                   Text(
-                    "${data?.runtime.toString() ?? "--"} dk",
+                    "${data.runtime.toString()} dk",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -403,7 +403,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Text(
-            data?.overview.toString() ?? "--",
+            data.overview.toString(),
             overflow: TextOverflow.ellipsis,
             maxLines: 6,
             textAlign: TextAlign.center,
