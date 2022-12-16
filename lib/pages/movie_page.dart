@@ -166,23 +166,8 @@ class _MoviePageState extends State<MoviePage> {
                           );
                         } else {
                           return buildLastProcessCardEffect(
-                            SizedBox(
-                              width: double.infinity,
-                              height: (widht / 3) * 1.5,
-                              child: ListView.builder(
-                                clipBehavior: Clip.none,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 5,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: Image.asset(
-                                      "assets/black_adam_brochure.jpg",
-                                    ),
-                                  );
-                                },
-                              ),
+                            const SizedBox(
+                              child: CircularProgressIndicator(),
                             ),
                             context,
                           );
@@ -250,23 +235,8 @@ class _MoviePageState extends State<MoviePage> {
                           );
                         } else {
                           return buildLastProcessCardEffect(
-                            SizedBox(
-                              width: double.infinity,
-                              height: (widht / 3) * 1.5,
-                              child: ListView.builder(
-                                clipBehavior: Clip.none,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 5,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: Image.asset(
-                                      "assets/black_adam_brochure.jpg",
-                                    ),
-                                  );
-                                },
-                              ),
+                            const SizedBox(
+                              child: CircularProgressIndicator(),
                             ),
                             context,
                           );
@@ -334,23 +304,8 @@ class _MoviePageState extends State<MoviePage> {
                           );
                         } else {
                           return buildLastProcessCardEffect(
-                            SizedBox(
-                              width: double.infinity,
-                              height: (widht / 3) * 1.5,
-                              child: ListView.builder(
-                                clipBehavior: Clip.none,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 5,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: Image.asset(
-                                      "assets/black_adam_brochure.jpg",
-                                    ),
-                                  );
-                                },
-                              ),
+                            const SizedBox(
+                              child: CircularProgressIndicator(),
                             ),
                             context,
                           );
