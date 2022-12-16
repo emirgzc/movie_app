@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
-import 'package:movie_app/models/trendins_movie.dart';
+import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
 
 class MoviePage extends StatefulWidget {
@@ -123,7 +123,10 @@ class _MoviePageState extends State<MoviePage> {
                   itemBuilder: (BuildContext context, int index) =>
                       categoriesItemList[index],
                 ),
-              ), */
+              ), 
+              */
+
+              // en cok o alan filmler
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -206,6 +209,8 @@ class _MoviePageState extends State<MoviePage> {
                   ],
                 ),
               ),
+
+              // trend filmler
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -289,7 +294,7 @@ class _MoviePageState extends State<MoviePage> {
                 ),
               ),
 
-              // custom lists, My List
+              // populer filmler
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -372,8 +377,6 @@ class _MoviePageState extends State<MoviePage> {
                   ],
                 ),
               ),
-
-              // custom lists, Trends
 
               const SizedBox(height: 200),
             ],

@@ -4,8 +4,6 @@ import 'package:movie_app/pages/movie_page.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
-
   runApp(const MyApp());
 }
 

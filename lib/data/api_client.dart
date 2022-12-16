@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
-import 'package:movie_app/models/trendins_movie.dart';
+import 'package:movie_app/models/trend_movie.dart';
 
 class ApiClient {
   final String apikey = "2444ef19302975166c670f0e507218ec";

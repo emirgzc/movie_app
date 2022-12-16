@@ -202,145 +202,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             color: Colors.white,
             child: Column(
               children: [
-                // movie image and buttons
-                // Ekranı kaydırınca appbar da kaysın diyosan, appbarı sil
-                // alttaki stacki yorumdan çıkar
-                /*
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      height: 335,
-                    ),
-
-                    // background image
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.8),
-                              spreadRadius: 16,
-                              blurRadius: 40,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.elliptical(widht, 60),
-                            bottomRight: Radius.elliptical(widht, 60),
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.elliptical(widht, 60),
-                            bottomRight: Radius.elliptical(widht, 60),
-                          ),
-                          child: Image.asset(
-                            "assets/black_adam_backdrop.jpg",
-                            fit: BoxFit.cover,
-                            width: 1000.0,
-                            height: 300,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // appbar
-                    Positioned(
-                      // yoksa ortalarda kalıyor
-                      top: -70,
-                      left: 0,
-                      right: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // menu icon
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.menu,
-                              color: Colors.white,
-                            ),
-                          ),
-                          // header
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(80.0),
-                              child: Image.asset(
-                                "assets/header_logo.png",
-                              ),
-                            ),
-                          ),
-
-                          // like
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.favorite_border,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // play button
-                    Positioned(
-                      left: widht / 2 - 35,
-                      bottom: 0,
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        child: RawMaterialButton(
-                          onPressed: () {},
-                          elevation: 2.0,
-                          fillColor: Colors.white,
-                          padding: const EdgeInsets.all(10.0),
-                          shape: const CircleBorder(),
-                          child: const Icon(
-                            Icons.play_arrow,
-                            size: 50.0,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // add and share buttons
-                    Positioned(
-                      // yoksa ortalarda kalıyor
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // add
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.black,
-                            ),
-                          ),
-
-                          // share
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.share,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                */
-
                 const SizedBox(
                   height: 30,
                 ),
@@ -378,6 +239,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       double widht, List<Widget> backdropItemList, DetailMovie? data) {
     return Column(
       children: [
+        // tagline
         SizedBox(
           width: widht / 1.8,
           child: Text(
@@ -390,6 +252,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           ),
         ),
 
+        // title
         SizedBox(
           width: widht / 1.8,
           child: Text(
@@ -440,10 +303,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
         // rating
         RatingBar.builder(
+          ignoreGestures: true,
           itemSize: 28,
           glowColor: Colors.red,
           unratedColor: Colors.black,
-          initialRating: 7.291 / 2,
+          initialRating: data!.voteAverage! / 2,
           minRating: 1,
           direction: Axis.horizontal,
           allowHalfRating: true,
@@ -454,7 +318,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             color: Colors.red,
           ),
           onRatingUpdate: (rating) {
-            print(rating);
+            // print(data.voteAverage);
           },
         ),
 
@@ -464,10 +328,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
         // year, country, lenght
         SizedBox(
-          width: widht / 1.6,
+          //width: widht / 1.6,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              // yil
               Column(
                 children: [
                   const Text(
@@ -487,6 +352,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   )
                 ],
               ),
+
+              // ulke
               Column(
                 children: [
                   const Text(
@@ -507,6 +374,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   )
                 ],
               ),
+
+              // sure
               Column(
                 children: [
                   const Text(
@@ -612,7 +481,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   createBackdropItem(String backdropUrl, double widht) {
     return GestureDetector(
       onTap: () {
-        print(backdropUrl);
+        // print(backdropUrl);
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
