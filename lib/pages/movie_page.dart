@@ -19,23 +19,6 @@ class _MoviePageState extends State<MoviePage> {
   Widget build(BuildContext context) {
     double widht = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    double categoryItemWidht = widht / 2.4;
-
-    List<Widget> categoriesItemList = [
-      createCategoriesItem(
-          "assets/black_adam_backdrop.jpg", "DISCOVER", categoryItemWidht),
-      createCategoriesItem(
-          "assets/black_adam_backdrop.jpg", "HORROR", categoryItemWidht),
-      createCategoriesItem("assets/black_adam_backdrop.jpg", "SCIENCE FICTION",
-          categoryItemWidht),
-    ];
-
-    List<Widget> brochureItemList = [
-      createBrochureItem("assets/black_adam_brochure.jpg", widht),
-      createBrochureItem("assets/black_adam_brochure.jpg", widht),
-      createBrochureItem("assets/black_adam_brochure.jpg", widht),
-      createBrochureItem("assets/black_adam_brochure.jpg", widht),
-    ];
 
     return Scaffold(
       appBar: AppBar(
