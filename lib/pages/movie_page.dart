@@ -17,7 +17,7 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
-    double widht = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -109,205 +109,84 @@ class _MoviePageState extends State<MoviePage> {
               ), 
               */
 
-              // en cok o alan filmler
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "En Çok Oy Alan Filmler",
-                          textScaleFactor: 1.2,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_forward),
-                        )
-                      ],
-                    ),
-                    FutureBuilder(
-                      future: ApiClient().topRatedData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            snapshot.data != null) {
-                          var data = snapshot.data as List<Result?>;
-                          debugPrint(data[0]?.id.toString());
-                          return SizedBox(
-                            width: double.infinity,
-                            height: (widht / 3) * 1.5,
-                            child: ListView.builder(
-                              clipBehavior: Clip.none,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                    "/detailPage",
-                                    arguments: (data[index]?.id ?? 0),
-                                  ),
-                                  child: Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: Image.network(
-                                      "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return buildLastProcessCardEffect(
-                            const SizedBox(
-                              child: CircularProgressIndicator(),
-                            ),
-                            context,
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              createPosterList(
+                  "En Çok Oy Alan Filmler", width, ApiClient().topRatedData()),
 
-              // trend filmler
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Trend Filmler",
-                          textScaleFactor: 1.2,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_forward),
-                        )
-                      ],
-                    ),
-                    FutureBuilder(
-                      future: ApiClient().trendData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            snapshot.data != null) {
-                          var data = snapshot.data as List<Result?>;
-                          debugPrint(data[0]?.posterPath.toString());
-                          return SizedBox(
-                            width: double.infinity,
-                            height: (widht / 3) * 1.5,
-                            child: ListView.builder(
-                              clipBehavior: Clip.none,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                    "/detailPage",
-                                    arguments: (data[index]?.id ?? 0),
-                                  ),
-                                  child: Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: Image.network(
-                                      "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return buildLastProcessCardEffect(
-                            const SizedBox(
-                              child: CircularProgressIndicator(),
-                            ),
-                            context,
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              createPosterList("Trend Filmler", width, ApiClient().trendData()),
 
-              // populer filmler
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Popüler Filmler",
-                          textScaleFactor: 1.2,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_forward),
-                        )
-                      ],
-                    ),
-                    FutureBuilder(
-                      future: ApiClient().popularData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            snapshot.data != null) {
-                          var data = snapshot.data as List<Result?>;
-                          debugPrint(data[0]?.posterPath.toString());
-                          return SizedBox(
-                            width: double.infinity,
-                            height: (widht / 3) * 1.5,
-                            child: ListView.builder(
-                              clipBehavior: Clip.none,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                    "/detailPage",
-                                    arguments: (data[index]?.id ?? 0),
-                                  ),
-                                  child: Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: Image.network(
-                                      "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return buildLastProcessCardEffect(
-                            const SizedBox(
-                              child: CircularProgressIndicator(),
-                            ),
-                            context,
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              createPosterList(
+                  "Popüler Filmler", width, ApiClient().popularData()),
 
               const SizedBox(height: 200),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  createPosterList(String listName, double width, Future futureGetDataFunc) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                listName,
+                textScaleFactor: 1.2,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.arrow_forward),
+              )
+            ],
+          ),
+          FutureBuilder(
+            future: futureGetDataFunc,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData &&
+                  snapshot.data != null) {
+                var data = snapshot.data as List<Result?>;
+                debugPrint(data[0]?.posterPath.toString());
+                return SizedBox(
+                  width: double.infinity,
+                  height: (width / 3) * 1.5,
+                  child: ListView.builder(
+                    clipBehavior: Clip.none,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () => Navigator.of(context).pushNamed(
+                          "/detailPage",
+                          arguments: (data[index]?.id ?? 0),
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          child: Image.network(
+                            "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return buildLastProcessCardEffect(
+                  const SizedBox(
+                    child: CircularProgressIndicator(),
+                  ),
+                  context,
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }
