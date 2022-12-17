@@ -26,13 +26,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     double widht = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    List<Widget> backdropItemList = [
-      createBackdropItem("assets/backdrop_1.jpg", widht),
-      createBackdropItem("assets/backdrop_1.jpg", widht),
-      createBackdropItem("assets/backdrop_1.jpg", widht),
-      createBackdropItem("assets/backdrop_1.jpg", widht),
-    ];
-
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -82,8 +75,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               snapshot.hasData &&
                               snapshot.data != null) {
                             var data = snapshot.data as DetailMovie;
-                            /* debugPrint(
-                                "----${data.backdrops![0].filePath.toString()}"); */
+
                             return Image.network(
                               "https://image.tmdb.org/t/p/w500${data.backdropPath.toString()}",
                               width: 1000,
@@ -221,7 +213,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       var data = snapshot.data as DetailMovie;
                       imdbUrl = "https://www.imdb.com/title/${data.imdbId}/";
 
-                      return detailMovieData(widht, backdropItemList, data);
+                      return detailMovieData(widht, data);
                     } else {
                       return buildLastProcessCardEffect(
                         const Text("Yükleniyor..."),
@@ -242,8 +234,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 
-  Column detailMovieData(
-      double widht, List<Widget> backdropItemList, DetailMovie? data) {
+  Column detailMovieData(double widht, DetailMovie? data) {
     return Column(
       children: [
         // tagline

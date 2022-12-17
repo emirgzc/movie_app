@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/extension.dart';
@@ -272,7 +273,6 @@ class _MoviePageState extends State<MoviePage> {
             borderRadius: BorderRadius.all(Radius.circular(myRadius / 2)),
             child: Stack(
               children: [
-                // image.network
                 Image.network("https://image.tmdb.org/t/p/w500$pathImage",
                     fit: BoxFit.cover, width: 1000.0),
                 Positioned(
