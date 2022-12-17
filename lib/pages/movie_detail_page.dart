@@ -404,7 +404,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           child: Text(
             data.overview.toString(),
             overflow: TextOverflow.ellipsis,
-            maxLines: 6,
+            maxLines: 100,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black.withOpacity(0.6),
