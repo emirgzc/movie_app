@@ -6,6 +6,7 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MovieDetailPage extends StatefulWidget {
   const MovieDetailPage({super.key, required this.movieId});
@@ -18,6 +19,7 @@ class MovieDetailPage extends StatefulWidget {
 class _MovieDetailPageState extends State<MovieDetailPage> {
   final double myRadius = 12.0;
   List<String> backdropFilePathUrls = [];
+  String imdbUrl = "";
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +166,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
                 // add and share buttons
                 Positioned(
-                  // yoksa ortalarda kalıyor
                   bottom: 0,
                   left: 0,
                   right: 0,
@@ -182,7 +183,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
                       // share
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await Share.share(imdbUrl,
+                              subject: "Bu Filmi Paylaş");
+                        },
                         icon: const Icon(
                           Icons.share,
                           color: Colors.black,
@@ -215,8 +219,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         snapshot.hasData &&
                         snapshot.data != null) {
                       var data = snapshot.data as DetailMovie;
-                      /* debugPrint(
-                                "----${data.backdrops![0].filePath.toString()}"); */
+                      imdbUrl = "https://www.imdb.com/title/${data.imdbId}/";
+
                       return detailMovieData(widht, backdropItemList, data);
                     } else {
                       return buildLastProcessCardEffect(
