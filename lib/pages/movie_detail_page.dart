@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_app/constants/extension.dart';
@@ -15,6 +17,7 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   final double myRadius = 12.0;
+  List<String> backdropFilePathUrls = [];
 
   @override
   Widget build(BuildContext context) {
@@ -297,10 +300,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           ),
         ),
 
-        const SizedBox(
-          height: 20,
-        ),
-
         // rating
         RatingBar.builder(
           ignoreGestures: true,
@@ -441,7 +440,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       snapshot.hasData &&
                       snapshot.data != null) {
                     var data = snapshot.data as Images;
-                    print(data);
+                    data.backdrops?.forEach((element) {
+                      backdropFilePathUrls.add(element.filePath.toString());
+                    });
 
                     return SizedBox(
                       width: double.infinity,
@@ -452,13 +453,16 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           scrollDirection: Axis.horizontal,
                           itemCount: data.backdrops?.length ?? 0,
                           itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              margin: const EdgeInsets.only(right: 8),
-                              child: Image.network(
-                                "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath.toString()}",
-                                width: 150,
-                                height: 300,
-                                fit: BoxFit.cover,
+                            return Hero(
+                              tag: backdropFilePathUrls[index],
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed("/imagePage",
+                                      arguments: [backdropFilePathUrls, index]);
+                                },
+                                child: createBackdropItem(
+                                    "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath.toString()}",
+                                    widht),
                               ),
                             );
                           }),
@@ -478,26 +482,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 
-  createBackdropItem(String backdropUrl, double widht) {
-    return GestureDetector(
-      onTap: () {
-        // print(backdropUrl);
-      },
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: Material(
-          elevation: 14,
-          color: Colors.transparent,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(myRadius)),
-            child: // image.network
-                Image.asset(
-              backdropUrl,
-              fit: BoxFit.cover,
-              width: widht / 2.2,
-              // 281 / 500 : resim cozunurlugu
-              height: (widht / 2.2) * (281 / 500),
-            ),
+  Widget createBackdropItem(String backdropUrl, double widht) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      child: Material(
+        elevation: 14,
+        color: Colors.transparent,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(myRadius)),
+          child: CachedNetworkImage(
+            imageUrl: backdropUrl,
+
+            fit: BoxFit.cover,
+            width: widht / 2.2,
+            // 281 / 500 : resim cozunurlugu
+            height: (widht / 2.2) * (281 / 500),
           ),
         ),
       ),

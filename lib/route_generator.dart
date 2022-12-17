@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/pages/image_page.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
 import 'package:movie_app/pages/movie_page.dart';
 
@@ -27,6 +28,16 @@ class RouteGenerator {
       case "/detailPage":
         return _generateRoute(
           MovieDetailPage(movieId: settings.arguments as int),
+          settings,
+        );
+
+      // image page
+      case "/imagePage":
+        return _generateRoute(
+          ImagePage(
+            imageUrls: (settings.arguments as List)[0] as List<String>,
+            clickedIndex: (settings.arguments as List)[1] as int,
+          ),
           settings,
         );
 
