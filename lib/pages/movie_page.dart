@@ -146,13 +146,9 @@ class _MoviePageState extends State<MoviePage> {
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MovieDetailPage(
-                                        movieId: (data[index]?.id ?? 0),
-                                      ),
-                                    ),
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                    "/detailPage",
+                                    arguments: (data[index]?.id ?? 0),
                                   ),
                                   child: Container(
                                     margin: const EdgeInsets.only(right: 8),
@@ -215,13 +211,9 @@ class _MoviePageState extends State<MoviePage> {
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MovieDetailPage(
-                                        movieId: (data[index]?.id ?? 0),
-                                      ),
-                                    ),
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                    "/detailPage",
+                                    arguments: (data[index]?.id ?? 0),
                                   ),
                                   child: Container(
                                     margin: const EdgeInsets.only(right: 8),
@@ -284,13 +276,9 @@ class _MoviePageState extends State<MoviePage> {
                               itemCount: data.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MovieDetailPage(
-                                        movieId: (data[index]?.id ?? 0),
-                                      ),
-                                    ),
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                    "/detailPage",
+                                    arguments: (data[index]?.id ?? 0),
                                   ),
                                   child: Container(
                                     margin: const EdgeInsets.only(right: 8),
