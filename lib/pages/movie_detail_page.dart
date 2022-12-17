@@ -441,8 +441,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       snapshot.hasData &&
                       snapshot.data != null) {
                     var data = snapshot.data as Images;
-                    /* debugPrint(
-                                "----${data.backdrops![0].filePath.toString()}"); */
+                    print(data);
+
                     return SizedBox(
                       width: double.infinity,
                       height: (widht / 2.2) * (281 / 500),

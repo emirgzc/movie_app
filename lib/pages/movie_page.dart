@@ -69,7 +69,6 @@ class _MoviePageState extends State<MoviePage> {
                       snapshot.hasData &&
                       snapshot.data != null) {
                     var data = snapshot.data as List<Result?>;
-                    debugPrint(data[0]?.posterPath.toString());
                     return CarouselSlider.builder(
                       itemCount: data.length,
                       itemBuilder: (context, index, realIndex) {
@@ -151,7 +150,6 @@ class _MoviePageState extends State<MoviePage> {
                   snapshot.hasData &&
                   snapshot.data != null) {
                 var data = snapshot.data as List<Result?>;
-                debugPrint(data[0]?.posterPath.toString());
                 return SizedBox(
                   width: double.infinity,
                   height: (width / 3) * 1.5,
@@ -166,12 +164,9 @@ class _MoviePageState extends State<MoviePage> {
                           "/detailPage",
                           arguments: (data[index]?.id ?? 0),
                         ),
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.network(
+                        child: createBrochureItem(
                             "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
-                          ),
-                        ),
+                            width),
                       );
                     },
                   ),
@@ -191,25 +186,20 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createBrochureItem(String brochureUrl, double widht) {
-    return GestureDetector(
-      onTap: () {
-        print(brochureUrl);
-      },
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: Material(
-          elevation: 14,
-          color: Colors.transparent,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(myRadius)),
-            child: // image.network
-                Image.asset(
-              brochureUrl,
-              fit: BoxFit.cover,
-              width: widht / 3,
-              height: (widht / 3) * 1.5,
-            ),
+  createBrochureItem(String brochureUrl, double width) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      child: Material(
+        elevation: 14,
+        color: Colors.transparent,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(myRadius)),
+          child: // image.network
+              Image.network(
+            brochureUrl,
+            fit: BoxFit.cover,
+            width: width / 3,
+            height: (width / 3) * 1.5,
           ),
         ),
       ),
@@ -217,11 +207,9 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   createCategoriesItem(
-      String backgroudImageUrl, String text, double categoryItemWidht) {
+      String backgroudImageUrl, String text, double categoryItemWidth) {
     return GestureDetector(
-      onTap: () {
-        print("$backgroudImageUrl , $text");
-      },
+      onTap: () {},
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Material(
@@ -236,14 +224,14 @@ class _MoviePageState extends State<MoviePage> {
                 Image.asset(
                   backgroudImageUrl,
                   fit: BoxFit.none,
-                  width: categoryItemWidht,
-                  height: categoryItemWidht / 2.8,
+                  width: categoryItemWidth,
+                  height: categoryItemWidth / 2.8,
                 ),
                 Container(
                   color: const Color.fromARGB(255, 160, 13, 3).withOpacity(0.8),
                   // image widht ve height ile ayni olmali
-                  width: categoryItemWidht,
-                  height: categoryItemWidht / 2.8,
+                  width: categoryItemWidth,
+                  height: categoryItemWidth / 2.8,
                   child: Center(
                     child: Text(
                       text,
