@@ -94,6 +94,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   ),
                 ),
                 // appbar
+
                 Positioned(
                   // yoksa ortalarda kalıyor
                   top: -70,
@@ -359,13 +360,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                   ),
                   Text(
-                    data.productionCountries?[0].name.toString() ?? "--",
+                    data.productionCountries?[0].name?.toString() ?? "--",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  )
+                  ),
                 ],
               ),
 
