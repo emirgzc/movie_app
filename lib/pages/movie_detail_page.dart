@@ -93,8 +93,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                   ),
                 ),
-                // appbar
 
+                // appbar
                 Positioned(
                   // yoksa ortalarda kalıyor
                   top: -70,

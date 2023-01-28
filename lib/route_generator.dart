@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/pages/image_page.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
+import 'package:movie_app/pages/movie_detail_page_yeni.dart';
 import 'package:movie_app/pages/movie_page.dart';
 
 class RouteGenerator {
@@ -22,7 +23,7 @@ class RouteGenerator {
 
       // home page
       case "/":
-        return _generateRoute(const MoviePage(), settings);
+        return _generateRoute(const MovieDetailPageYeni(), settings);
 
       // detail page
       case "/detailPage":
