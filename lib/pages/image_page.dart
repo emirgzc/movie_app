@@ -1,8 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -34,6 +31,7 @@ class _ImagePageState extends State<ImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       backgroundColor: Colors.black,
       body: Stack(
         children: [
@@ -72,15 +70,18 @@ class _ImagePageState extends State<ImagePage> {
           ),
 
           // back button
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop(_current);
-              },
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+          Positioned(
+            top: 100,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop(_current);
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
