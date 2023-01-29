@@ -10,7 +10,8 @@ import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
 
 class MovieDetailPageYeni extends StatefulWidget {
-  const MovieDetailPageYeni({super.key});
+  const MovieDetailPageYeni({super.key, required this.movieId});
+  final int? movieId;
 
   @override
   State<MovieDetailPageYeni> createState() => _MovieDetailPageYeniState();
@@ -20,15 +21,21 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
   Color widgetBackgroundColor = Colors.black.withOpacity(0.4);
   Color normalTextColor = Colors.white.withOpacity(0.8);
   Color headerTextColor = Colors.white;
+  late PageController pageController;
+
+  @override
+  void initState() {
+    pageController = PageController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     double widht = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-        // widget.movieId ?? 0
         body: FutureBuilder(
-      future: ApiClient().detailMovieData(865559),
+      future: ApiClient().detailMovieData(widget.movieId ?? 0),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData &&
@@ -82,13 +89,15 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                                         padding: const EdgeInsets.all(16),
                                         child: FittedBox(
                                           fit: BoxFit.fitWidth,
-                                          child: Text(
-                                            data.title.toString(),
-                                            style: TextStyle(
-                                              overflow: TextOverflow.fade,
-                                              color: headerTextColor,
-                                              fontSize: 36,
-                                              fontWeight: FontWeight.bold,
+                                          child: SizedBox(
+                                            width: widht - 100,
+                                            child: Text(
+                                              data.title.toString(),
+                                              style: TextStyle(
+                                                color: headerTextColor,
+                                                fontSize: 36,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -104,6 +113,7 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                               width: double.infinity,
                               height: 200,
                               child: PageView(
+                                controller: pageController,
                                 children: [
                                   // acıklama
                                   movieDescription(data),
@@ -193,7 +203,12 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                                         height: (widht - 90) / 5,
                                         color: widgetBackgroundColor,
                                         child: MaterialButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            pageController.nextPage(
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                                curve: Curves.easeInOut);
+                                          },
                                           child: Icon(
                                             Icons.info_outline,
                                             color: headerTextColor,
@@ -229,7 +244,8 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
 
                             // ekran goruntuleri
                             FutureBuilder(
-                              future: ApiClient().getImages(865559),
+                              future:
+                                  ApiClient().getImages(widget.movieId ?? 0),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                         ConnectionState.done &&

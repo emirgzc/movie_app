@@ -5,6 +5,7 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
+import 'package:movie_app/pages/movie_detail_page_yeni.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
@@ -255,13 +256,9 @@ class _MoviePageState extends State<MoviePage> {
   createTopSliderItem(
       String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MovieDetailPage(
-            movieId: (data[index]?.id ?? 0),
-          ),
-        ),
+      onTap: () => Navigator.of(context).pushNamed(
+        "/detailPage",
+        arguments: (data[index]?.id ?? 0),
       ),
       child: Container(
         margin: const EdgeInsets.all(5),

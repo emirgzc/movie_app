@@ -23,12 +23,12 @@ class RouteGenerator {
 
       // home page
       case "/":
-        return _generateRoute(const MovieDetailPageYeni(), settings);
+        return _generateRoute(const MoviePage(), settings);
 
-      // detail page
+      // detail page yeni
       case "/detailPage":
         return _generateRoute(
-          MovieDetailPage(movieId: settings.arguments as int),
+          MovieDetailPageYeni(movieId: settings.arguments as int),
           settings,
         );
 
