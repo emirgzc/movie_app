@@ -363,7 +363,7 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
     );
   }
 
-  Widget movieDescription(DetailMovie? data) {
+  Widget movieDescription(DetailMovie data) {
     return Padding(
       padding: const EdgeInsets.only(
         left: 25,
@@ -379,7 +379,9 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
             child: Scrollbar(
                 child: SingleChildScrollView(
               child: Text(
-                data?.overview.toString() ?? "--",
+                data.overview.toString().isEmpty
+                    ? "Film ile ilgili girilmiş bir açıklama metni yok"
+                    : data.overview.toString(),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 100,
                 style: TextStyle(
