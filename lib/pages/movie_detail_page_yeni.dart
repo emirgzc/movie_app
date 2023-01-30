@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,6 +27,7 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
   @override
   void initState() {
     pageController = PageController();
+
     super.initState();
   }
 
@@ -278,7 +280,8 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.only(
-                                                  right: 10),
+                                                right: 10,
+                                              ),
                                               child: screenshotItem(
                                                   "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath.toString()}",
                                                   widht / 2),
@@ -289,7 +292,39 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                                     ),
                                   );
                                 } else {
-                                  return const Text("Yükleniyor...");
+                                  // loading
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 25,
+                                      right: 25,
+                                      top: 12,
+                                    ),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      height: (widht / 2) * (281 / 500),
+                                      child: ListView.builder(
+                                        clipBehavior: Clip.none,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: 3,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: SizedBox(
+                                              width: widht / 2,
+                                              child: const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                  ;
                                 }
                               },
                             ),
@@ -299,11 +334,11 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           );
         } else {
-          return Text("YUKLENIYORRR.....");
+          return Center(child: CircularProgressIndicator());
         }
       },
     ));

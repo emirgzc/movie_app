@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/pages/image_page.dart';
-import 'package:movie_app/pages/movie_detail_page.dart';
 import 'package:movie_app/pages/movie_detail_page_yeni.dart';
 import 'package:movie_app/pages/movie_page.dart';
 
