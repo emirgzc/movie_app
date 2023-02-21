@@ -9,6 +9,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
+import 'package:movie_app/models/trailer.dart';
+import 'package:movie_app/pages/trailer_page.dart';
 
 class MovieDetailPageYeni extends StatefulWidget {
   const MovieDetailPageYeni({super.key, required this.movieId});
@@ -60,6 +62,7 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
                   child: Container(
+                    padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                     ),
@@ -69,43 +72,111 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            // film resmi ve ismi
                             Padding(
-                              padding: const EdgeInsets.only(top: 25),
-                              child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(24)),
-                                child: SizedBox(
-                                  // width: widht - 50,
-                                  // height: widht - 50,
-                                  child: Stack(
-                                    alignment: Alignment.bottomLeft,
-                                    children: [
-                                      Image.network(
-                                        "https://image.tmdb.org/t/p/w500${data.backdropPath.toString()}",
-                                        fit: BoxFit.fitHeight,
-                                        width: widht - 50,
-                                        height: widht - 50,
+                              padding: const EdgeInsets.only(top: 32),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 8,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: FittedBox(
-                                          fit: BoxFit.fitWidth,
-                                          child: SizedBox(
-                                            width: widht - 100,
-                                            child: Text(
-                                              data.title.toString(),
-                                              style: TextStyle(
-                                                color: headerTextColor,
-                                                fontSize: 36,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: widgetBackgroundColor,
+                                      ),
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.all(8),
+                                      child: const Icon(
+                                        Icons.arrow_left,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: widgetBackgroundColor,
+                                      ),
+                                      child: Text(
+                                        data.title.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: headerTextColor,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: widgetBackgroundColor,
+                                      ),
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.all(8),
+                                      child: const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            // film resmi ve ismi
+                            ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(24)),
+                              child: SizedBox(
+                                // width: widht - 50,
+                                // height: widht - 50,
+                                child: Stack(
+                                  alignment: Alignment.bottomLeft,
+                                  children: [
+                                    Image.network(
+                                      "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
+                                      fit: BoxFit.fitHeight,
+                                      width: widht - 50,
+                                      height: widht - 100,
+                                    ),
+                                    /* Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: FittedBox(
+                                        fit: BoxFit.fitWidth,
+                                        child: SizedBox(
+                                          width: widht - 100,
+                                          child: Text(
+                                            data.title.toString(),
+                                            style: TextStyle(
+                                              color: headerTextColor,
+                                              fontSize: 36,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    ), */
+                                  ],
                                 ),
                               ),
                             ),
@@ -128,8 +199,6 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                             // butonlar
                             Padding(
                               padding: const EdgeInsets.only(
-                                left: 25,
-                                right: 25,
                                 top: 12,
                               ),
                               child: SizedBox(
@@ -140,22 +209,51 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                                   scrollDirection: Axis.horizontal,
                                   children: [
                                     // oynat butonu
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(18)),
-                                      child: Container(
-                                        width: (widht - 90) / 5,
-                                        height: (widht - 90) / 5,
-                                        color: widgetBackgroundColor,
-                                        child: MaterialButton(
-                                          onPressed: () {},
-                                          child: Icon(
-                                            Icons.play_arrow,
-                                            color: headerTextColor,
-                                          ),
-                                        ),
-                                      ),
+                                    FutureBuilder(
+                                      future: ApiClient()
+                                          .getTrailer(widget.movieId ?? 0),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          var data = snapshot.data as Trailer;
+                                          return ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(18)),
+                                            child: Container(
+                                              width: (widht - 90) / 5,
+                                              height: (widht - 90) / 5,
+                                              color: widgetBackgroundColor,
+                                              child: MaterialButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TrailerPage(
+                                                        id: widget.movieId ?? 0,
+                                                        videoURL: [
+                                                          data.results
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Icon(
+                                                  Icons.play_arrow,
+                                                  color: headerTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return const Text("Yükleniyor...");
+                                        }
+                                      },
                                     ),
+
                                     const SizedBox(
                                       width: 10,
                                     ),
@@ -226,8 +324,6 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                             // Screenshots text
                             Padding(
                               padding: const EdgeInsets.only(
-                                left: 25,
-                                right: 25,
                                 top: 12,
                               ),
                               child: Row(
@@ -257,8 +353,6 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
 
                                   return Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 25,
-                                      right: 25,
                                       top: 12,
                                     ),
                                     child: SizedBox(
@@ -328,6 +422,7 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                                 }
                               },
                             ),
+                            const SizedBox(height: 120),
                           ],
                         ),
                       ),
@@ -366,8 +461,6 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
   Widget movieDescription(DetailMovie data) {
     return Padding(
       padding: const EdgeInsets.only(
-        left: 25,
-        right: 25,
         top: 12,
       ),
       child: ClipRRect(
@@ -400,8 +493,6 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
   Widget movieDetails(DetailMovie? data, double widht) {
     return Padding(
       padding: const EdgeInsets.only(
-        left: 25,
-        right: 25,
         top: 12,
       ),
       child: ClipRRect(

@@ -137,7 +137,7 @@ class _MoviePageState extends State<MoviePage> {
               Text(
                 listName,
                 textScaleFactor: 1.2,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               IconButton(
                 onPressed: () {},

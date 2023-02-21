@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
+import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
 
 class ApiClient {
@@ -26,7 +27,7 @@ class ApiClient {
 
         return mapApiModel.results;
       } else {
-        throw Exception('getMaps apide hata var');
+        throw Exception('trendData apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");
@@ -51,7 +52,7 @@ class ApiClient {
 
         return mapApiModel.results;
       } else {
-        throw Exception('getMaps apide hata var');
+        throw Exception('popularData apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");
@@ -76,7 +77,7 @@ class ApiClient {
 
         return mapApiModel.results;
       } else {
-        throw Exception('getMaps apide hata var');
+        throw Exception('topRatedData apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");
@@ -101,7 +102,7 @@ class ApiClient {
 
         return mapApiModel.results;
       } else {
-        throw Exception('getMaps apide hata var');
+        throw Exception('upComingData apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");
@@ -125,7 +126,7 @@ class ApiClient {
         DetailMovie mapApiModel = DetailMovie.fromMap(responseJson);
         return mapApiModel;
       } else {
-        throw Exception('detail apide hata var');
+        throw Exception('detailMovieData apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");
@@ -150,7 +151,32 @@ class ApiClient {
 
         return mapApiModel;
       } else {
-        throw Exception('getMaps apide hata var');
+        throw Exception('getImages apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+
+  Future<Trailer?> getTrailer(int movieId) async {
+    String baseUrl =
+        'https://api.themoviedb.org/3/movie/$movieId/videos?api_key=$apikey&language=en-US';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        //debugPrint(responseJson.toString());
+        Trailer mapApiModel = Trailer.fromJson(responseJson);
+
+        return mapApiModel;
+      } else {
+        throw Exception('getTrailer apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");
