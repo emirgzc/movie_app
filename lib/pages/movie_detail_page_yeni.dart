@@ -418,7 +418,6 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
                                       ),
                                     ),
                                   );
-                                  ;
                                 }
                               },
                             ),
@@ -433,7 +432,7 @@ class _MovieDetailPageYeniState extends State<MovieDetailPageYeni> {
             ],
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     ));
