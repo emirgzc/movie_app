@@ -179,7 +179,8 @@ class _SearchPageState extends State<SearchPage> {
                                         glowColor: Colors.yellow,
                                         unratedColor: Colors.black,
                                         initialRating:
-                                            data.results[index].voteAverage / 2,
+                                            data.results[index].voteAverage /
+                                                2.0,
                                         minRating: 1,
                                         direction: Axis.horizontal,
                                         allowHalfRating: true,
