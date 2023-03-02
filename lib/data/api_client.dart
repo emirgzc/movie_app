@@ -2,17 +2,22 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_app/models/cast_persons_movies.dart';
+import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
+import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/images.dart';
+import 'package:movie_app/models/search.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/pages/search_page.dart';
 
 class ApiClient {
   final String apikey = "2444ef19302975166c670f0e507218ec";
 
   Future<List<Result>?> trendData() async {
     String baseUrl =
-        'https://api.themoviedb.org/3/trending/all/day?api_key=$apikey&language=tr-TR';
+        'https://api.themoviedb.org/3/trending/movie/day?api_key=$apikey&language=tr-TR';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -35,9 +40,9 @@ class ApiClient {
     return null;
   }
 
-  Future<List<Result>?> popularData() async {
+  Future<List<Result>?> popularData({int page = 1}) async {
     String baseUrl =
-        'https://api.themoviedb.org/3/movie/popular?api_key=$apikey&language=tr-TR';
+        'https://api.themoviedb.org/3/movie/popular?api_key=$apikey&language=tr-TR&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -60,9 +65,9 @@ class ApiClient {
     return null;
   }
 
-  Future<List<Result>?> topRatedData() async {
+  Future<List<Result>?> topRatedData({int page = 1}) async {
     String baseUrl =
-        'https://api.themoviedb.org/3/movie/top_rated?api_key=$apikey&language=tr-TR';
+        'https://api.themoviedb.org/3/movie/top_rated?api_key=$apikey&language=tr-TR&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -85,9 +90,9 @@ class ApiClient {
     return null;
   }
 
-  Future<List<Result>?> upComingData() async {
+  Future<List<Result>?> upComingData({int page = 1}) async {
     String baseUrl =
-        'https://api.themoviedb.org/3/movie/upcoming?api_key=$apikey&language=tr-TR';
+        'https://api.themoviedb.org/3/movie/upcoming?api_key=$apikey&language=tr-TR&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -103,6 +108,34 @@ class ApiClient {
         return mapApiModel.results;
       } else {
         throw Exception('upComingData apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+
+  Future<List<Result>?> similarMoviesData(int movieId, {int page = 1}) async {
+    String baseUrl =
+        'https://api.themoviedb.org/3/movie/$movieId/similar?api_key=$apikey&language=tr-TR&page=$page';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        Trend mapApiModel = Trend.fromMap(responseJson);
+
+        // resmi olmayan filmeleri kaldır
+        mapApiModel.results!
+            .removeWhere((element) => element.posterPath == null);
+
+        return mapApiModel.results;
+      } else {
+        throw Exception('similarMoviesData apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");
@@ -180,6 +213,117 @@ class ApiClient {
       }
     } catch (e) {
       debugPrint("hata $e");
+    }
+    return null;
+  }
+
+  Future<Genres?> genres() async {
+    String baseUrl =
+        'https://api.themoviedb.org/3/genre/movie/list?api_key=$apikey&language=tr-TR';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+
+        Genres mapApiModel = Genres.fromMap(responseJson);
+
+        return mapApiModel;
+      } else {
+        throw Exception('genres apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+
+  Future<Credits?> credits(int movieId) async {
+    String baseUrl =
+        'https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$apikey&language=tr-TR';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+
+        Credits mapApiModel = Credits.fromMap(responseJson);
+
+        // resmi olmayanalrı kaldır
+        mapApiModel.cast.removeWhere(
+          (element) => (element.profilePath == null),
+        );
+
+        return mapApiModel;
+      } else {
+        throw Exception('credits apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+
+  // oyuncunun oynadigi filmler
+  Future<CastPersonsMovies?> castPersonsMovies(int personId) async {
+    String baseUrl =
+        'https://api.themoviedb.org/3/person/$personId/movie_credits?api_key=$apikey&language=tr-TR';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+
+        CastPersonsMovies mapApiModel =
+            CastPersonsMovies.fromJson(responseJson);
+        if (mapApiModel.cast != null) {
+          mapApiModel.cast!
+              .removeWhere((element) => element.posterPath == null);
+        }
+
+        return mapApiModel;
+      } else {
+        throw Exception('CastPersonsMovies apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+
+  Future<Search?> search({String query = "a", int page = 1}) async {
+    String baseUrl =
+        'https://api.themoviedb.org/3/search/movie?api_key=2444ef19302975166c670f0e507218ec&language=tr-Tr&query=$query&page=$page&include_adult=false';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+
+        Search mapApiModel = Search.fromMap(responseJson);
+
+        return mapApiModel;
+      } else {
+        throw Exception('search apide hata var');
+      }
+    } catch (e) {
+      debugPrint("search $e");
     }
     return null;
   }

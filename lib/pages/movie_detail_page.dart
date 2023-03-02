@@ -1,12 +1,19 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:movie_app/models/trailer.dart';
+import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/pages/trailer_page.dart';
 
 class MovieDetailPage extends StatefulWidget {
   const MovieDetailPage({super.key, required this.movieId});
@@ -17,217 +24,682 @@ class MovieDetailPage extends StatefulWidget {
 }
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
-  final double myRadius = 12.0;
-  List<String> backdropFilePathUrls = [];
-  String imdbUrl = "";
+  Color widgetBackgroundColor = Colors.black.withOpacity(0.4);
+  Color normalTextColor = Colors.white.withOpacity(0.8);
+  Color headerTextColor = Colors.white;
+  late PageController pageController;
+  double borderRadius = 12.0;
+
+  @override
+  void initState() {
+    pageController = PageController();
+    print(widget.movieId);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double widht = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        automaticallyImplyLeading: false,
-        toolbarHeight: 360,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Column(
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
+      body: FutureBuilder(
+        future: ApiClient().detailMovieData(widget.movieId ?? 0),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData &&
+              snapshot.data != null) {
+            var data = snapshot.data as DetailMovie;
+
+            return Stack(
               children: [
-                Container(
-                  height: 335,
+                // arkaplandaki bulanik resim
+                ConstrainedBox(
+                  constraints: const BoxConstraints.expand(),
+                  child: data.backdropPath != null
+                      ? Image.network(
+                          "https://image.tmdb.org/t/p/w500${data.backdropPath.toString()}",
+                          fit: BoxFit.cover,
+                        )
+                      : const SizedBox(),
                 ),
 
-                // background image
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.8),
-                          spreadRadius: 16,
-                          blurRadius: 40,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.elliptical(widht, 60),
-                        bottomRight: Radius.elliptical(widht, 60),
+                // ondeki widgetlar
+                ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
                       ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.elliptical(widht, 60),
-                        bottomRight: Radius.elliptical(widht, 60),
-                      ),
-                      child: FutureBuilder(
-                        future:
-                            ApiClient().detailMovieData(widget.movieId ?? 0),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              snapshot.hasData &&
-                              snapshot.data != null) {
-                            var data = snapshot.data as DetailMovie;
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              // isim , geri ve begen butonu
+                              Padding(
+                                padding: const EdgeInsets.only(top: 32),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // geri
+                                    GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              borderRadius),
+                                          color: widgetBackgroundColor,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.all(8),
+                                        child: const Icon(
+                                          Icons.arrow_left,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
 
-                            return Image.network(
-                              "https://image.tmdb.org/t/p/w500${data.backdropPath.toString()}",
-                              width: 1000,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            );
-                          } else {
-                            return buildLastProcessCardEffect(
-                              const Text("Yükleniyor..."),
-                              context,
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ),
+                                    // film ismi
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4,
+                                        ),
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              borderRadius),
+                                          color: widgetBackgroundColor,
+                                        ),
+                                        child: Center(
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8, 4, 8, 4),
+                                              child: Text(
+                                                data.title.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: headerTextColor,
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
 
-                // appbar
-                Positioned(
-                  // yoksa ortalarda kalıyor
-                  top: -70,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // menu icon
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.keyboard_arrow_left_outlined,
-                          color: Colors.white,
-                        ),
-                      ),
-                      // header
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(80.0),
-                          child: Image.asset(
-                            "assets/header_logo.png",
+                                    // kalp butonu
+                                    GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              borderRadius),
+                                          color: widgetBackgroundColor,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.all(8),
+                                        child: const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+
+                              // film resmi
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                            sigmaX: 20.0,
+                                            sigmaY: 20.0,
+                                          ),
+                                          child: Material(
+                                            //elevation: 14,
+                                            color: Colors.transparent,
+                                            child: Image.network(
+                                              "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
+                                              fit: BoxFit.contain,
+                                              width: width,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Hero(
+                                  tag:
+                                      "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(borderRadius),
+                                    ),
+                                    child: SizedBox(
+                                      width: width - 200,
+                                      height: width - 100,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // acıklama ve detaylar
+                              SizedBox(
+                                width: double.infinity,
+                                height: 200,
+                                child: PageView(
+                                  controller: pageController,
+                                  children: [
+                                    // acıklama
+                                    movieDescription(data),
+
+                                    // detaylar
+                                    movieDetails(data, width),
+
+                                    // cast oyunculari
+                                    castPlayers(data.id ?? 0),
+                                  ],
+                                ),
+                              ),
+
+                              // butonlar
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 12,
+                                ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: (width - 90) / 5,
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: [
+                                      // oynat butonu
+                                      FutureBuilder(
+                                        future: ApiClient()
+                                            .getTrailer(widget.movieId ?? 0),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                                  ConnectionState.done &&
+                                              snapshot.hasData &&
+                                              snapshot.data != null) {
+                                            var data = snapshot.data as Trailer;
+                                            return ClipRRect(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(borderRadius),
+                                              ),
+                                              child: Container(
+                                                width: (width - 90) / 5,
+                                                height: (width - 90) / 5,
+                                                color: widgetBackgroundColor,
+                                                child: MaterialButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            "/trailerPage",
+                                                            arguments: [
+                                                          widget.movieId ?? 0,
+                                                          [data.results],
+                                                        ]);
+                                                  },
+                                                  child: Icon(
+                                                    Icons.play_arrow,
+                                                    color: headerTextColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return ClipRRect(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(borderRadius),
+                                              ),
+                                              child: Container(
+                                                width: (width - 90) / 5,
+                                                height: (width - 90) / 5,
+                                                color: widgetBackgroundColor,
+                                                child: MaterialButton(
+                                                  onPressed: () {},
+                                                  child: Icon(
+                                                    Icons.play_disabled,
+                                                    color: headerTextColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+
+                                      // aciklama butonu
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(borderRadius)),
+                                        child: Container(
+                                          width: (width - 90) / 5,
+                                          height: (width - 90) / 5,
+                                          color: widgetBackgroundColor,
+                                          child: MaterialButton(
+                                            onPressed: () {
+                                              pageController.animateToPage(0,
+                                                  duration: const Duration(
+                                                      milliseconds: 500),
+                                                  curve: Curves.easeInOut);
+                                            },
+                                            child: Icon(
+                                              Icons.description,
+                                              color: headerTextColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+
+                                      // info butonu
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(borderRadius)),
+                                        child: Container(
+                                          width: (width - 90) / 5,
+                                          height: (width - 90) / 5,
+                                          color: widgetBackgroundColor,
+                                          child: MaterialButton(
+                                            onPressed: () {
+                                              pageController.animateToPage(1,
+                                                  duration: const Duration(
+                                                      milliseconds: 500),
+                                                  curve: Curves.easeInOut);
+                                            },
+                                            child: Icon(
+                                              Icons.info_outline,
+                                              color: headerTextColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+
+                                      // oyuncular
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(borderRadius)),
+                                        child: Container(
+                                          width: (width - 90) / 5,
+                                          height: (width - 90) / 5,
+                                          color: widgetBackgroundColor,
+                                          child: MaterialButton(
+                                            onPressed: () {
+                                              pageController.animateToPage(2,
+                                                  duration: const Duration(
+                                                      milliseconds: 500),
+                                                  curve: Curves.easeInOut);
+                                            },
+                                            child: Icon(
+                                              Icons.family_restroom,
+                                              color: headerTextColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      // ekle butonu
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(borderRadius)),
+                                        child: Container(
+                                          width: (width - 90) / 5,
+                                          height: (width - 90) / 5,
+                                          color: widgetBackgroundColor,
+                                          child: MaterialButton(
+                                            onPressed: () {},
+                                            child: Icon(
+                                              Icons.add,
+                                              color: headerTextColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              // Ekran Görüntüleri text
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 12,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Ekran Görüntüleri",
+                                      textScaleFactor: 1.2,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: headerTextColor),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // ekran goruntuleri
+                              FutureBuilder(
+                                future:
+                                    ApiClient().getImages(widget.movieId ?? 0),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                          ConnectionState.done &&
+                                      snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    var data = snapshot.data as Images;
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 12,
+                                      ),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        // dogru oranin yakalanmasi icin
+                                        // 281 / 500 : resim cozunurlugu
+                                        height: (width / 2) * (281 / 500),
+                                        child: ListView.builder(
+                                          clipBehavior: Clip.none,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount:
+                                              data.backdrops?.length ?? 0,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                showScreenshots(
+                                                    data, index, width);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 10,
+                                                ),
+                                                child: screenshotItem(
+                                                    "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath}",
+                                                    width / 2),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    // loading
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 25,
+                                        right: 25,
+                                        top: 12,
+                                      ),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: (width / 2) * (281 / 500),
+                                        child: ListView.builder(
+                                          clipBehavior: Clip.none,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: 3,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: SizedBox(
+                                                width: width / 2,
+                                                child: const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+
+                              // Hoşunuza Gidebilir
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 24,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Hoşunuza Gidebilir",
+                                      textScaleFactor: 1.2,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: headerTextColor),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // önerilen filmler
+                              FutureBuilder(
+                                future:
+                                    ApiClient().similarMoviesData(data.id ?? 0),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                          ConnectionState.done &&
+                                      snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    var similarMoviesData =
+                                        snapshot.data as List<Result?>;
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: (width / 3) * 1.5,
+                                        child: ListView.builder(
+                                          clipBehavior: Clip.none,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: similarMoviesData.length,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () => Navigator.of(context)
+                                                  .pushNamed(
+                                                "/detailPage",
+                                                arguments:
+                                                    (similarMoviesData[index]
+                                                            ?.id ??
+                                                        0),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        8, 0, 8, 0),
+                                                child: Material(
+                                                  elevation: 14,
+                                                  color: Colors.transparent,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      Radius.circular(12),
+                                                    ),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
+                                                      fit: BoxFit.cover,
+                                                      width: width / 3,
+                                                      height: (width / 3) * 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return const SizedBox();
+                                  }
+                                },
+                              ),
+
+                              const SizedBox(height: 120),
+                            ],
                           ),
                         ),
                       ),
-
-                      // like
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.favorite_border,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // play button
-                Positioned(
-                  left: widht / 2 - 35,
-                  bottom: 0,
-                  child: SizedBox(
-                    width: 70,
-                    height: 70,
-                    child: RawMaterialButton(
-                      onPressed: () {},
-                      elevation: 2.0,
-                      fillColor: Colors.white,
-                      padding: const EdgeInsets.all(10.0),
-                      shape: const CircleBorder(),
-                      child: const Icon(
-                        Icons.play_arrow,
-                        size: 50.0,
-                        color: Colors.red,
-                      ),
                     ),
                   ),
                 ),
-
-                // add and share buttons
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // add
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.black,
-                        ),
-                      ),
-
-                      // share
-                      IconButton(
-                        onPressed: () async {
-                          await Share.share(imdbUrl,
-                              subject: "Bu Filmi Paylaş");
-                        },
-                        icon: const Icon(
-                          Icons.share,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
-            ),
-            const SizedBox(
-              height: 25,
-            )
-          ],
-        ),
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                FutureBuilder(
-                  future: ApiClient().detailMovieData(widget.movieId ?? 0),
+    );
+  }
+
+  Widget castPlayers(int movieId) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 12,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        child: Container(
+          color: widgetBackgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.all(9),
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                child: FutureBuilder(
+                  future: ApiClient().credits(movieId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData &&
                         snapshot.data != null) {
-                      var data = snapshot.data as DetailMovie;
-                      imdbUrl = "https://www.imdb.com/title/${data.imdbId}/";
+                      var creditsData = snapshot.data as Credits;
 
-                      return detailMovieData(widht, data);
-                    } else {
-                      return buildLastProcessCardEffect(
-                        const Text("Yükleniyor..."),
-                        context,
+                      // profil resmi olmayanları kaldırmasın
+                      /*
+                      creditsData.cast.removeWhere(
+                        (element) => (element.profilePath == null ||
+                            element.adult == true),
                       );
+                      */
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              "Oyuncular: ",
+                              style: TextStyle(
+                                fontSize: 22,
+                                height: 1.4,
+                                color: normalTextColor,
+                              ),
+                            ),
+                          ),
+                          Wrap(
+                            spacing: 4,
+                            runSpacing: 4,
+                            children: [
+                              for (var castMember in creditsData.cast)
+                                Theme(
+                                  data: ThemeData(
+                                      canvasColor: Colors.transparent),
+                                  child: RawChip(
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed(
+                                          "/castPersonsMoviesPage",
+                                          arguments: [
+                                            castMember.id,
+                                            castMember.name
+                                          ]);
+                                    },
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    padding: const EdgeInsets.all(1.0),
+                                    elevation: 0,
+                                    label: Text(
+                                      "${castMember.originalName} (${castMember.character})",
+                                      style: TextStyle(color: normalTextColor),
+                                    ),
+                                    avatar: CircleAvatar(
+                                      backgroundColor: Colors.transparent,
+                                      backgroundImage: CachedNetworkImageProvider(
+                                          "https://image.tmdb.org/t/p/w500${castMember.profilePath}"),
+                                    ),
+                                  ),
+                                )
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox();
                     }
                   },
                 ),
-                const SizedBox(
-                  height: 100,
-                ),
-                // movie name
-              ],
+              ),
             ),
           ),
         ),
@@ -235,267 +707,257 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 
-  Column detailMovieData(double widht, DetailMovie? data) {
-    return Column(
-      children: [
-        // tagline
-        SizedBox(
-          width: widht / 1.8,
-          child: Text(
-            data?.tagline.toString() ?? "--",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.black.withOpacity(0.6),
+  Widget movieDescription(DetailMovie data) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 12,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        child: Container(
+          color: widgetBackgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                child: Text(
+                  data.overview.toString().isEmpty
+                      ? "Film ile ilgili girilmiş bir açıklama metni yok"
+                      : data.overview.toString(),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 100,
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.4,
+                    color: normalTextColor,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
 
-        // title
-        SizedBox(
-          width: widht / 1.8,
-          child: Text(
-            data?.title.toString() ?? "--",
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-        ),
+  Widget movieDetails(DetailMovie? data, double width) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 12,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        child: Container(
+          color: widgetBackgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // categories
+                  SizedBox(
+                    height: width / 20,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: data?.genres?.length ?? 0,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: Text(
+                                  "${data?.genres?[index].name.toString() ?? "---"},",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: normalTextColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
-        const SizedBox(
-          height: 10,
-        ),
+                  // rating
+                  RatingBar.builder(
+                    ignoreGestures: true,
+                    itemSize: 28,
+                    glowColor: Colors.red,
+                    unratedColor: Colors.black,
+                    initialRating: data!.voteAverage! / 2,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.red,
+                    ),
+                    onRatingUpdate: (rating) {
+                      // print(data.voteAverage);
+                    },
+                  ),
 
-        // categories
-        SizedBox(
-          height: widht / 20,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: data?.genres?.length ?? 0,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      "${data?.genres?[index].name.toString() ?? "---"},",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  // year, country, lenght
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: SizedBox(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // yil
+                          Row(
+                            children: [
+                              Text(
+                                "Yıl : ",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: headerTextColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                data.releaseDate.toString().split("-")[0],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: normalTextColor,
+                                ),
+                              )
+                            ],
+                          ),
+
+                          const SizedBox(
+                            height: 10,
+                          ),
+
+                          // ulke
+                          Row(
+                            children: [
+                              Text(
+                                "Ülke : ",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: headerTextColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                data.productionCountries!.isEmpty
+                                    ? "Belirtilmemiş"
+                                    : data.productionCountries![0].name
+                                        .toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: normalTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(
+                            height: 10,
+                          ),
+
+                          // sure
+                          Row(
+                            children: [
+                              Text(
+                                "Süre : ",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: headerTextColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "${data.runtime.toString()} dk",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: normalTextColor,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-
-        // rating
-        RatingBar.builder(
-          ignoreGestures: true,
-          itemSize: 28,
-          glowColor: Colors.red,
-          unratedColor: Colors.black,
-          initialRating: data!.voteAverage! / 2,
-          minRating: 1,
-          direction: Axis.horizontal,
-          allowHalfRating: true,
-          itemCount: 5,
-          itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-          itemBuilder: (context, _) => const Icon(
-            Icons.star,
-            color: Colors.red,
-          ),
-          onRatingUpdate: (rating) {
-            // print(data.voteAverage);
-          },
-        ),
-
-        const SizedBox(
-          height: 10,
-        ),
-
-        // year, country, lenght
-        SizedBox(
-          //width: widht / 1.6,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // yil
-              Column(
-                children: [
-                  const Text(
-                    "Yıl",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    data.releaseDate.toString().split("-")[0],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  )
-                ],
-              ),
-
-              // ulke
-              Column(
-                children: [
-                  const Text(
-                    "Ülke",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    data.productionCountries?[0].name?.toString() ?? "--",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      overflow: TextOverflow.ellipsis,
-                    ),
                   ),
                 ],
               ),
-
-              // sure
-              Column(
-                children: [
-                  const Text(
-                    "Süre",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    "${data.runtime.toString()} dk",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        // movie description
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: Text(
-            data.overview.toString(),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 100,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black.withOpacity(0.6),
-              fontSize: 14,
             ),
           ),
         ),
-
-        // screenshot list
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: Column(
-            children: [
-              // Screenshots text and button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Screenshots",
-                    textScaleFactor: 1.2,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.arrow_forward),
-                  )
-                ],
-              ),
-              FutureBuilder(
-                future: ApiClient().getImages(widget.movieId ?? 0),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData &&
-                      snapshot.data != null) {
-                    var data = snapshot.data as Images;
-                    data.backdrops?.forEach((element) {
-                      backdropFilePathUrls.add(element.filePath.toString());
-                    });
-
-                    return SizedBox(
-                      width: double.infinity,
-                      height: (widht / 2.2) * (281 / 500),
-                      child: ListView.builder(
-                          clipBehavior: Clip.none,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: data.backdrops?.length ?? 0,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Hero(
-                              tag: backdropFilePathUrls[index],
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pushNamed("/imagePage",
-                                      arguments: [backdropFilePathUrls, index]);
-                                },
-                                child: createBackdropItem(
-                                    "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath.toString()}",
-                                    widht),
-                              ),
-                            );
-                          }),
-                    );
-                  } else {
-                    return buildLastProcessCardEffect(
-                      const Text("Yükleniyor..."),
-                      context,
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget createBackdropItem(String backdropUrl, double widht) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-      child: Material(
-        elevation: 14,
-        color: Colors.transparent,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(myRadius)),
-          child: CachedNetworkImage(
-            imageUrl: backdropUrl,
-
-            fit: BoxFit.cover,
-            width: widht / 2.2,
-            // 281 / 500 : resim cozunurlugu
-            height: (widht / 2.2) * (281 / 500),
-          ),
+  Widget screenshotItem(String url, double width) {
+    return Material(
+      //elevation: 14,
+      color: Colors.transparent,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(borderRadius),
+        ),
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+          width: width,
+          // 281 / 500 : resim cozunurlugu
+          height: (width) * (281 / 500),
         ),
       ),
+    );
+  }
+
+  showScreenshots(Images data, int clickedIndex, double width) {
+    showDialog(
+      // barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 20.0,
+              sigmaY: 20.0,
+            ),
+            child: CarouselSlider(
+              items: data.backdrops
+                  ?.map((backdrop) => screenshotItem(
+                      "https://image.tmdb.org/t/p/w500${backdrop.filePath.toString()}",
+                      width))
+                  .toList(),
+              options: CarouselOptions(
+                  initialPage: clickedIndex,
+                  autoPlay: true,
+                  aspectRatio: 2.0,
+                  enlargeCenterPage: true,
+                  enableInfiniteScroll: false),
+            ),
+          ),
+        );
+      },
     );
   }
 }
