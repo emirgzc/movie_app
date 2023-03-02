@@ -1,13 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
+<<<<<<< HEAD
 import 'package:movie_app/pages/list_page.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
+=======
+>>>>>>> d19449e6be65d132d2a0e003a2976d6a70f2a71c
 
 class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
