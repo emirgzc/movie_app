@@ -166,7 +166,7 @@ class _SearchPageState extends State<SearchPage> {
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                vertical: 8,
+                                                vertical: 10,
                                               ),
                                               child: Text(
                                                 toRevolveDate(data
