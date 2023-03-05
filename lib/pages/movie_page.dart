@@ -25,6 +25,7 @@ class _MoviePageState extends State<MoviePage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -79,9 +80,7 @@ class _MoviePageState extends State<MoviePage> {
                       itemCount: data.length,
                       itemBuilder: (context, index, realIndex) {
                         return createTopSliderItem(
-                          (data[index]?.originalTitle ??
-                              data[index]?.title ??
-                              "--"),
+                          (data[index]?.title ?? data[index]?.title ?? "--"),
                           (data[index]?.backdropPath ?? "--"),
                           data,
                           index,
@@ -123,7 +122,7 @@ class _MoviePageState extends State<MoviePage> {
                       ),
                     );
                   } else {
-                    return SizedBox();
+                    return const SizedBox();
                   }
                 },
               ),

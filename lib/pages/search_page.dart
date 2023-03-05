@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/search.dart';
 
@@ -25,7 +26,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 2,
         // The search area here
         backgroundColor: Colors.white,
         foregroundColor: Colors.grey.shade800,
@@ -33,8 +36,7 @@ class _SearchPageState extends State<SearchPage> {
           width: double.infinity,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.grey.shade400,
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(4),
           ),
           child: Center(
             child: TextField(
@@ -44,7 +46,7 @@ class _SearchPageState extends State<SearchPage> {
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    Icons.clear,
+                    Icons.delete_forever,
                     color: Colors.red.shade700,
                   ),
                   onPressed: () => setState(() {
@@ -62,7 +64,7 @@ class _SearchPageState extends State<SearchPage> {
       /*
       EasySearchBar(
         searchHintText: "Ara",
-        elevation: 0,
+        elevation: 0,                                                                                             
         backgroundColor: Colors.white,
         title: Padding(
           padding: const EdgeInsets.all(4.0),
@@ -71,151 +73,164 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
         onSearch: (value) => setState(() => searchValue = value),
-      ),
+      ),    Zdffvfgv                                       
       */
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          FutureBuilder(
-            future: ApiClient()
-                .search(query: searchValue.isNotEmpty ? searchValue : "a"),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData &&
-                  snapshot.data != null) {
-                var data = snapshot.data as Search;
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 8,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            FutureBuilder(
+              future: ApiClient()
+                  .search(query: searchValue.isNotEmpty ? searchValue : "a"),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData &&
+                    snapshot.data != null) {
+                  var data = snapshot.data as Search;
 
-                return Expanded(
-                  child: ListView.builder(
-                    clipBehavior: Clip.antiAlias,
-                    shrinkWrap: false,
-                    scrollDirection: Axis.vertical,
-                    itemCount: data.results.length,
-                    itemBuilder: (context, index) {
-                      if (data.results[index].backdropPath?.isEmpty ??
-                          null == null) {
-                        return const SizedBox();
-                      }
+                  return Expanded(
+                    child: MasonryGridView.count(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: data.results.length,
+                      crossAxisCount: 2,
+                      itemBuilder: (context, index) {
+                        if (data.results[index].backdropPath?.isEmpty ??
+                            null == null) {
+                          return const SizedBox();
+                        }
 
-                      return GestureDetector(
-                        onTap: () {
-                          FocusScopeNode currentFocus = FocusScope.of(context);
-                          if (!currentFocus.hasPrimaryFocus) {
-                            currentFocus.unfocus();
-                          }
+                        return GestureDetector(
+                          onTap: () {
+                            FocusScopeNode currentFocus =
+                                FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
 
-                          Navigator.of(context).pushNamed(
-                            "/detailPage",
-                            arguments: data.results[index].id,
-                          );
-                        },
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 4,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // resim
-                              Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Hero(
-                                  tag:
-                                      "https://image.tmdb.org/t/p/w500${data.results[index].posterPath.toString()}",
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
+                            Navigator.of(context).pushNamed(
+                              "/detailPage",
+                              arguments: data.results[index].id,
+                            );
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            elevation: 4,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // resim
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Hero(
+                                      tag:
                                           "https://image.tmdb.org/t/p/w500${data.results[index].posterPath.toString()}",
-                                      height: 50 * 1.5,
-                                      width: 50,
-                                      fit: BoxFit.fill,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "https://image.tmdb.org/t/p/w500${data.results[index].posterPath.toString()}",
+                                        width: 50,
+                                        height: 90,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
 
-                              // isim, tarih, derecelendirme, kategoriler
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    // film ismi
-                                    Column(
+                                  // isim, tarih, derecelendirme, kategoriler
+                                  Expanded(
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 8, 8, 2),
-                                          child: Text(
-                                            data.results[index].title,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                        // film ismi
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              data.results[index].title,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 8,
+                                              ),
+                                              child: Text(
+                                                toRevolveDate(data
+                                                    .results[index].releaseDate
+                                                    .toString()),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 0, 0, 12),
-                                          child: Text(
-                                            data.results[index].releaseDate
-                                                .toString(),
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600),
+
+                                        // rating
+                                        RatingBar.builder(
+                                          ignoreGestures: true,
+                                          itemSize: 20,
+                                          glowColor: Colors.yellow,
+                                          unratedColor: Colors.black,
+                                          initialRating:
+                                              data.results[index].voteAverage /
+                                                  2,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
                                           ),
+                                          onRatingUpdate: (double value) {},
                                         ),
                                       ],
                                     ),
-
-                                    // rating
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: RatingBar.builder(
-                                        ignoreGestures: true,
-                                        itemSize: 20,
-                                        glowColor: Colors.yellow,
-                                        unratedColor: Colors.black,
-                                        initialRating:
-                                            data.results[index].voteAverage / 2,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemBuilder: (context, _) => const Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                        ),
-                                        onRatingUpdate: (double value) {},
-                                      ),
-                                    ),
-
-                                    const SizedBox(
-                                      height: 8,
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return const Center(
-                  child: LinearProgressIndicator(
-                    color: Colors.grey,
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+                        );
+                      },
+                    ),
+                    /* child: ListView.builder(
+                      clipBehavior: Clip.antiAlias,
+                      shrinkWrap: false,
+                      scrollDirection: Axis.vertical,
+                      itemCount: data.results.length,
+                      
+                    ), */
+                  );
+                } else {
+                  return const Center(
+                    child: LinearProgressIndicator(
+                      color: Colors.grey,
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

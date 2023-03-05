@@ -101,7 +101,8 @@ packages:
     dependency: "direct main"
     description:
       name: easy_search_bar
-      url: "https://pub.dartlang.org"
+      sha256: "08a549a53dddf1f03fa7dd58b4a2facf81b021b9ec3b914476ed6e177d1e0bc3"
+      url: "https://pub.dev"
     source: hosted
     version: "2.4.2"
   fake_async:
@@ -173,6 +174,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  flutter_staggered_grid_view:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_grid_view
+      sha256: "1312314293acceb65b92754298754801b0e1f26a1845833b740b30415bbbcf07"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -215,6 +224,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  masonry_grid:
+    dependency: "direct main"
+    description:
+      name: masonry_grid
+      sha256: ad080dae535106117d7ba70ef34882a95de0da06f113a1e3e80cfbd300e81979
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   matcher:
     dependency: transitive
     description:

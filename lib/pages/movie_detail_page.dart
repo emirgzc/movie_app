@@ -3,17 +3,14 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
-import 'package:movie_app/pages/trailer_page.dart';
 
 class MovieDetailPage extends StatefulWidget {
   const MovieDetailPage({super.key, required this.movieId});
@@ -80,6 +77,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           child: Column(
                             children: [
                               // isim , geri ve begen butonu
+
                               Padding(
                                 padding: const EdgeInsets.only(top: 32),
                                 child: Row(
@@ -106,9 +104,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                         ),
                                       ),
                                     ),
-
+                                    Image.asset(
+                                      "assets/header_logo.png",
+                                      height: 100,
+                                      width: 140,
+                                    ),
                                     // film ismi
-                                    Expanded(
+                                    /* Expanded(
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           vertical: 4,
@@ -142,7 +144,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ), */
 
                                     // kalp butonu
                                     GestureDetector(
@@ -167,10 +169,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-
                               // film resmi
                               GestureDetector(
                                 onTap: () {
@@ -205,11 +203,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                       "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(borderRadius),
+                                      Radius.circular(borderRadius / 3),
                                     ),
                                     child: SizedBox(
                                       width: width - 200,
-                                      height: width - 100,
+                                      height: height * 0.4,
                                       child: CachedNetworkImage(
                                         imageUrl:
                                             "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
@@ -645,12 +643,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       );
                       */
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
                               "Oyuncular: ",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 22,
                                 height: 1.4,
@@ -659,11 +658,76 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             ),
                           ),
                           Wrap(
-                            spacing: 4,
-                            runSpacing: 4,
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            runAlignment: WrapAlignment.center,
+                            alignment: WrapAlignment.center,
                             children: [
                               for (var castMember in creditsData.cast)
-                                Theme(
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        "/castPersonsMoviesPage",
+                                        arguments: [
+                                          castMember.id,
+                                          castMember.name
+                                        ]);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    width: 120,
+                                    margin: const EdgeInsets.only(
+                                      right: 4,
+                                      bottom: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: widgetBackgroundColor,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        CachedNetworkImage(
+                                          height: 90,
+                                          imageUrl:
+                                              "https://image.tmdb.org/t/p/w500${castMember.profilePath}",
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 4),
+                                                child: Text(
+                                                  castMember.originalName,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: normalTextColor),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 4,
+                                                ),
+                                                child: Text(
+                                                  "(${castMember.character})",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: normalTextColor),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              /* Theme(
                                   data: ThemeData(
                                       canvasColor: Colors.transparent),
                                   child: RawChip(
@@ -689,7 +753,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                           "https://image.tmdb.org/t/p/w500${castMember.profilePath}"),
                                     ),
                                   ),
-                                )
+                                ) */
                             ],
                           ),
                         ],
@@ -720,17 +784,31 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: const EdgeInsets.all(20.0),
             child: Scrollbar(
               child: SingleChildScrollView(
-                child: Text(
-                  data.overview.toString().isEmpty
-                      ? "Film ile ilgili girilmiş bir açıklama metni yok"
-                      : data.overview.toString(),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 100,
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.4,
-                    color: normalTextColor,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.title.toString(),
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: normalTextColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      data.overview.toString().isEmpty
+                          ? "Film ile ilgili girilmiş bir açıklama metni yok"
+                          : data.overview.toString(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 100,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        color: normalTextColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -787,24 +865,37 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   ),
 
                   // rating
-                  RatingBar.builder(
-                    ignoreGestures: true,
-                    itemSize: 28,
-                    glowColor: Colors.red,
-                    unratedColor: Colors.black,
-                    initialRating: data!.voteAverage! / 2,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                    ),
-                    onRatingUpdate: (rating) {
-                      // print(data.voteAverage);
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RatingBar.builder(
+                        ignoreGestures: true,
+                        itemSize: 28,
+                        glowColor: Colors.red,
+                        unratedColor: Colors.black,
+                        initialRating: data!.voteAverage! / 2,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding:
+                            const EdgeInsets.symmetric(horizontal: 1.0),
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Colors.red,
+                        ),
+                        onRatingUpdate: (rating) {
+                          // print(data.voteAverage);
+                        },
+                      ),
+                      Text(
+                        "(${(data.voteAverage ?? 0) / 2}) ",
+                        style: TextStyle(
+                          color: normalTextColor,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
 
                   const SizedBox(
@@ -822,7 +913,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           Row(
                             children: [
                               Text(
-                                "Yıl : ",
+                                "Çıkış Yılı : ",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: headerTextColor,
@@ -831,7 +922,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 ),
                               ),
                               Text(
-                                data.releaseDate.toString().split("-")[0],
+                                toRevolveDate(
+                                  data.releaseDate.toString().split(" ")[0],
+                                ),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
