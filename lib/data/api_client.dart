@@ -7,10 +7,10 @@ import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/images.dart';
+import 'package:movie_app/models/keywords.dart';
 import 'package:movie_app/models/search.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
-import 'package:movie_app/pages/search_page.dart';
 
 class ApiClient {
   final String apikey = "2444ef19302975166c670f0e507218ec";
@@ -324,6 +324,31 @@ class ApiClient {
       }
     } catch (e) {
       debugPrint("search $e");
+    }
+    return null;
+  }
+
+  Future<List<Keyword>?> keywords(int movieId) async {
+    String baseUrl =
+        'https://api.themoviedb.org/3/movie/$movieId/keywords?api_key=$apikey&language=tr-TR';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        //debugPrint(responseJson.toString());
+        Keywords mapApiModel = Keywords.fromMap(responseJson);
+
+        return mapApiModel.keyword;
+      } else {
+        throw Exception('trendData apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
     }
     return null;
   }

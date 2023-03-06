@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/credits.dart';
@@ -645,87 +646,85 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Text(
-                              "Oyuncular: ",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 22,
-                                height: 1.4,
-                                color: normalTextColor,
-                              ),
+                          Text(
+                            "Oyuncular: ",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 22,
+                              height: 1.4,
+                              color: normalTextColor,
                             ),
                           ),
-                          Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.start,
-                            runAlignment: WrapAlignment.center,
-                            alignment: WrapAlignment.center,
-                            children: [
-                              for (var castMember in creditsData.cast)
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                        "/castPersonsMoviesPage",
-                                        arguments: [
-                                          castMember.id,
-                                          castMember.name
-                                        ]);
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    width: 120,
-                                    margin: const EdgeInsets.only(
-                                      right: 4,
-                                      bottom: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: widgetBackgroundColor,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        CachedNetworkImage(
-                                          height: 90,
-                                          imageUrl:
-                                              "https://image.tmdb.org/t/p/w500${castMember.profilePath}",
-                                          fit: BoxFit.cover,
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 4),
-                                                child: Text(
-                                                  castMember.originalName,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: normalTextColor),
-                                                ),
+                          MasonryGridView.count(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: creditsData.cast.length,
+                            crossAxisCount: 3,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                      "/castPersonsMoviesPage",
+                                      arguments: [
+                                        creditsData.cast[index].id,
+                                        creditsData.cast[index].name,
+                                      ]);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  width: 120,
+                                  margin: const EdgeInsets.only(
+                                    right: 4,
+                                    bottom: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: widgetBackgroundColor,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      CachedNetworkImage(
+                                        height: 90,
+                                        imageUrl:
+                                            "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 4),
+                                              child: Text(
+                                                creditsData
+                                                    .cast[index].originalName,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: normalTextColor),
                                               ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 4,
-                                                ),
-                                                child: Text(
-                                                  "(${castMember.character})",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: normalTextColor),
-                                                ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 4,
                                               ),
-                                            ],
-                                          ),
+                                              child: Text(
+                                                "(${creditsData.cast[index].character})",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: normalTextColor),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                              );
 
                               /* Theme(
                                   data: ThemeData(
@@ -754,7 +753,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                     ),
                                   ),
                                 ) */
-                            ],
+                            },
                           ),
                         ],
                       );
