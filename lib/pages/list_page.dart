@@ -131,10 +131,11 @@ class _ListPageState extends State<ListPage> {
                                   "/detailPage",
                                   arguments: (data[index]?.id ?? 0),
                                 ),
-                                child: (data[index]
-                                            ?.genreIds
-                                            ?.contains(genreFilterId) ??
-                                        false)
+                                child: ((data[index]
+                                                ?.genreIds
+                                                ?.contains(genreFilterId) ??
+                                            false) ||
+                                        genreFilterId == 0)
                                     ? customMovieCard(
                                         data,
                                         genresData,
@@ -208,13 +209,16 @@ class _ListPageState extends State<ListPage> {
                                       ),
                                       contentPadding: EdgeInsets.zero,
                                     ),
+                                    onTap: () {},
+                                    onChanged: (value) {},
                                     onSubmitted: (value) {
+                                      /*
                                       if (100 > int.parse(value) &&
                                           0 < int.parse(value)) {
                                         setState(() {
                                           page = int.parse(value);
                                         });
-                                      }
+                                        */
                                     },
                                   ),
                                 ),
