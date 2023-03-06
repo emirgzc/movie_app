@@ -18,7 +18,7 @@ class ListPage extends StatefulWidget {
   State<ListPage> createState() => _ListPageState();
 }
 
-int genreFilterId = 28;
+int genreFilterId = 0;
 
 class _ListPageState extends State<ListPage> {
   int page = 1;
