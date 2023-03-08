@@ -24,6 +24,12 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

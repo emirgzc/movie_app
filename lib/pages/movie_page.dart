@@ -26,42 +26,6 @@ class _MoviePageState extends State<MoviePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // menu icon
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.black,
-              ),
-            ),
-            // header
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(80.0),
-                child: Image.asset(
-                  "assets/header_logo.png",
-                ),
-              ),
-            ),
-            // search icon
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/searchPage");
-              },
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
       body: SingleChildScrollView(
         child: Container(
           color: Colors.white,

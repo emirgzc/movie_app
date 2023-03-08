@@ -39,6 +39,14 @@ class _TrailerPageState extends State<TrailerPage> {
   }
 
   @override
+  void dispose() {
+    for (var element in _controllers) {
+      element.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

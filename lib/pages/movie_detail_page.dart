@@ -25,15 +25,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   Color widgetBackgroundColor = Colors.black.withOpacity(0.4);
   Color normalTextColor = Colors.white.withOpacity(0.8);
   Color headerTextColor = Colors.white;
-  late PageController pageController;
+  late PageController _pageController;
   double borderRadius = 12.0;
 
   @override
   void initState() {
-    pageController = PageController();
+    _pageController = PageController();
     print(widget.movieId);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -224,7 +230,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 width: double.infinity,
                                 height: 200,
                                 child: PageView(
-                                  controller: pageController,
+                                  controller: _pageController,
                                   children: [
                                     // acıklama
                                     movieDescription(data),
@@ -321,7 +327,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                           color: widgetBackgroundColor,
                                           child: MaterialButton(
                                             onPressed: () {
-                                              pageController.animateToPage(0,
+                                              _pageController.animateToPage(0,
                                                   duration: const Duration(
                                                       milliseconds: 500),
                                                   curve: Curves.easeInOut);
@@ -347,7 +353,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                           color: widgetBackgroundColor,
                                           child: MaterialButton(
                                             onPressed: () {
-                                              pageController.animateToPage(1,
+                                              _pageController.animateToPage(1,
                                                   duration: const Duration(
                                                       milliseconds: 500),
                                                   curve: Curves.easeInOut);
@@ -373,7 +379,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                           color: widgetBackgroundColor,
                                           child: MaterialButton(
                                             onPressed: () {
-                                              pageController.animateToPage(2,
+                                              _pageController.animateToPage(2,
                                                   duration: const Duration(
                                                       milliseconds: 500),
                                                   curve: Curves.easeInOut);
