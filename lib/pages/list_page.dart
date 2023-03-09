@@ -34,6 +34,12 @@ class _ListPageState extends State<ListPage> {
   }
 
   @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.clickedListName == "En Çok Oy Alan Filmler") {
       listDataFuture = MovieApiClient().topRatedMovieData(page: page);

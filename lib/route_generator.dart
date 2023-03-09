@@ -8,7 +8,7 @@ import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/pages/cast_persons_movies_page.dart';
 import 'package:movie_app/pages/credits_page.dart';
-import 'package:movie_app/pages/image_page.dart';
+import 'package:movie_app/pages/home_page.dart';
 import 'package:movie_app/pages/list_page.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
 import 'package:movie_app/pages/movie_page.dart';
@@ -29,10 +29,9 @@ class RouteGenerator {
 
   static Route<dynamic>? routeGenrator(RouteSettings settings) {
     switch (settings.name) {
-
       // home page
       case "/":
-        return _generateRoute(MoviePage(), settings);
+        return _generateRoute(HomePage(), settings);
 
       // detail page
       case "/detailPage":
@@ -40,16 +39,6 @@ class RouteGenerator {
             builder: (context) =>
                 MovieDetailPage(movieId: settings.arguments as int),
             settings: settings);
-
-      // image page
-      case "/imagePage":
-        return _generateRoute(
-          ImagePage(
-            imageUrls: (settings.arguments as List)[0] as List<String>,
-            clickedIndex: (settings.arguments as List)[1] as int,
-          ),
-          settings,
-        );
 
       // tariler page
       case "/trailerPage":
