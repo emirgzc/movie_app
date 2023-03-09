@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
-import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
@@ -42,7 +42,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: FutureBuilder(
-        future: ApiClient().detailMovieData(widget.movieId ?? 0),
+        future: MovieApiClient().detailMovieData(widget.movieId ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData &&
@@ -252,7 +252,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                     children: [
                                       // oynat butonu
                                       FutureBuilder(
-                                        future: ApiClient()
+                                        future: MovieApiClient()
                                             .getTrailer(widget.movieId ?? 0),
                                         builder: (context, snapshot) {
                                           if (snapshot.connectionState ==
@@ -433,7 +433,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               // ekran goruntuleri
                               FutureBuilder(
                                 future:
-                                    ApiClient().getImages(widget.movieId ?? 0),
+                                    MovieApiClient().getImages(widget.movieId ?? 0),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                           ConnectionState.done &&
@@ -535,7 +535,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               // önerilen filmler
                               FutureBuilder(
                                 future:
-                                    ApiClient().similarMoviesData(data.id ?? 0),
+                                    MovieApiClient().similarMoviesData(data.id ?? 0),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                           ConnectionState.done &&
@@ -629,7 +629,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             child: Scrollbar(
               child: SingleChildScrollView(
                 child: FutureBuilder(
-                  future: ApiClient().credits(movieId),
+                  future: MovieApiClient().credits(movieId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData &&

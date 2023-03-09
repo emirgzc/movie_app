@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
-import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/models/genres.dart';
 
@@ -20,15 +20,15 @@ class CastPersonsMoviesPage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         foregroundColor: Colors.black,
-        elevation: 0,
-        backgroundColor: Colors.white,
+
+
         title: Text("Oyuncu : $personName"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder(
           future: Future.wait(
-              [ApiClient().castPersonsMovies(personId), ApiClient().genres()]),
+              [MovieApiClient().castPersonsMovies(personId), MovieApiClient().genres()]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData &&

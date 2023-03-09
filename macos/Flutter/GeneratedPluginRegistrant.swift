@@ -5,7 +5,7 @@
 import FlutterMacOS
 import Foundation
 
-import path_provider_foundation
+import path_provider_macos
 import share_plus
 import sqflite
 

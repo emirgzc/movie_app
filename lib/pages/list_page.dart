@@ -6,7 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/list_page_shimmer.dart';
-import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/data/movie_api_client.dart';
+import 'package:movie_app/data/tv_api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
 
@@ -23,7 +24,7 @@ int genreFilterId = 0;
 class _ListPageState extends State<ListPage> {
   int page = 1;
   late TextEditingController _textEditingController;
-  late Future<List<Result>?> listDataFuture;
+  late Future<List<dynamic>?> listDataFuture;
 
   @override
   void initState() {
@@ -35,13 +36,15 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     if (widget.clickedListName == "En Çok Oy Alan Filmler") {
-      listDataFuture = ApiClient().topRatedData(page: page);
+      listDataFuture = MovieApiClient().topRatedMovieData(page: page);
     } else if (widget.clickedListName == "Gelmekte Olan Filmler") {
-      listDataFuture = ApiClient().upComingData(page: page);
+      listDataFuture = MovieApiClient().upComingMovieData(page: page);
     } else if (widget.clickedListName == "Popüler Filmler") {
-      listDataFuture = ApiClient().popularData(page: page);
+      listDataFuture = MovieApiClient().popularMovieData(page: page);
+    } else if (widget.clickedListName == "En Çok Oy Alan Diziler") {
+      listDataFuture = TvApiClient().topRatedTvData();
     } else {
-      listDataFuture = ApiClient().topRatedData(page: page);
+      listDataFuture = MovieApiClient().topRatedMovieData(page: page);
     }
 
     double width = MediaQuery.of(context).size.width;
@@ -51,8 +54,7 @@ class _ListPageState extends State<ListPage> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         foregroundColor: Colors.black,
-        elevation: 0,
-        backgroundColor: Colors.white,
+        
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -74,7 +76,7 @@ class _ListPageState extends State<ListPage> {
       body: SafeArea(
         child: FutureBuilder(
           // 2 tane future bekliyor, future icinde future de yapilabilir
-          future: Future.wait([listDataFuture, ApiClient().genres()]),
+          future: Future.wait([listDataFuture, MovieApiClient().genres()]),
           builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData &&

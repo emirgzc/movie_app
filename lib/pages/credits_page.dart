@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/credits.dart';
 
 class CreditsPage extends StatelessWidget {
@@ -14,8 +14,6 @@ class CreditsPage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -42,7 +40,7 @@ class CreditsPage extends StatelessWidget {
         ),
       ),
       body: FutureBuilder(
-        future: ApiClient().credits(movieId),
+        future: MovieApiClient().credits(movieId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData &&

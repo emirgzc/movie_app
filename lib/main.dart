@@ -19,6 +19,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
       ),
       onGenerateRoute: RouteGenerator.routeGenrator,
     );

@@ -44,8 +44,7 @@ class _TrailerPageState extends State<TrailerPage> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         foregroundColor: Colors.black,
-        elevation: 0,
-        backgroundColor: Colors.white,
+
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
-import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/search.dart';
 
 class SearchPage extends StatefulWidget {
@@ -28,9 +28,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 2,
         // The search area here
-        backgroundColor: Colors.white,
         foregroundColor: Colors.grey.shade800,
         title: Container(
           width: double.infinity,
@@ -53,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
                     _textEditingController.text = "";
                   }),
                 ),
-                hintText: 'Ara...',
+                hintText: 'Aramak için yazınız...',
                 border: InputBorder.none,
               ),
             ),
@@ -84,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             FutureBuilder(
-              future: ApiClient()
+              future: MovieApiClient()
                   .search(query: searchValue.isNotEmpty ? searchValue : "a"),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&

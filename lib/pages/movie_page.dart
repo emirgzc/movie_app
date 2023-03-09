@@ -2,12 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/extension.dart';
-import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/data/movie_api_client.dart';
+import 'package:movie_app/data/tv_api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
-import 'package:movie_app/pages/list_page.dart';
-import 'package:movie_app/pages/movie_detail_page.dart';
-import 'package:movie_app/pages/movie_detail_page.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
@@ -27,8 +25,6 @@ class _MoviePageState extends State<MoviePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -70,7 +66,7 @@ class _MoviePageState extends State<MoviePage> {
             children: [
               // Top trend movies slider
               FutureBuilder(
-                future: ApiClient().trendData(),
+                future: MovieApiClient().trendMovieData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData &&
@@ -100,7 +96,7 @@ class _MoviePageState extends State<MoviePage> {
 
               // categories
               FutureBuilder(
-                future: ApiClient().genres(),
+                future: MovieApiClient().genres(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData &&
@@ -127,14 +123,16 @@ class _MoviePageState extends State<MoviePage> {
                 },
               ),
 
-              createPosterList(
-                  "Popüler Filmler", width, ApiClient().popularData()),
+              createPosterList("Popüler Filmler", width,
+                  MovieApiClient().popularMovieData()),
 
-              createPosterList(
-                  "En Çok Oy Alan Filmler", width, ApiClient().topRatedData()),
+              createPosterList("En Çok Oy Alan Filmler", width,
+                  MovieApiClient().topRatedMovieData()),
 
-              createPosterList(
-                  "Gelmekte Olan Filmler", width, ApiClient().upComingData()),
+              createPosterList("Gelmekte Olan Filmler", width,
+                  MovieApiClient().upComingMovieData()),
+              /* createPosterList("En Çok Oy Alan Diziler", width,
+                  TvApiClient().topRatedTvData()), */
 
               const SizedBox(height: 200),
             ],
@@ -191,7 +189,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   createPosterList(
-      String listName, double width, Future<List<Result>?> futureGetDataFunc) {
+      String listName, double width, Future<List<dynamic>?> futureGetDataFunc) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -221,7 +219,7 @@ class _MoviePageState extends State<MoviePage> {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData &&
                   snapshot.data != null) {
-                var data = snapshot.data as List<Result?>;
+                var data = snapshot.data as List<dynamic>;
                 return SizedBox(
                   width: double.infinity,
                   height: (width / 3) * 1.5,
