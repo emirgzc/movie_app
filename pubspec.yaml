@@ -47,6 +47,7 @@ dependencies:
   masonry_grid: ^1.0.0
   google_nav_bar: ^5.0.6
   flutter_zoom_drawer: ^3.0.4+1
+  flutter_screenutil: ^5.7.0
 
 dev_dependencies:
   flutter_test:

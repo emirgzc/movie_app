@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/models/cast_persons_movies.dart';
+import 'package:movie_app/models/comment.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/genres.dart';
@@ -44,6 +45,31 @@ class MovieApiClient {
   Future<List<Result>?> popularMovieData({int page = 1}) async {
     String baseUrl =
         '$_baseuRL/movie/popular?api_key=$apikey&$_languageKey&page=$page';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        //debugPrint(responseJson.toString());
+        Trend mapApiModel = Trend.fromMap(responseJson);
+
+        return mapApiModel.results;
+      } else {
+        throw Exception('popularData apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+
+   Future<List<Result>?> nowPlayingMovieData({int page = 1}) async {
+    String baseUrl =
+        '$_baseuRL/movie/now_playing?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -209,6 +235,30 @@ class MovieApiClient {
         return mapApiModel;
       } else {
         throw Exception('getTrailer apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+  Future<Comment?> getComment(int movieId) async {
+    String baseUrl =
+        '$_baseuRL/movie/$movieId/reviews?api_key=$apikey&language=tr-TR';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        //debugPrint(responseJson.toString());
+        Comment mapApiModel = Comment.fromJson(responseJson);
+
+        return mapApiModel;
+      } else {
+        throw Exception('getComment apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");

@@ -1,136 +1,96 @@
-// To parse this JSON data, do
-//
-//     final tv = tvFromJson(jsonString);
-
-import 'dart:convert';
-
-Tv tvFromJson(String str) => Tv.fromMap(json.decode(str));
-
-String tvToJson(Tv data) => json.encode(data.toJson());
-
 class Tv {
-  Tv({
-     this.page,
-     this.results,
-     this.totalPages,
-     this.totalResults,
-  });
-
   int? page;
-  List<TVResult>? results;
+  List<TVResults>? results;
   int? totalPages;
   int? totalResults;
 
-  factory Tv.fromMap(Map<String, dynamic> json) => Tv(
-        page: json["page"],
-        results:
-            List<TVResult>.from(json["results"].map((x) => TVResult.fromJson(x))),
-        totalPages: json["total_pages"],
-        totalResults: json["total_results"],
-      );
+  Tv({this.page, this.results, this.totalPages, this.totalResults});
 
-  Map<String, dynamic> toJson() => {
-        "page": page,
-        "results": List<dynamic>.from(results!.map((x) => x.toJson())),
-       
-        "total_pages": totalPages,
-        "total_results": totalResults,
-      };
+  Tv.fromJson(Map<String, dynamic> json) {
+    page = json['page'];
+    if (json['results'] != null) {
+      results = <TVResults>[];
+      json['results'].forEach((v) {
+        results!.add(TVResults.fromJson(v));
+      });
+    }
+    totalPages = json['total_pages'];
+    totalResults = json['total_results'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['page'] = page;
+    if (results != null) {
+      data['results'] = results!.map((v) => v.toJson()).toList();
+    }
+    data['total_pages'] = totalPages;
+    data['total_results'] = totalResults;
+    return data;
+  }
 }
 
-class TVResult {
-  TVResult({
-    required this.backdropPath,
-    required this.firstAirDate,
-    required this.genreIds,
-    required this.id,
-    required this.name,
-    required this.originCountry,
-    required this.originalLanguage,
-    required this.originalName,
-    required this.overview,
-    required this.popularity,
-    required this.posterPath,
-    required this.voteAverage,
-    required this.voteCount,
-  });
+class TVResults {
+  String? backdropPath;
+  String? firstAirDate;
+  List<int>? genreIds;
+  int? id;
+  String? name;
+  List<String>? originCountry;
+  String? originalLanguage;
+  String? originalName;
+  String? overview;
+  double? popularity;
+  String? posterPath;
+  dynamic voteAverage;
+  int? voteCount;
 
-  String backdropPath;
-  DateTime firstAirDate;
-  List<int> genreIds;
-  int id;
-  String name;
-  List<OriginCountry> originCountry;
-  OriginalLanguage originalLanguage;
-  String originalName;
-  String overview;
-  double popularity;
-  String posterPath;
-  double voteAverage;
-  int voteCount;
+  TVResults(
+      {this.backdropPath,
+      this.firstAirDate,
+      this.genreIds,
+      this.id,
+      this.name,
+      this.originCountry,
+      this.originalLanguage,
+      this.originalName,
+      this.overview,
+      this.popularity,
+      this.posterPath,
+      this.voteAverage,
+      this.voteCount});
 
-  factory TVResult.fromJson(Map<String, dynamic> json) => TVResult(
-        backdropPath: json["backdrop_path"],
-        firstAirDate: DateTime.parse(json["first_air_date"]),
-        genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
-        id: json["id"],
-        name: json["name"],
-        originCountry: List<OriginCountry>.from(
-            json["origin_country"].map((x) => originCountryValues.map[x]!)),
-        originalLanguage:
-            originalLanguageValues.map[json["original_language"]]!,
-        originalName: json["original_name"],
-        overview: json["overview"],
-        popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
-        voteAverage: json["vote_average"]?.toDouble(),
-        voteCount: json["vote_count"],
-      );
+  TVResults.fromJson(Map<String, dynamic> json) {
+    backdropPath = json['backdrop_path'];
+    firstAirDate = json['first_air_date'];
+    genreIds = json['genre_ids'].cast<int>();
+    id = json['id'];
+    name = json['name'];
+    originCountry = json['origin_country'].cast<String>();
+    originalLanguage = json['original_language'];
+    originalName = json['original_name'];
+    overview = json['overview'];
+    popularity = json['popularity'];
+    posterPath = json['poster_path'];
+    voteAverage = json['vote_average'];
+    voteCount = json['vote_count'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        "backdrop_path": backdropPath,
-        "first_air_date":
-            "${firstAirDate.year.toString().padLeft(4, '0')}-${firstAirDate.month.toString().padLeft(2, '0')}-${firstAirDate.day.toString().padLeft(2, '0')}",
-        "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
-        "id": id,
-        "name": name,
-        "origin_country": List<dynamic>.from(
-            originCountry.map((x) => originCountryValues.reverse[x])),
-        "original_language": originalLanguageValues.reverse[originalLanguage],
-        "original_name": originalName,
-        "overview": overview,
-        "popularity": popularity,
-        "poster_path": posterPath,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-      };
-}
-
-enum OriginCountry { US, CA, JP, KR }
-
-final originCountryValues = EnumValues({
-  "CA": OriginCountry.CA,
-  "JP": OriginCountry.JP,
-  "KR": OriginCountry.KR,
-  "US": OriginCountry.US
-});
-
-enum OriginalLanguage { EN, JA, KO }
-
-final originalLanguageValues = EnumValues({
-  "en": OriginalLanguage.EN,
-  "ja": OriginalLanguage.JA,
-  "ko": OriginalLanguage.KO
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['backdrop_path'] = backdropPath;
+    data['first_air_date'] = firstAirDate;
+    data['genre_ids'] = genreIds;
+    data['id'] = id;
+    data['name'] = name;
+    data['origin_country'] = originCountry;
+    data['original_language'] = originalLanguage;
+    data['original_name'] = originalName;
+    data['overview'] = overview;
+    data['popularity'] = popularity;
+    data['poster_path'] = posterPath;
+    data['vote_average'] = voteAverage;
+    data['vote_count'] = voteCount;
+    return data;
   }
 }

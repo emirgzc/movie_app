@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/search.dart';
 
@@ -32,18 +34,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        // The search area here
         foregroundColor: Colors.grey.shade800,
-        title: Container(
+        title: SizedBox(
           width: double.infinity,
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-          ),
+          height: 160.h,
           child: Center(
             child: TextField(
+              autofocus: true,
               controller: _textEditingController,
               onChanged: (value) => setState(() => searchValue = value),
               decoration: InputDecoration(
@@ -64,26 +62,8 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
       ),
-
-      /*
-      EasySearchBar(
-        searchHintText: "Ara",
-        elevation: 0,                                                                                             
-        backgroundColor: Colors.white,
-        title: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Image.asset(
-            "assets/header_logo.png",
-          ),
-        ),
-        onSearch: (value) => setState(() => searchValue = value),
-      ),    Zdffvfgv                                       
-      */
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 8,
-          horizontal: 8,
-        ),
+        padding: Style.pagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -108,120 +88,9 @@ class _SearchPageState extends State<SearchPage> {
                           return const SizedBox();
                         }
 
-                        return GestureDetector(
-                          onTap: () {
-                            FocusScopeNode currentFocus =
-                                FocusScope.of(context);
-                            if (!currentFocus.hasPrimaryFocus) {
-                              currentFocus.unfocus();
-                            }
-
-                            Navigator.of(context).pushNamed(
-                              "/detailPage",
-                              arguments: data.results[index].id,
-                            );
-                          },
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            elevation: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // resim
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Hero(
-                                      tag:
-                                          "https://image.tmdb.org/t/p/w500${data.results[index].posterPath.toString()}",
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            "https://image.tmdb.org/t/p/w500${data.results[index].posterPath.toString()}",
-                                        width: 50,
-                                        height: 90,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-
-                                  // isim, tarih, derecelendirme, kategoriler
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        // film ismi
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              data.results[index].title,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                vertical: 10,
-                                              ),
-                                              child: Text(
-                                                toRevolveDate(data
-                                                    .results[index].releaseDate
-                                                    .toString()),
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey.shade600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                        // rating
-                                        RatingBar.builder(
-                                          ignoreGestures: true,
-                                          itemSize: 20,
-                                          glowColor: Colors.yellow,
-                                          unratedColor: Colors.black,
-                                          initialRating:
-                                              data.results[index].voteAverage /
-                                                  2,
-                                          minRating: 1,
-                                          direction: Axis.horizontal,
-                                          allowHalfRating: true,
-                                          itemCount: 5,
-                                          itemBuilder: (context, _) =>
-                                              const Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                          ),
-                                          onRatingUpdate: (double value) {},
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
+                        return searcItemCard(context, data, index);
                       },
                     ),
-                    /* child: ListView.builder(
-                      clipBehavior: Clip.antiAlias,
-                      shrinkWrap: false,
-                      scrollDirection: Axis.vertical,
-                      itemCount: data.results.length,
-                      
-                    ), */
                   );
                 } else {
                   return const Center(
@@ -235,6 +104,113 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget searcItemCard(BuildContext context, Search data, int index) {
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+
+        Navigator.of(context).pushNamed(
+          "/movieDetailPage",
+          arguments: data.results[index].id,
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        elevation: Style.defaultElevation,
+        child: Padding(
+          padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // resim
+              image(data, index),
+
+              // isim, tarih, derecelendirme, kategoriler
+              titleDateStar(data, index),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget image(Search data, int index) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: Style.defaultPaddingSize / 2,
+      ),
+      child: Hero(
+        tag:
+            "https://image.tmdb.org/t/p/w500${data.results[index].posterPath.toString()}",
+        child: CachedNetworkImage(
+          imageUrl:
+              "https://image.tmdb.org/t/p/w500${data.results[index].posterPath.toString()}",
+          width: 130.w,
+          height: 250.h,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget titleDateStar(Search data, int index) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          // film ismi
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data.results[index].title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: Style.defaultPaddingSize / 2,
+                ),
+                child: Text(
+                  toRevolveDate(data.results[index].releaseDate.toString()),
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Colors.grey.shade600,
+                      ),
+                ),
+              ),
+            ],
+          ),
+
+          // rating
+          RatingBar.builder(
+            ignoreGestures: true,
+            itemSize: 48.r,
+            glowColor: Style.starColor,
+            unratedColor: Colors.black,
+            initialRating: data.results[index].voteAverage / 2,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Style.starColor,
+            ),
+            onRatingUpdate: (double value) {},
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/route_generator.dart';
 
 void main() {
@@ -14,17 +16,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          backgroundColor: Colors.white,
-        ),
-      ),
-      onGenerateRoute: RouteGenerator.routeGenrator,
+    return ScreenUtilInit(
+      designSize: const Size(1080, 2280),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Movie App',
+          theme: ThemeData(
+            appBarTheme: const AppBarTheme(
+              elevation: 0,
+              backgroundColor: Style.whiteColor,
+            ),
+            scaffoldBackgroundColor: Style.whiteColor,
+          ),
+          onGenerateRoute: RouteGenerator.routeGenrator,
+        );
+      },
     );
   }
 }

@@ -1,19 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/constants/list_page_shimmer.dart';
-import 'package:movie_app/models/cast_persons_movies.dart';
-import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/trailer.dart';
-import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/pages/cast_persons_movies_page.dart';
-import 'package:movie_app/pages/credits_page.dart';
 import 'package:movie_app/pages/home_page.dart';
 import 'package:movie_app/pages/list_page.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
-import 'package:movie_app/pages/movie_page.dart';
 import 'package:movie_app/pages/search_page.dart';
 import 'package:movie_app/pages/trailer_page.dart';
+import 'package:movie_app/pages/tv_detail_page.dart';
+import 'package:movie_app/pages/tv_page.dart';
 
 class RouteGenerator {
   static Route<dynamic>? _generateRoute(
@@ -31,13 +27,19 @@ class RouteGenerator {
     switch (settings.name) {
       // home page
       case "/":
-        return _generateRoute(HomePage(), settings);
+        return _generateRoute(const HomePage(), settings);
 
       // detail page
-      case "/detailPage":
+      case "/movieDetailPage":
         return CupertinoPageRoute(
             builder: (context) =>
                 MovieDetailPage(movieId: settings.arguments as int),
+            settings: settings);
+
+      case "/tvDetailPage":
+        return CupertinoPageRoute(
+            builder: (context) =>
+                TVDetailPage(movieId: settings.arguments as int),
             settings: settings);
 
       // tariler page
@@ -73,6 +75,10 @@ class RouteGenerator {
       case "/searchPage":
         return CupertinoPageRoute(
             builder: (context) => const SearchPage(), settings: settings);
+
+      case "/tvPage":
+        return CupertinoPageRoute(
+            builder: (context) => const TVPage(), settings: settings);
 
       // unknown page
       default:

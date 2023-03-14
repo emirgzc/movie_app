@@ -1,11 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/constants/extension.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
-import 'package:movie_app/data/tv_api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/widgets/create_poster_list.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
@@ -15,130 +15,114 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  final double myRadius = 12.0;
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // menu icon
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.black,
-              ),
-            ),
-            // header
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(80.0),
-                child: Image.asset(
-                  "assets/header_logo.png",
-                ),
-              ),
-            ),
-            // search icon
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/searchPage");
-              },
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
       body: SingleChildScrollView(
-        child: Container(
-          color: Colors.white,
+        child: Padding(
+          padding: Style.pagePadding,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Top trend movies slider
-              FutureBuilder(
-                future: MovieApiClient().trendMovieData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData &&
-                      snapshot.data != null) {
-                    var data = snapshot.data as List<Result?>;
-                    return CarouselSlider.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index, realIndex) {
-                        return createTopSliderItem(
-                          (data[index]?.title ?? data[index]?.title ?? "--"),
-                          (data[index]?.backdropPath ?? "--"),
-                          data,
-                          index,
-                        );
-                      },
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        aspectRatio: 1.9,
-                        enlargeCenterPage: true,
-                      ),
-                    );
-                  } else {
-                    return const Text("Yükleniyor...");
-                  }
-                },
-              ),
+              sliderList(),
 
               // categories
-              FutureBuilder(
-                future: MovieApiClient().genres(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData &&
-                      snapshot.data != null) {
-                    var genresData = snapshot.data as Genres;
-                    return SizedBox(
-                      width: double.infinity,
-                      height: height / 12,
-                      child: ListView.builder(
-                        clipBehavior: Clip.none,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: genresData.genres.length,
-                        itemBuilder: (context, index) {
-                          // return Text(genresData.genres[index].name);
-                          return createCategoriesItem((height / 12) * 2.4,
-                              genresData.genres[index].name);
-                        },
-                      ),
-                    );
-                  } else {
-                    return const SizedBox();
-                  }
-                },
+              genresList(height),
+
+              CreatePosterList(
+                listName: "Popüler Filmler",
+                width: width,
+                futureGetDataFunc: MovieApiClient().popularMovieData(),
               ),
 
-              createPosterList("Popüler Filmler", width,
-                  MovieApiClient().popularMovieData()),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: Style.defaultPaddingSize),
+                child: CreatePosterList(
+                  listName: "En Çok Oy Alan Filmler",
+                  width: width,
+                  futureGetDataFunc: MovieApiClient().topRatedMovieData(),
+                ),
+              ),
 
-              createPosterList("En Çok Oy Alan Filmler", width,
-                  MovieApiClient().topRatedMovieData()),
-
-              createPosterList("Gelmekte Olan Filmler", width,
-                  MovieApiClient().upComingMovieData()),
+              CreatePosterList(
+                listName: "Gelmekte Olan Filmler",
+                width: width,
+                futureGetDataFunc: MovieApiClient().upComingMovieData(),
+              ),
               /* createPosterList("En Çok Oy Alan Diziler", width,
                   TvApiClient().topRatedTvData()), */
 
-              const SizedBox(height: 200),
+              SizedBox(height: 600.h),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  FutureBuilder<Genres?> genresList(double height) {
+    return FutureBuilder(
+      future: MovieApiClient().genres(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
+          var genresData = snapshot.data as Genres;
+          return SizedBox(
+            width: double.infinity,
+            height: height / 12,
+            child: ListView.builder(
+              clipBehavior: Clip.none,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: genresData.genres.length,
+              itemBuilder: (context, index) {
+                // return Text(genresData.genres[index].name);
+                return createCategoriesItem(
+                    (height / 12) * 2.4, genresData.genres[index].name);
+              },
+            ),
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
+  }
+
+  FutureBuilder<List<Result>?> sliderList() {
+    return FutureBuilder(
+      future: MovieApiClient().trendMovieData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
+          var data = snapshot.data as List<Result?>;
+          return CarouselSlider.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index, realIndex) {
+              return createTopSliderItem(
+                (data[index]?.title ?? data[index]?.title ?? "--"),
+                (data[index]?.backdropPath ?? "--"),
+                data,
+                index,
+              );
+            },
+            options: CarouselOptions(
+              autoPlay: true,
+              aspectRatio: 1.9,
+              enlargeCenterPage: true,
+            ),
+          );
+        } else {
+          return const Text("Yükleniyor...");
+        }
+      },
     );
   }
 
@@ -146,129 +130,32 @@ class _MoviePageState extends State<MoviePage> {
     return GestureDetector(
       onTap: () {},
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
         child: Material(
-          elevation: 12,
-          color: Colors.transparent,
+          elevation: Style.defaultElevation,
+          color: Style.transparentColor,
           shadowColor: Colors.red,
           child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(myRadius)),
-            child: Stack(
-              children: [
-                // image.network
-                /*
-                Image.asset(
-                  backgroudImageUrl,
-                  fit: BoxFit.none,
-                  width: categoryItemWidth,
-                  height: categoryItemWidth / 2.8,
-                ),
-                */
-                Container(
-                  color: const Color.fromARGB(255, 160, 13, 3).withOpacity(0.8),
-                  // image widht ve height ile ayni olmali
-                  width: categoryItemWidth,
-                  height: categoryItemWidth / 2.8,
-                  child: Center(
-                    child: Text(
-                      categoryName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(
+                Style.defaultRadiusSize / 2,
+              ),
+            ),
+            child: Container(
+              color: const Color.fromARGB(255, 160, 13, 3).withOpacity(0.8),
+              // image widht ve height ile ayni olmali
+              width: categoryItemWidth,
+              height: categoryItemWidth / 2.8,
+              child: Center(
+                child: Text(
+                  categoryName,
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Style.whiteColor,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  createPosterList(
-      String listName, double width, Future<List<dynamic>?> futureGetDataFunc) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          // liste adı
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                listName,
-                textScaleFactor: 1.2,
-                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed("/listPage", arguments: listName);
-                },
-                icon: const Icon(Icons.arrow_forward),
-              )
-            ],
-          ),
-          // film afis resmi
-          FutureBuilder(
-            future: futureGetDataFunc,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData &&
-                  snapshot.data != null) {
-                var data = snapshot.data as List<dynamic>;
-                return SizedBox(
-                  width: double.infinity,
-                  height: (width / 3) * 1.5,
-                  child: ListView.builder(
-                    clipBehavior: Clip.none,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed(
-                          "/detailPage",
-                          arguments: (data[index]?.id ?? 0),
-                        ),
-                        child: createBrochureItem(
-                            "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
-                            width),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return buildLastProcessCardEffect(
-                  const SizedBox(
-                    child: CircularProgressIndicator(),
-                  ),
-                  context,
-                );
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  createBrochureItem(String brochureUrl, double width) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-      child: Material(
-        elevation: 14,
-        color: Colors.transparent,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(myRadius)),
-          child: CachedNetworkImage(
-            imageUrl: brochureUrl,
-            fit: BoxFit.cover,
-            width: width / 3,
-            height: (width / 3) * 1.5,
+            ),
           ),
         ),
       ),
@@ -279,21 +166,29 @@ class _MoviePageState extends State<MoviePage> {
       String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        "/detailPage",
+        (data[index]?.name == null) ? "/movieDetailPage" : "/tvDetailPage",
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(
-        margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+        margin: const EdgeInsets.all(Style.defaultPaddingSize / 4),
+        padding: const EdgeInsets.fromLTRB(
+            0, Style.defaultPaddingSize / 2, 0, Style.defaultPaddingSize),
         child: Material(
-          elevation: 12,
-          color: Colors.transparent,
+          elevation: Style.defaultElevation,
+          color: Style.transparentColor,
           child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(myRadius / 2)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(
+                Style.defaultRadiusSize / 2,
+              ),
+            ),
             child: Stack(
               children: [
-                Image.network("https://image.tmdb.org/t/p/w500$pathImage",
-                    fit: BoxFit.cover, width: 1000.0),
+                Image.network(
+                  "https://image.tmdb.org/t/p/w500$pathImage",
+                  fit: BoxFit.cover,
+                  width: 1000.0,
+                ),
                 Positioned(
                   bottom: 0.0,
                   left: 0.0,
@@ -310,16 +205,17 @@ class _MoviePageState extends State<MoviePage> {
                       ),
                     ),
                     padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 20.0,
+                      vertical: Style.defaultPaddingSize / 2,
+                      horizontal: Style.defaultPaddingSize,
                     ),
                     child: Text(
                       movieName ?? "---",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Style.whiteColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Style.defaultPaddingSize * 1.2,
+                          ),
                     ),
                   ),
                 ),

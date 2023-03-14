@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -51,8 +52,7 @@ class _TrailerPageState extends State<TrailerPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        foregroundColor: Colors.black,
-
+        foregroundColor: Style.blackColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -70,7 +70,7 @@ class _TrailerPageState extends State<TrailerPage> {
               onPressed: () {},
               icon: const Icon(
                 Icons.search,
-                color: Colors.black,
+                color: Style.blackColor,
               ),
             ),
           ],
@@ -89,7 +89,7 @@ class _TrailerPageState extends State<TrailerPage> {
                       child: YoutubePlayer(
                         controller: _controllers[i],
                         showVideoProgressIndicator: true,
-                        liveUIColor: Colors.yellow,
+                        liveUIColor: Style.starColor,
                       ),
                     ),
                     const SizedBox(height: 32),
