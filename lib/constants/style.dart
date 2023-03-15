@@ -26,4 +26,11 @@ class Style {
   static const Color transparentColor = Colors.transparent;
 
   static double defaultIconsSize = 40.r;
+  static double iconSizeTv = 72.r;
+  static  BoxShadow defaultShadow = BoxShadow(
+    offset: const Offset(5, 5),
+    blurRadius: 10,
+    spreadRadius: 6,
+    color: Style.blackColor.withOpacity(0.1),
+  );
 }

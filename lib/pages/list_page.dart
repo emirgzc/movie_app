@@ -129,12 +129,16 @@ class _ListPageState extends State<ListPage> {
                           itemBuilder: (BuildContext context, int index) {
                             // film kartları
                             return ImageDetailCard(
-                              title: data[index].title ?? "",
+                              title: data[index].title,
                               id: data[index].id ?? 0,
                               posterPath: data[index].posterPath ?? "",
                               voteAverageNumber: data[index].voteAverage ?? 0,
-                              dateCard: data[index].releaseDate.toString(),
+                              dateCard:
+                                  data[index].releaseDate.toString() == "null"
+                                      ? data[index].firstAirDate.toString()
+                                      : data[index].releaseDate.toString(),
                               width: width,
+                              name: data[index].name ?? "",
                             );
                           },
                         ),

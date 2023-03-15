@@ -29,7 +29,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
 
   FutureBuilder<CastPersonsMovies?> body(double width) {
     return FutureBuilder(
-      future: MovieApiClient().castPersonsMovies(personId),
+      future: MovieApiClient().castPersonsCombined(personId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData &&
@@ -53,12 +53,15 @@ class CastPersonsMoviesPage extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         // film kartları
         return ImageDetailCard(
-          title: data.cast?[index].title ?? "",
+          title: data.cast?[index].title,
           posterPath: data.cast?[index].posterPath ?? "",
           id: data.cast?[index].id ?? 0,
           voteAverageNumber: data.cast?[index].voteAverage ?? 0,
           width: width,
-          dateCard: data.cast?[index].releaseDate ?? "",
+          dateCard:
+              data.cast?[index].releaseDate ?? data.cast?[index].firstAirDate,
+          mediaType: data.cast?[index].mediaType.toString(),
+          name: data.cast?[index].name ?? "",
         );
       },
     );

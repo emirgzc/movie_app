@@ -68,7 +68,7 @@ class Result {
   String? originalTitle;
   String? overview;
   String? posterPath;
-  MediaType? mediaType;
+  String? mediaType;
   List<int>? genreIds;
   double? popularity;
   DateTime? releaseDate;
@@ -90,7 +90,7 @@ class Result {
         originalTitle: json["original_title"],
         overview: json["overview"],
         posterPath: json["poster_path"],
-        mediaType: mediaTypeValues.map![json["media_type"]],
+        mediaType: json["media_type"],
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         popularity: json["popularity"].toDouble(),
         releaseDate: json["release_date"] == null
@@ -118,7 +118,7 @@ class Result {
         "original_title": originalTitle,
         "overview": overview,
         "poster_path": posterPath,
-        "media_type": mediaTypeValues.reverse![mediaType],
+        "media_type": mediaType,
         "genre_ids": List<dynamic>.from(genreIds!.map((x) => x)),
         "popularity": popularity,
         "release_date": releaseDate == null

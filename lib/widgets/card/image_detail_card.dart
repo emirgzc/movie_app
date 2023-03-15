@@ -5,26 +5,31 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 
 class ImageDetailCard extends StatelessWidget {
-  const ImageDetailCard(
-      {super.key,
-      required this.title,
-      required this.id,
-      required this.width,
-      required this.posterPath,
-      required this.voteAverageNumber,
-      required this.dateCard});
+  const ImageDetailCard({
+    super.key,
+    required this.title,
+    required this.id,
+    required this.width,
+    required this.posterPath,
+    required this.voteAverageNumber,
+    required this.dateCard,
+    this.mediaType,
+    required this.name,
+  });
   final String? title;
   final String? posterPath;
   final String? dateCard;
   final double? voteAverageNumber;
   final int? id;
   final double width;
+  final String? mediaType;
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        (title != null) ? "/movieDetailPage" : "/tvDetailPage",
+        (mediaType != "tv") ? "/movieDetailPage" : "/tvDetailPage",
         arguments: (id ?? 0),
       ),
       child: Card(
@@ -41,9 +46,8 @@ class ImageDetailCard extends StatelessWidget {
           children: [
             // resim
             imageHero(posterPath, width),
-
             // isim ve tarih
-            titleAndDate(title,dateCard, context),
+            titleAndDate(title, name, dateCard, context),
             // divider
             const Divider(
               thickness: 1,
@@ -98,7 +102,8 @@ class ImageDetailCard extends StatelessWidget {
     );
   }
 
-  Widget titleAndDate(String? titleCard, String? dateCard, BuildContext context) {
+  Widget titleAndDate(
+      String? titleCard, String? name, String? dateCard, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -107,7 +112,7 @@ class ImageDetailCard extends StatelessWidget {
           padding: Style.defaultSymetricPadding / 3,
           child: Center(
             child: Text(
-              titleCard ?? "-",
+              (titleCard == null) ? name.toString() : titleCard.toString(),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.bold,
@@ -115,15 +120,28 @@ class ImageDetailCard extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          (dateCard ?? DateTime.now()).toString().isNotEmpty
-              ? toRevolveDate(
-                  (dateCard ?? DateTime.now()).toString().substring(0, 10))
-              : "-",
-          style: const TextStyle(
-            color: Style.dateColor,
+        (mediaType == null)
+            ? Container()
+            : Text(
+                (mediaType ?? "") == "movie" ? "Film Aktörü" : "Dizi Aktörü",
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+        Padding(
+          padding: const EdgeInsets.only(
+            top: Style.defaultPaddingSize / 3,
           ),
-          textAlign: TextAlign.center,
+          child: Text(
+            (dateCard ?? DateTime.now()).toString().isNotEmpty
+                ? toRevolveDate((dateCard ?? DateTime.now()).toString())
+                : "-",
+            style: const TextStyle(
+              color: Style.dateColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     );

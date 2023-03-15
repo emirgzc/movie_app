@@ -166,7 +166,7 @@ class _MoviePageState extends State<MoviePage> {
       String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        (data[index]?.name == null) ? "/movieDetailPage" : "/tvDetailPage",
+        (data[index]?.title != null) ? "/movieDetailPage" : "/tvDetailPage",
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(

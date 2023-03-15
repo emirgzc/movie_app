@@ -81,7 +81,9 @@ class _TrailerPageState extends State<TrailerPage> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              for (int i = 0; i < (_controllers.length); i++)
+              for (int i = 0;
+                  i < (_controllers.length > 2 ? 2 : _controllers.length);
+                  i++)
                 Column(
                   children: [
                     ClipRRect(
