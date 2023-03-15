@@ -51,13 +51,15 @@ class _ListPageState extends State<ListPage> {
     } else if (widget.clickedListName == "Yayında Olan Filmler") {
       listDataFuture = MovieApiClient().nowPlayingMovieData(page: page);
     } else if (widget.clickedListName == "Trend Filmler") {
-      listDataFuture = MovieApiClient().trendMovieData();
+      listDataFuture = MovieApiClient().trendData("movie");
     } else if (widget.clickedListName == "En Çok Oy Alan Diziler") {
       listDataFuture = TvApiClient().topRatedTvData();
     } else if (widget.clickedListName == "Popüler Diziler") {
       listDataFuture = TvApiClient().popularTvData();
     } else if (widget.clickedListName == "Yayında Olan Diziler") {
       listDataFuture = TvApiClient().onTheAirTvData();
+    } else if (widget.clickedListName == "Haftanın Trend Dizileri") {
+      listDataFuture = MovieApiClient().trendData("tv");
     } else {
       listDataFuture = MovieApiClient().topRatedMovieData(page: page);
     }

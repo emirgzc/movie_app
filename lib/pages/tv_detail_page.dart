@@ -10,6 +10,7 @@ import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/models/images.dart';
 import 'package:movie_app/models/trailer.dart';
+import 'package:movie_app/widgets/detail_page/tv/opened_text_for_overview.dart';
 
 class TVDetailPage extends StatefulWidget {
   const TVDetailPage({super.key, required this.movieId});
@@ -21,11 +22,11 @@ class TVDetailPage extends StatefulWidget {
 
 class _TVDetailPageState extends State<TVDetailPage> {
   late PageController _pageController;
+  final bool _isOpenedText = false;
 
   @override
   void initState() {
     _pageController = PageController();
-    print(widget.movieId);
 
     super.initState();
   }
@@ -209,19 +210,14 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                 data.tagline ?? "-",
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: Style.defaultPaddingSize / 2,
-                          ),
-                          child: Text(
-                            data.overview.toString().isEmpty
-                                ? "Film ile ilgili girilmiş bir açıklama metni yok"
-                                : data.overview.toString(),
-                          ),
+                        OpenedTextForOverview(
+                          isOpenedText: _isOpenedText,
+                          data: data.overview ?? "-",
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: Style.defaultPaddingSize / 2,
+                          padding: const EdgeInsets.only(
+                            top: Style.defaultPaddingSize,
+                            bottom: Style.defaultPaddingSize / 2,
                           ),
                           child: Text(
                             (data.productionCountries?.isEmpty ?? false)

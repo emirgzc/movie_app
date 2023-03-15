@@ -18,9 +18,9 @@ class MovieApiClient {
   final String _baseuRL = "https://api.themoviedb.org/3";
   final String _languageKey = "language=tr-TR";
 
-  Future<List<Result>?> trendMovieData() async {
+  Future<List<Result>?> trendData(String mediaType) async {
     String baseUrl =
-        '$_baseuRL/trending/movie/day?api_key=$apikey&$_languageKey';
+        '$_baseuRL/trending/$mediaType/week?api_key=$apikey&$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/data/tv_api_client.dart';
 import 'package:movie_app/widgets/create_poster_list.dart';
 
@@ -21,6 +22,11 @@ class _TVPageState extends State<TVPage> {
         padding: Style.pagePadding,
         child: Column(
           children: [
+            CreatePosterList(
+              listName: "Haftanın Trend Dizileri",
+              width: width,
+              futureGetDataFunc: MovieApiClient().trendData("tv"),
+            ),
             CreatePosterList(
               listName: "En Çok Oy Alan Diziler",
               width: width,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -53,27 +54,10 @@ class _TrailerPageState extends State<TrailerPage> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         foregroundColor: Style.blackColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // header
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(80.0),
-                child: Image.asset(
-                  "assets/header_logo.png",
-                ),
-              ),
-            ),
-            // search icon
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Style.blackColor,
-              ),
-            ),
-          ],
+        title: Image.asset(
+          "assets/header_logo.png",
+          width: 290.w,
+          fit: BoxFit.contain,
         ),
       ),
       body: SingleChildScrollView(

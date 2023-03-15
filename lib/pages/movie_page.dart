@@ -97,7 +97,7 @@ class _MoviePageState extends State<MoviePage> {
 
   FutureBuilder<List<Result>?> sliderList() {
     return FutureBuilder(
-      future: MovieApiClient().trendMovieData(),
+      future: MovieApiClient().trendData("movie"),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData &&
