@@ -145,7 +145,7 @@ class MovieApiClient {
 
   Future<List<Result>?> similarMoviesData(int movieId, {int page = 1}) async {
     String baseUrl =
-        '$_baseuRL/movie/$movieId/similar?api_key=$apikey&$_languageKey&page=$page';
+        '$_baseuRL/movie/$movieId/recommendations?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
