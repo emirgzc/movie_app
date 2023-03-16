@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/models/cast_persons_movies.dart';
+import 'package:movie_app/models/collection.dart';
 import 'package:movie_app/models/comment.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
@@ -285,6 +286,32 @@ class MovieApiClient {
         return mapApiModel;
       } else {
         throw Exception('genres apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata $e");
+    }
+    return null;
+  }
+
+  Future<Collection?> collectionData(int collectionId) async {
+    String baseUrl =
+        '$_baseuRL/collection/$collectionId?api_key=$apikey&$_languageKey';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': apikey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        print(collectionId);
+
+        Collection mapApiModel = Collection.fromMap(responseJson);
+
+        return mapApiModel;
+      } else {
+        throw Exception('collection apide hata var');
       }
     } catch (e) {
       debugPrint("hata $e");

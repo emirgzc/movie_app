@@ -8,6 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
+import 'package:movie_app/models/collection.dart';
 import 'package:movie_app/models/comment.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
@@ -98,6 +99,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                     // cast oyunculari
                                     castPlayers(data.id ?? 0),
 
+                                    // yorumlar
                                     commentForUsers(data.id ?? 0),
                                   ],
                                 ),
@@ -121,6 +123,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
                               // ekran goruntuleri
                               images(width),
+
+                              // serinin diger filmleri*
+                              data.belongsToCollection != null
+                                  ? serininDigerFilmleri(width,
+                                      data.belongsToCollection["id"] ?? 0)
+                                  : const SizedBox(),
 
                               // Hoşunuza Gidebilir
                               Padding(
@@ -156,6 +164,61 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 
+  Widget serininDigerFilmleri(
+    double width,
+    int collectionId,
+  ) {
+    return Column(
+      children: [
+        // Serinin diğer filmleri text
+        Padding(
+          padding: EdgeInsets.only(
+            top: Style.defaultPaddingSizeVertical,
+            bottom: Style.defaultPaddingSizeVertical / 2,
+          ),
+          child: Row(
+            children: [
+              titleHead("Serinin Diğer Filmleri"),
+            ],
+          ),
+        ),
+        FutureBuilder(
+          future: MovieApiClient().collectionData(collectionId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData &&
+                snapshot.data != null) {
+              Collection collectionData = snapshot.data as Collection;
+              return Padding(
+                padding:
+                    EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: (width / 3) * 1.5,
+                  child: ListView.builder(
+                    clipBehavior: Clip.none,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: collectionData.parts.length,
+                    // ilk eleman olarak varsa
+                    itemBuilder: (context, index) {
+                      return BrochureItem(
+                          brochureUrl:
+                              "https://image.tmdb.org/t/p/w500${collectionData.parts[index].posterPath}",
+                          width: width);
+                    },
+                  ),
+                ),
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
+        ),
+      ],
+    );
+  }
+
   FutureBuilder<List<Result>?> oneriler(DetailMovie data, double width) {
     return FutureBuilder(
       future: MovieApiClient().similarMoviesData(data.id ?? 0),
@@ -175,6 +238,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: similarMoviesData.length,
+                // ilk eleman olarak varsa
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () => Navigator.of(context).pushNamed(
