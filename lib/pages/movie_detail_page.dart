@@ -59,17 +59,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             return Stack(
               children: [
                 // arkaplandaki bulanik resim
-                BlurryImage(path: data.backdropPath),
+                BlurryImage(path: data.posterPath),
 
                 // ondeki widgetlar
                 ClipRect(
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                    filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
                     child: Container(
                       padding: Style.pagePadding,
-                      decoration: BoxDecoration(
-                        color: Style.whiteColor.withOpacity(0.15),
-                      ),
                       child: SizedBox(
                         width: double.infinity,
                         height: double.infinity,
@@ -110,9 +107,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
                               // Ekran Görüntüleri text
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  top: Style.defaultPaddingSize,
-                                  bottom: Style.defaultPaddingSize / 2,
+                                padding:  EdgeInsets.only(
+                                  top: Style.defaultPaddingSizeVertical,
+                                  bottom: Style.defaultPaddingSizeVertical / 2,
                                 ),
                                 child: Row(
                                   children: [
@@ -126,9 +123,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
                               // Hoşunuza Gidebilir
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  top: Style.defaultPaddingSize,
-                                  bottom: Style.defaultPaddingSize / 2,
+                                padding:  EdgeInsets.only(
+                                  top: Style.defaultPaddingSizeVertical,
+                                  bottom: Style.defaultPaddingSizeVertical / 2,
                                 ),
                                 child: Row(
                                   children: [
@@ -168,7 +165,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           var similarMoviesData = snapshot.data as List<Result?>;
 
           return Padding(
-            padding: const EdgeInsets.only(top: Style.defaultPaddingSize / 2),
+            padding:  EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
             child: SizedBox(
               width: double.infinity,
               height: (width / 3) * 1.5,
@@ -210,8 +207,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           var data = snapshot.data as Images;
 
           return Padding(
-            padding: const EdgeInsets.only(
-              top: Style.defaultPaddingSize / 2,
+            padding:  EdgeInsets.only(
+              top: Style.defaultPaddingSizeVertical / 2,
             ),
             child: SizedBox(
               width: double.infinity,
@@ -229,8 +226,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       showScreenshots(data, index, width);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: Style.defaultPaddingSize * 0.75,
+                      padding:  EdgeInsets.only(
+                        right: Style.defaultPaddingSizeHorizontal * 0.75,
                       ),
                       child: screenshotItem(
                         "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath}",
@@ -290,8 +287,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget buttons(double width, double height) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize * 0.75,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical * 0.75,
       ),
       child: SizedBox(
         width: double.infinity,
@@ -384,9 +381,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget appBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize * 3.25,
-        bottom: Style.defaultPaddingSize * 1.25,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical * 3.25,
+        bottom: Style.defaultPaddingSizeVertical * 1.25,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,7 +398,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 color: Style.widgetBackgroundColor,
               ),
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+              padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
               child: const Icon(
                 Icons.arrow_left,
                 color: Style.whiteColor,
@@ -425,7 +422,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 color: Style.widgetBackgroundColor,
               ),
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+              padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
               child: Icon(
                 Icons.favorite,
                 color: Theme.of(context).colorScheme.error,
@@ -439,11 +436,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget commentForUsers(int movieId) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize / 1.25,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical / 1.25,
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
+        borderRadius:  BorderRadius.all(
           Radius.circular(
             Style.defaultRadiusSize / 2,
           ),
@@ -451,7 +448,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         child: Container(
           color: Style.widgetBackgroundColor,
           child: Padding(
-            padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+            padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: Scrollbar(
               child: SingleChildScrollView(
                 child: Column(
@@ -474,8 +471,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             snapshot.data != null) {
                           var creditsData = snapshot.data as Comment;
                           return ListView.builder(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: Style.defaultPaddingSize / 2),
+                            padding:  EdgeInsets.symmetric(
+                                vertical: Style.defaultPaddingSizeVertical / 2),
                             physics: const BouncingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: creditsData.results?.length,
@@ -510,10 +507,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget commentCard(Comment creditsData, int index) {
     return Container(
-      padding: const EdgeInsets.all(Style.defaultPaddingSize / 4),
-      margin: const EdgeInsets.only(
-        right: Style.defaultPaddingSize / 4,
-        bottom: Style.defaultPaddingSize / 4,
+      padding:  EdgeInsets.all(Style.defaultPaddingSize / 4),
+      margin:  EdgeInsets.only(
+        right: Style.defaultPaddingSizeHorizontal / 4,
+        bottom: Style.defaultPaddingSizeVertical / 4,
       ),
       decoration: BoxDecoration(
         color: Style.widgetBackgroundColor,
@@ -523,13 +520,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: Style.defaultPaddingSize / 2),
+            padding:  EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: Style.defaultPaddingSize / 4),
+                       EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -568,9 +565,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: Style.defaultPaddingSize / 4,
-                            left: Style.defaultPaddingSize / 2.5),
+                        padding:  EdgeInsets.only(
+                            top: Style.defaultPaddingSizeVertical / 4,
+                            left: Style.defaultPaddingSizeHorizontal / 2.5),
                         child: Text(
                           "${creditsData.results?[index].content ?? "-"} (${creditsData.results?[index].authorDetails?.rating ?? 0})",
                           style: const TextStyle(
@@ -591,11 +588,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget castPlayers(int movieId) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize / 1.25,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical / 1.25,
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
+        borderRadius:  BorderRadius.all(
           Radius.circular(
             Style.defaultRadiusSize / 2,
           ),
@@ -603,7 +600,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         child: Container(
           color: Style.widgetBackgroundColor,
           child: Padding(
-            padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+            padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: Scrollbar(
               child: SingleChildScrollView(
                 child: Column(
@@ -626,8 +623,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             snapshot.data != null) {
                           var creditsData = snapshot.data as Credits;
                           return MasonryGridView.count(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: Style.defaultPaddingSize / 2),
+                            padding:  EdgeInsets.symmetric(
+                                vertical: Style.defaultPaddingSizeVertical / 2),
                             physics: const BouncingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: creditsData.cast.length,
@@ -663,12 +660,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget playersCard(Credits creditsData, int index) {
     return Container(
-      padding: const EdgeInsets.all(
+      padding:  EdgeInsets.all(
         Style.defaultPaddingSize / 4,
       ),
-      margin: const EdgeInsets.only(
-        right: Style.defaultPaddingSize / 4,
-        bottom: Style.defaultPaddingSize / 4,
+      margin:  EdgeInsets.only(
+        right: Style.defaultPaddingSizeHorizontal / 4,
+        bottom: Style.defaultPaddingSizeVertical / 4,
       ),
       decoration: BoxDecoration(
         color: Style.widgetBackgroundColor,
@@ -682,13 +679,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             fit: BoxFit.cover,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: Style.defaultPaddingSize / 2),
+            padding:  EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: Style.defaultPaddingSize / 4),
+                       EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
                   child: Text(
                     creditsData.cast[index].originalName,
                     textAlign: TextAlign.center,
@@ -698,8 +695,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: Style.defaultPaddingSize / 4,
+                  padding:  EdgeInsets.symmetric(
+                    vertical: Style.defaultPaddingSizeVertical / 4,
                   ),
                   child: Text(
                     "(${creditsData.cast[index].character})",
@@ -719,24 +716,24 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget movieDescription(DetailMovie data) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize / 1.25,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical / 1.25,
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
+        borderRadius:  BorderRadius.all(
             Radius.circular(Style.defaultRadiusSize / 2)),
         child: Container(
           color: Style.widgetBackgroundColor,
           child: Padding(
-            padding: const EdgeInsets.all(Style.defaultPaddingSize),
+            padding:  EdgeInsets.all(Style.defaultPaddingSize),
             child: Scrollbar(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: Style.defaultPaddingSize / 2,
+                      padding:  EdgeInsets.only(
+                        bottom: Style.defaultPaddingSizeVertical / 2,
                       ),
                       child: Text(
                         data.title.toString(),
@@ -769,24 +766,24 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget movieDetails(DetailMovie? data, double width) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize / 1.25,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical / 1.25,
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
+        borderRadius:  BorderRadius.all(
             Radius.circular(Style.defaultRadiusSize / 2)),
         child: Container(
           color: Style.widgetBackgroundColor,
           child: Padding(
-            padding: const EdgeInsets.all(Style.defaultPaddingSize),
+            padding:  EdgeInsets.all(Style.defaultPaddingSize),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // categories
                   Container(
-                    margin: const EdgeInsets.only(
-                        bottom: Style.defaultPaddingSize / 2),
+                    margin:  EdgeInsets.only(
+                        bottom: Style.defaultPaddingSizeVertical / 2),
                     height: width / 20,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -799,8 +796,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.only(
-                                    right: Style.defaultPaddingSize / 4),
+                                padding:  EdgeInsets.only(
+                                    right: Style.defaultPaddingSizeHorizontal / 4),
                                 child: Text(
                                   "${data?.genres?[index].name.toString() ?? "---"},",
                                   textAlign: TextAlign.center,
@@ -849,7 +846,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             "Değerlendirme : ",
                             (data?.voteAverage.toString().isEmpty ?? false)
                                 ? "Belirtilmemiş"
-                                : ((data?.voteAverage)! / 2)
+                                : ((data?.voteAverage))
                                     .toString()
                                     .substring(0, 3),
                           ),
@@ -868,7 +865,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget movieDetailItem(DetailMovie? data, String title, String item) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: Style.defaultPaddingSize / 2),
+      padding:  EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -897,7 +894,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       //elevation: 14,
       color: Colors.transparent,
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
+        borderRadius:  BorderRadius.all(
           Radius.circular(Style.defaultRadiusSize / 2),
         ),
         child: Image.network(

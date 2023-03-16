@@ -94,7 +94,7 @@ class _ListPageState extends State<ListPage> {
                   // Kategori filtre
                   Padding(
                     padding:
-                        const EdgeInsets.only(bottom: Style.defaultPaddingSize),
+                         EdgeInsets.only(bottom: Style.defaultPaddingSizeHorizontal),
                     child: SizedBox(
                       width: double.infinity,
                       height: 100.h,
@@ -168,16 +168,16 @@ class _ListPageState extends State<ListPage> {
     String arrowRight = "Sonraki Sayfa";
 
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize * 0.75,
-        bottom: Style.defaultPaddingSize * 0.75,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical * 0.75,
+        bottom: Style.defaultPaddingSizeHorizontal * 0.75,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // onceki sayfa
           Padding(
-            padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+            padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
                 if (page > 1) {
@@ -190,7 +190,7 @@ class _ListPageState extends State<ListPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 padding:
-                    const EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+                     EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
                 elevation: 0,
                 shadowColor: Colors.red,
               ),
@@ -248,7 +248,7 @@ class _ListPageState extends State<ListPage> {
           ),
           // sonraki sayfa
           Padding(
-            padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+            padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
                 if (page < 101) {
@@ -261,7 +261,7 @@ class _ListPageState extends State<ListPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 padding:
-                    const EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+                     EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
                 elevation: 0,
                 shadowColor: Colors.red,
               ),
@@ -284,7 +284,7 @@ class _ListPageState extends State<ListPage> {
   Widget filterGenreItem(int genreId, String genreName) {
     bool isSelected = genreId == genreFilterId;
     return Padding(
-      padding: const EdgeInsets.only(right: Style.defaultPaddingSize / 4),
+      padding:  EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 4),
       child: ElevatedButton(
         onPressed: () {
           setState(() {

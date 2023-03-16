@@ -63,7 +63,7 @@ class ImageDetailCard extends StatelessWidget {
     return Hero(
       tag: "https://image.tmdb.org/t/p/w500$image",
       child: ClipRRect(
-        borderRadius: const BorderRadius.only(
+        borderRadius:  BorderRadius.only(
           topLeft: Radius.circular(
             Style.defaultRadiusSize / 2,
           ),
@@ -130,8 +130,8 @@ class ImageDetailCard extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
         Padding(
-          padding: const EdgeInsets.only(
-            top: Style.defaultPaddingSize / 3,
+          padding:  EdgeInsets.only(
+            top: Style.defaultPaddingSizeVertical / 3,
           ),
           child: Text(
             (dateCard ?? DateTime.now()).toString().isNotEmpty

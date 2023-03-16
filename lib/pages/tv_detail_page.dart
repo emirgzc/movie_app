@@ -62,13 +62,17 @@ class _TVDetailPageState extends State<TVDetailPage> {
                       Positioned(
                         right: 0,
                         bottom: 0,
-                        child: textItemForContainer(
-                          data,
-                          Text(
-                            (data.episodeRunTime?.isEmpty ?? false)
-                                ? "Süre Belirtilmemiş"
-                                : "${data.episodeRunTime?[0].toString()} dakika",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                        child: Padding(
+                          padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+                          child: textItemForContainer(
+                            data,
+                            Text(
+                              (data.episodeRunTime?.isEmpty ?? false)
+                                  ? "Süre Belirtilmemiş"
+                                  : "${data.episodeRunTime?[0].toString()} dakika",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ),
@@ -90,7 +94,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                               snapshot.data != null) {
                             var data = snapshot.data as Trailer;
                             return Positioned(
-                              left: 165.w,
+                              left: 180.w,
                               bottom: 0,
                               child: circleItem(
                                 context,
@@ -106,7 +110,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             );
                           } else {
                             return Positioned(
-                              left: 165.w,
+                              left: 180.w,
                               bottom: 0,
                               child: circleItem(
                                 context,
@@ -157,8 +161,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                     size: Style.defaultIconsSize,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: Style.defaultPaddingSize / 3,
+                                    padding: EdgeInsets.only(
+                                      left: Style.defaultPaddingSizeHorizontal /
+                                          3,
                                     ),
                                     child: Text(
                                       (data.voteAverage.toString().isEmpty)
@@ -180,8 +185,10 @@ class _TVDetailPageState extends State<TVDetailPage> {
                               size: Style.iconSizeTv,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: (Style.defaultPaddingSize / 4) * 3,
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    (Style.defaultPaddingSizeHorizontal / 4) *
+                                        3,
                               ),
                               child: Icon(
                                 Icons.add_box_outlined,
@@ -195,9 +202,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: (Style.defaultPaddingSize / 2) * 4,
-                            bottom: Style.defaultPaddingSize / 2,
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 4,
+                            bottom: Style.defaultPaddingSizeVertical / 2,
                           ),
                           child: Text(
                             data.name ?? "--",
@@ -215,9 +222,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           data: data.overview ?? "-",
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: Style.defaultPaddingSize,
-                            bottom: Style.defaultPaddingSize / 2,
+                          padding: EdgeInsets.only(
+                            top: Style.defaultPaddingSizeVertical,
+                            bottom: Style.defaultPaddingSizeVertical / 2,
                           ),
                           child: Text(
                             (data.productionCountries?.isEmpty ?? false)
@@ -231,9 +238,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: (Style.defaultPaddingSize / 2) * 3,
-                            bottom: Style.defaultPaddingSize,
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 3,
+                            bottom: Style.defaultPaddingSizeVertical,
                           ),
                           child: Text(
                             "Oyuncular",
@@ -268,9 +275,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           },
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: (Style.defaultPaddingSize / 2),
-                            bottom: Style.defaultPaddingSize / 2,
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 2,
+                            bottom: Style.defaultPaddingSizeVertical / 2,
                           ),
                           child: Text(
                             "Görüntüler",
@@ -287,8 +294,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                               var data = snapshot.data as Images;
 
                               return Padding(
-                                padding: const EdgeInsets.only(
-                                  top: Style.defaultPaddingSize / 2,
+                                padding: EdgeInsets.only(
+                                  top: Style.defaultPaddingSizeVertical / 2,
                                 ),
                                 child: SizedBox(
                                   width: double.infinity,
@@ -315,37 +322,39 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           },
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: (Style.defaultPaddingSize / 2) * 3,
-                            bottom: Style.defaultPaddingSize / 2,
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 2,
+                            bottom: Style.defaultPaddingSizeVertical / 3,
                           ),
                           child: Text(
                             "Yapımcı Şirketler",
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ...List.generate(
-                                  data.productionCompanies?.length ?? 0,
-                                  (index) {
-                                if (data.productionCompanies?[index].logoPath ==
-                                    null) {
-                                  return Container();
-                                } else {
-                                  return productCompaniesImage(
-                                      context, data, index, width);
-                                }
-                              }),
-                            ],
+                        SizedBox(
+                          width: double.infinity,
+                          // dogru oranin yakalanmasi icin
+                          // 281 / 500 : resim cozunurlugu
+                          height: 250.h,
+                          child: ListView.builder(
+                            clipBehavior: Clip.none,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: data.productionCompanies?.length ?? 0,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (data.productionCompanies?[index].logoPath ==
+                                  null) {
+                                return Container();
+                              } else {
+                                return productCompaniesImage(
+                                    context, data, index, width);
+                              }
+                            },
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: (Style.defaultPaddingSize / 2) * 3,
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 3,
                           ),
                           child: SizedBox(
                             width: double.infinity,
@@ -380,12 +389,12 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   Widget genresCard(TvDetail data, int index) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: Style.defaultPaddingSize / 4,
-        horizontal: Style.defaultPaddingSize / 2,
+      padding: EdgeInsets.symmetric(
+        vertical: Style.defaultPaddingSizeVertical / 4,
+        horizontal: Style.defaultPaddingSizeHorizontal / 2,
       ),
-      margin: const EdgeInsets.only(
-        right: (Style.defaultPaddingSize / 4) * 3,
+      margin: EdgeInsets.only(
+        right: (Style.defaultPaddingSizeHorizontal / 4) * 3,
       ),
       decoration: BoxDecoration(
         color: Style.whiteColor,
@@ -411,15 +420,15 @@ class _TVDetailPageState extends State<TVDetailPage> {
             },
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 20.0,
-                sigmaY: 20.0,
+                sigmaX: 30.0,
+                sigmaY: 30.0,
               ),
               child: Material(
                 //elevation: 14,
                 color: Colors.transparent,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Style.defaultPaddingSize * 3,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Style.defaultPaddingSizeHorizontal * 3,
                   ),
                   child: Image.network(
                     "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
@@ -433,13 +442,30 @@ class _TVDetailPageState extends State<TVDetailPage> {
         },
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 24, right: 16),
+        padding: EdgeInsets.only(
+          top: (Style.defaultPaddingSizeVertical / 2) * 3,
+          right: Style.defaultPaddingSizeHorizontal,
+        ),
         child: SizedBox(
-          width: 180,
+          width: 400.w,
           child: Container(
-            margin: const EdgeInsets.only(bottom: 8, right: 8),
-            height: 60,
-            width: 60,
+            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+            margin: EdgeInsets.only(
+                bottom: Style.defaultPaddingSizeVertical / 2,
+                right: Style.defaultPaddingSizeHorizontal / 2),
+            height: 140.h,
+            width: 400.w,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1,
+                color: Style.blackColor.withOpacity(0.2),
+              ),
+              borderRadius: BorderRadius.circular(
+                Style.defaultRadiusSize / 4,
+              ),
+              boxShadow: [Style.defaultShadow],
+              color: Style.whiteColor,
+            ),
             child: Image.network(
               "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
               fit: BoxFit.contain,
@@ -456,8 +482,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
         showScreenshots(data, index, width);
       },
       child: Padding(
-        padding: const EdgeInsets.only(
-          right: Style.defaultPaddingSize / 2,
+        padding: EdgeInsets.only(
+          right: Style.defaultPaddingSizeHorizontal / 2,
         ),
         child: SizedBox(
           width: 470.w,
@@ -491,9 +517,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: const EdgeInsets.only(
-                bottom: Style.defaultPaddingSize / 2,
-                right: Style.defaultPaddingSize / 2,
+              margin: EdgeInsets.only(
+                bottom: Style.defaultPaddingSizeVertical / 2,
+                right: Style.defaultPaddingSizeHorizontal / 2,
               ),
               height: 250.h,
               width: 230.w,
@@ -511,8 +537,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Style.defaultPaddingSize / 2,
+              padding: EdgeInsets.symmetric(
+                horizontal: Style.defaultPaddingSizeHorizontal / 2,
               ),
               child: Text(
                 creditsData.cast[index].originalName,
@@ -534,7 +560,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+        padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 3),
         decoration: BoxDecoration(
           boxShadow: [Style.defaultShadow],
           shape: BoxShape.circle,
@@ -544,9 +570,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
             color: Style.widgetBackgroundColor,
           ),
         ),
-        margin: const EdgeInsets.symmetric(
-          horizontal: Style.defaultPaddingSize / 1.5,
-          vertical: Style.defaultPaddingSize / 1.5,
+        margin: EdgeInsets.symmetric(
+          horizontal: Style.defaultPaddingSizeHorizontal / 1.5,
+          vertical: Style.defaultPaddingSizeVertical / 1.5,
         ),
         child: Icon(icon),
       ),
@@ -555,9 +581,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   Widget textItemForContainer(TvDetail data, Widget child) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: Style.defaultPaddingSize / 4,
-        horizontal: Style.defaultPaddingSize / 2,
+      padding: EdgeInsets.symmetric(
+        vertical: Style.defaultPaddingSizeVertical / 4,
+        horizontal: Style.defaultPaddingSizeHorizontal / 3,
       ),
       decoration: BoxDecoration(
         boxShadow: [Style.defaultShadow],
@@ -566,7 +592,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           Style.defaultRadiusSize / 4,
         ),
       ),
-      margin: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+      margin: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
       child: child,
     );
   }
@@ -585,7 +611,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
       elevation: Style.defaultElevation,
       color: Colors.transparent,
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(Style.defaultRadiusSize / 4),
         ),
         child: Image.network(

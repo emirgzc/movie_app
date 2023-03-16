@@ -17,10 +17,10 @@ class ButtonForDetailMovie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: Style.defaultPaddingSize / 2),
+      padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(Style.defaultRadiusSize),
+        borderRadius: BorderRadius.all(
+          Radius.circular(Style.defaultRadiusSize / 2),
         ),
         child: Container(
           width: (width - 90) / 6,

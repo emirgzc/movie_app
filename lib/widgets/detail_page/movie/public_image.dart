@@ -47,7 +47,7 @@ class PublicImage extends StatelessWidget {
       child: Hero(
         tag: "https://image.tmdb.org/t/p/w500${path.toString()}",
         child: ClipRRect(
-          borderRadius: const BorderRadius.all(
+          borderRadius:  BorderRadius.all(
             Radius.circular(Style.defaultRadiusSize / 3),
           ),
           child: SizedBox(

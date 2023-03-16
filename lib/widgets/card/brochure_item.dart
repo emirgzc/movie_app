@@ -12,12 +12,12 @@ class BrochureItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          const EdgeInsets.symmetric(horizontal: Style.defaultPaddingSize / 2),
+           EdgeInsets.symmetric(horizontal: Style.defaultPaddingSizeHorizontal / 2),
       child: Material(
         elevation: Style.defaultElevation,
         color: Style.transparentColor,
         child: ClipRRect(
-          borderRadius: const BorderRadius.all(
+          borderRadius:  BorderRadius.all(
             Radius.circular(
               Style.defaultRadiusSize / 2,
             ),

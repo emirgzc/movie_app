@@ -127,7 +127,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
         elevation: Style.defaultElevation,
         child: Padding(
-          padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+          padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -145,8 +145,8 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget image(Search data, int index) {
     return Padding(
-      padding: const EdgeInsets.only(
-        right: Style.defaultPaddingSize / 2,
+      padding:  EdgeInsets.only(
+        right: Style.defaultPaddingSizeHorizontal / 2,
       ),
       child: Hero(
         tag:
@@ -180,8 +180,8 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: Style.defaultPaddingSize / 2,
+                padding:  EdgeInsets.symmetric(
+                  vertical: Style.defaultPaddingSizeVertical / 2,
                 ),
                 child: Text(
                   toRevolveDate(data.results[index].releaseDate.toString()),

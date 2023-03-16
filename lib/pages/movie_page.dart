@@ -40,8 +40,8 @@ class _MoviePageState extends State<MoviePage> {
               ),
 
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: Style.defaultPaddingSize),
+                padding:  EdgeInsets.symmetric(
+                    vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
                   listName: "En Çok Oy Alan Filmler",
                   width: width,
@@ -130,13 +130,13 @@ class _MoviePageState extends State<MoviePage> {
     return GestureDetector(
       onTap: () {},
       child: Padding(
-        padding: const EdgeInsets.all(Style.defaultPaddingSize / 2),
+        padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
           shadowColor: Colors.red,
           child: ClipRRect(
-            borderRadius: const BorderRadius.all(
+            borderRadius:  BorderRadius.all(
               Radius.circular(
                 Style.defaultRadiusSize / 2,
               ),
@@ -170,14 +170,14 @@ class _MoviePageState extends State<MoviePage> {
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(
-        margin: const EdgeInsets.all(Style.defaultPaddingSize / 4),
-        padding: const EdgeInsets.fromLTRB(
-            0, Style.defaultPaddingSize / 2, 0, Style.defaultPaddingSize),
+        margin:  EdgeInsets.all(Style.defaultPaddingSize / 4),
+        padding:  EdgeInsets.fromLTRB(
+            0, Style.defaultPaddingSizeVertical / 2, 0, Style.defaultPaddingSizeVertical),
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
           child: ClipRRect(
-            borderRadius: const BorderRadius.all(
+            borderRadius:  BorderRadius.all(
               Radius.circular(
                 Style.defaultRadiusSize / 2,
               ),
@@ -204,9 +204,9 @@ class _MoviePageState extends State<MoviePage> {
                         end: Alignment.topCenter,
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: Style.defaultPaddingSize / 2,
-                      horizontal: Style.defaultPaddingSize,
+                    padding:  EdgeInsets.symmetric(
+                      vertical: Style.defaultPaddingSizeVertical / 2,
+                      horizontal: Style.defaultPaddingSizeHorizontal,
                     ),
                     child: Text(
                       movieName ?? "---",

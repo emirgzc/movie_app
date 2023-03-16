@@ -19,8 +19,8 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: Style.defaultPaddingSize / 2,
+      padding:  EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical / 2,
       ),
       child: RichText(
         text: TextSpan(

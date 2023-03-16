@@ -19,7 +19,7 @@ class CreatePosterList extends StatelessWidget {
       children: [
         // liste adı
         Padding(
-          padding: const EdgeInsets.only(bottom: Style.defaultPaddingSize / 2),
+          padding:  EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
