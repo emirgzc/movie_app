@@ -64,8 +64,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 // ondeki widgetlar
                 ClipRect(
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                     child: Container(
+                      color: Style.whiteColor.withOpacity(0.01),
                       padding: Style.pagePadding,
                       child: SizedBox(
                         width: double.infinity,
@@ -400,7 +401,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
               child: const Icon(
-                Icons.arrow_left,
+                Icons.arrow_back,
                 color: Style.whiteColor,
               ),
             ),
