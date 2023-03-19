@@ -6,8 +6,7 @@ import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 
 class CastPersonsMoviesPage extends StatelessWidget {
-  CastPersonsMoviesPage(
-      {super.key, required this.personId, required this.personName});
+  CastPersonsMoviesPage({super.key, required this.personId, required this.personName});
   int personId;
   String personName;
 
@@ -31,9 +30,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
     return FutureBuilder(
       future: MovieApiClient().castPersonsCombined(personId),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as CastPersonsMovies;
 
           return listForMovie(data, width);
@@ -58,8 +55,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
           id: data.cast?[index].id ?? 0,
           voteAverageNumber: data.cast?[index].voteAverage ?? 0,
           width: width,
-          dateCard:
-              data.cast?[index].releaseDate ?? data.cast?[index].firstAirDate,
+          dateCard: data.cast?[index].releaseDate ?? data.cast?[index].firstAirDate,
           mediaType: data.cast?[index].mediaType.toString(),
           name: data.cast?[index].name ?? "",
         );

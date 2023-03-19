@@ -124,12 +124,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               // ekran goruntuleri
                               images(width),
 
-                              // serinin diger filmleri*
-                              data.belongsToCollection != null
-                                  ? serininDigerFilmleri(width,
-                                      data.belongsToCollection["id"] ?? 0)
-                                  : const SizedBox(),
-
                               // Hoşunuza Gidebilir
                               Padding(
                                 padding: EdgeInsets.only(
@@ -145,6 +139,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
                               // önerilen filmler
                               oneriler(data, width),
+
+                              // serinin diger filmleri*
+                              data.belongsToCollection != null
+                                  ? serininDigerFilmleri(
+                                      width,
+                                      data.belongsToCollection["id"] ?? 0,
+                                    )
+                                  : const SizedBox(),
 
                               SizedBox(height: 500.h),
                             ],
@@ -189,6 +191,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 snapshot.hasData &&
                 snapshot.data != null) {
               Collection collectionData = snapshot.data as Collection;
+
               return Padding(
                 padding:
                     EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
@@ -199,13 +202,24 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     clipBehavior: Clip.none,
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: collectionData.parts.length,
+                    itemCount: collectionData.parts?.length,
                     // ilk eleman olarak varsa
                     itemBuilder: (context, index) {
-                      return BrochureItem(
-                          brochureUrl:
-                              "https://image.tmdb.org/t/p/w500${collectionData.parts[index].posterPath}",
-                          width: width);
+                      if (collectionData.parts?[index].id == widget.movieId) {
+                        return Container();
+                      } else {
+                        return GestureDetector(
+                          onTap: () => Navigator.of(context).pushNamed(
+                            "/movieDetailPage",
+                            arguments: (collectionData.parts?[index].id),
+                          ),
+                          child: BrochureItem(
+                            brochureUrl:
+                                "https://image.tmdb.org/t/p/w500${collectionData.parts?[index].posterPath}",
+                            width: width,
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),

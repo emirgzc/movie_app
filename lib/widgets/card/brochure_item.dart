@@ -3,23 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/constants/style.dart';
 
 class BrochureItem extends StatelessWidget {
-  const BrochureItem(
-      {super.key, required this.brochureUrl, required this.width});
+  const BrochureItem({super.key, required this.brochureUrl, required this.width});
   final String brochureUrl;
   final double width;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-           EdgeInsets.symmetric(horizontal: Style.defaultPaddingSizeHorizontal / 2),
+      padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal),
       child: Material(
         elevation: Style.defaultElevation,
         color: Style.transparentColor,
         child: ClipRRect(
-          borderRadius:  BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(
-              Style.defaultRadiusSize / 2,
+              Style.defaultRadiusSize / 4,
             ),
           ),
           child: CachedNetworkImage(

@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/constants/style.dart';
 
 class PublicImage extends StatelessWidget {
-  const PublicImage(
-      {super.key,
-      required this.path,
-      required this.width,
-      required this.height});
+  const PublicImage({super.key, required this.path, required this.width, required this.height});
   final String? path;
   final double width;
   final double height;
@@ -47,7 +43,7 @@ class PublicImage extends StatelessWidget {
       child: Hero(
         tag: "https://image.tmdb.org/t/p/w500${path.toString()}",
         child: ClipRRect(
-          borderRadius:  BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(Style.defaultRadiusSize / 3),
           ),
           child: SizedBox(

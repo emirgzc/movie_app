@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/style.dart';
 
 class ButtonForDetailMovie extends StatelessWidget {
@@ -27,10 +28,12 @@ class ButtonForDetailMovie extends StatelessWidget {
           height: (width - 90) / 6,
           color: Style.widgetBackgroundColor,
           child: MaterialButton(
+            padding: EdgeInsets.zero,
             onPressed: onPressed,
             child: Icon(
               icondata,
               color: Style.whiteColor.withOpacity(0.8),
+              size: 64.r,
             ),
           ),
         ),

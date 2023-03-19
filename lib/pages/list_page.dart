@@ -93,8 +93,8 @@ class _ListPageState extends State<ListPage> {
                 children: [
                   // Kategori filtre
                   Padding(
-                    padding:
-                         EdgeInsets.only(bottom: Style.defaultPaddingSizeHorizontal),
+                    padding: EdgeInsets.only(
+                        bottom: Style.defaultPaddingSizeHorizontal),
                     child: SizedBox(
                       width: double.infinity,
                       height: 100.h,
@@ -130,18 +130,26 @@ class _ListPageState extends State<ListPage> {
                           crossAxisCount: 2,
                           itemBuilder: (BuildContext context, int index) {
                             // film kartları
-                            return ImageDetailCard(
-                              title: data[index].title,
-                              id: data[index].id ?? 0,
-                              posterPath: data[index].posterPath ?? "",
-                              voteAverageNumber: data[index].voteAverage ?? 0,
-                              dateCard:
-                                  data[index].releaseDate.toString() == "null"
-                                      ? data[index].firstAirDate.toString()
-                                      : data[index].releaseDate.toString(),
-                              width: width,
-                              name: data[index].name ?? "",
-                            );
+                            return (data[index]
+                                        .genreIds
+                                        ?.contains(genreFilterId)) ==
+                                    false
+                                ? ImageDetailCard(
+                                    title: data[index].title,
+                                    id: data[index].id ?? 0,
+                                    posterPath: data[index].posterPath ?? "",
+                                    voteAverageNumber:
+                                        data[index].voteAverage ?? 0,
+                                    dateCard: data[index]
+                                                .releaseDate
+                                                .toString() ==
+                                            "null"
+                                        ? data[index].firstAirDate.toString()
+                                        : data[index].releaseDate.toString(),
+                                    width: width,
+                                    name: data[index].name ?? "",
+                                  )
+                                : Container();
                           },
                         ),
                         // ileri geri sayfa butonları
@@ -168,7 +176,7 @@ class _ListPageState extends State<ListPage> {
     String arrowRight = "Sonraki Sayfa";
 
     return Padding(
-      padding:  EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: Style.defaultPaddingSizeVertical * 0.75,
         bottom: Style.defaultPaddingSizeHorizontal * 0.75,
       ),
@@ -177,7 +185,7 @@ class _ListPageState extends State<ListPage> {
         children: [
           // onceki sayfa
           Padding(
-            padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
+            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
                 if (page > 1) {
@@ -189,8 +197,7 @@ class _ListPageState extends State<ListPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
-                padding:
-                     EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+                padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
                 elevation: 0,
                 shadowColor: Colors.red,
               ),
@@ -248,7 +255,7 @@ class _ListPageState extends State<ListPage> {
           ),
           // sonraki sayfa
           Padding(
-            padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
+            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
                 if (page < 101) {
@@ -260,8 +267,7 @@ class _ListPageState extends State<ListPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
-                padding:
-                     EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+                padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
                 elevation: 0,
                 shadowColor: Colors.red,
               ),
@@ -284,7 +290,7 @@ class _ListPageState extends State<ListPage> {
   Widget filterGenreItem(int genreId, String genreName) {
     bool isSelected = genreId == genreFilterId;
     return Padding(
-      padding:  EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 4),
+      padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 4),
       child: ElevatedButton(
         onPressed: () {
           setState(() {

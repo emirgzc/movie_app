@@ -10,6 +10,8 @@ import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/models/images.dart';
 import 'package:movie_app/models/trailer.dart';
+import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/tv/opened_text_for_overview.dart';
 
 class TVDetailPage extends StatefulWidget {
@@ -49,9 +51,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
       body: FutureBuilder(
         future: TvApiClient().detailMovieData(widget.movieId ?? 0),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData &&
-              snapshot.data != null) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
             var data = snapshot.data as TvDetail;
             return SingleChildScrollView(
               child: Column(
@@ -70,8 +70,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                               (data.episodeRunTime?.isEmpty ?? false)
                                   ? "Süre Belirtilmemiş"
                                   : "${data.episodeRunTime?[0].toString()} dakika",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -88,10 +87,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                       FutureBuilder(
                         future: TvApiClient().getTrailer(widget.movieId ?? 0),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              snapshot.hasData &&
-                              snapshot.data != null) {
+                          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                             var data = snapshot.data as Trailer;
                             return Positioned(
                               left: 180.w,
@@ -99,8 +95,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                               child: circleItem(
                                 context,
                                 () {
-                                  Navigator.of(context)
-                                      .pushNamed("/trailerPage", arguments: [
+                                  Navigator.of(context).pushNamed("/trailerPage", arguments: [
                                     widget.movieId ?? 0,
                                     [data.results],
                                   ]);
@@ -162,15 +157,12 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
-                                      left: Style.defaultPaddingSizeHorizontal /
-                                          3,
+                                      left: Style.defaultPaddingSizeHorizontal / 3,
                                     ),
                                     child: Text(
                                       (data.voteAverage.toString().isEmpty)
                                           ? "Belirtilmemiş"
-                                          : ((data.voteAverage))
-                                              .toString()
-                                              .substring(0, 3),
+                                          : ((data.voteAverage)).toString().substring(0, 3),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -186,9 +178,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    (Style.defaultPaddingSizeHorizontal / 4) *
-                                        3,
+                                horizontal: (Style.defaultPaddingSizeHorizontal / 4) * 3,
                               ),
                               child: Icon(
                                 Icons.add_box_outlined,
@@ -250,10 +240,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                         FutureBuilder(
                           future: TvApiClient().credits(widget.movieId ?? 0),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData &&
-                                snapshot.data != null) {
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                               var creditsData = snapshot.data as Credits;
 
                               return SingleChildScrollView(
@@ -263,8 +250,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                   children: [
                                     ...List.generate(
                                       creditsData.cast.length,
-                                      (index) => peopleCard(
-                                          context, creditsData, index),
+                                      (index) => peopleCard(context, creditsData, index),
                                     ),
                                   ],
                                 ),
@@ -287,10 +273,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                         FutureBuilder(
                           future: TvApiClient().getImages(widget.movieId ?? 0),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData &&
-                                snapshot.data != null) {
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                               var data = snapshot.data as Images;
 
                               return Padding(
@@ -307,16 +290,61 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
                                     itemCount: data.backdrops?.length ?? 0,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return screenshootCard(
-                                          data, index, width);
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return screenshootCard(data, index, width);
                                     },
                                   ),
                                 ),
                               );
                             } else {
                               // loading
+                              return const SizedBox();
+                            }
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 2,
+                            bottom: Style.defaultPaddingSizeVertical / 3,
+                          ),
+                          child: Text(
+                            "Hoşunuza Gidebilir",
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                        FutureBuilder(
+                          future: TvApiClient().similarMoviesData(data.id ?? 0),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                              var similarMoviesData = snapshot.data as List<Result?>;
+
+                              return Padding(
+                                padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: (width / 3) * 1.5,
+                                  child: ListView.builder(
+                                    clipBehavior: Clip.none,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: similarMoviesData.length,
+                                    // ilk eleman olarak varsa
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () => Navigator.of(context).pushNamed(
+                                          "/tvDetailPage",
+                                          arguments: (similarMoviesData[index]?.id ?? 0),
+                                        ),
+                                        child: BrochureItem(
+                                          brochureUrl: "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
+                                          width: width,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            } else {
                               return const SizedBox();
                             }
                           },
@@ -342,12 +370,10 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             scrollDirection: Axis.horizontal,
                             itemCount: data.productionCompanies?.length ?? 0,
                             itemBuilder: (BuildContext context, int index) {
-                              if (data.productionCompanies?[index].logoPath ==
-                                  null) {
+                              if (data.productionCompanies?[index].logoPath == null) {
                                 return Container();
                               } else {
-                                return productCompaniesImage(
-                                    context, data, index, width);
+                                return productCompaniesImage(context, data, index, width);
                               }
                             },
                           ),
@@ -408,8 +434,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
-  Widget productCompaniesImage(
-      BuildContext context, TvDetail data, int index, double width) {
+  Widget productCompaniesImage(BuildContext context, TvDetail data, int index, double width) {
     return GestureDetector(
       onTap: () => showDialog(
         context: context,
@@ -450,9 +475,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           width: 400.w,
           child: Container(
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-            margin: EdgeInsets.only(
-                bottom: Style.defaultPaddingSizeVertical / 2,
-                right: Style.defaultPaddingSizeHorizontal / 2),
+            margin: EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2, right: Style.defaultPaddingSizeHorizontal / 2),
             height: 140.h,
             width: 400.w,
             decoration: BoxDecoration(
@@ -555,8 +578,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
-  Widget circleItem(
-      BuildContext context, void Function()? onTap, IconData icon) {
+  Widget circleItem(BuildContext context, void Function()? onTap, IconData icon) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -642,11 +664,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                       ))
                   .toList(),
               options: CarouselOptions(
-                  initialPage: clickedIndex,
-                  autoPlay: true,
-                  aspectRatio: 2.0,
-                  enlargeCenterPage: true,
-                  enableInfiniteScroll: false),
+                  initialPage: clickedIndex, autoPlay: true, aspectRatio: 2.0, enlargeCenterPage: true, enableInfiniteScroll: false),
             ),
           ),
         );

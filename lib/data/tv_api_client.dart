@@ -16,8 +16,8 @@ class TvApiClient {
   final String _baseuRL = "https://api.themoviedb.org/3";
   final String _languageKey = "language=tr-TR";
 
-  Future<List<Result>?> topRatedTvData() async {
-    String baseUrl = '$_baseuRL/tv/top_rated?api_key=$apikey&$_languageKey';
+  Future<List<Result>?> topRatedTvData({int page = 1}) async {
+    String baseUrl = '$_baseuRL/tv/top_rated?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -29,6 +29,8 @@ class TvApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
+         mapApiModel.results!
+            .removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -40,8 +42,8 @@ class TvApiClient {
     return null;
   }
 
-  Future<List<Result>?> popularTvData() async {
-    String baseUrl = '$_baseuRL/tv/popular?api_key=$apikey&$_languageKey';
+  Future<List<Result>?> popularTvData({int page = 1}) async {
+    String baseUrl = '$_baseuRL/tv/popular?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -53,6 +55,8 @@ class TvApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
 
         Trend mapApiModel = Trend.fromMap(responseJson);
+         mapApiModel.results!
+            .removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -64,8 +68,8 @@ class TvApiClient {
     return null;
   }
 
-  Future<List<Result>?> onTheAirTvData() async {
-    String baseUrl = '$_baseuRL/tv/on_the_air?api_key=$apikey&$_languageKey';
+  Future<List<Result>?> onTheAirTvData({int page = 1}) async {
+    String baseUrl = '$_baseuRL/tv/on_the_air?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -77,6 +81,8 @@ class TvApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
+         mapApiModel.results!
+            .removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -162,7 +168,7 @@ class TvApiClient {
 
   Future<List<Result>?> similarMoviesData(int movieId, {int page = 1}) async {
     String baseUrl =
-        '$_baseuRL/tv/$movieId/similar?api_key=$apikey&$_languageKey&page=$page';
+        '$_baseuRL/tv/$movieId/recommendations?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),

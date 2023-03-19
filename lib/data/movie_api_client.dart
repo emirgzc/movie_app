@@ -305,9 +305,8 @@ class MovieApiClient {
       );
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
-        print(collectionId);
 
-        Collection mapApiModel = Collection.fromMap(responseJson);
+        Collection mapApiModel = Collection.fromJson(responseJson);
 
         return mapApiModel;
       } else {
