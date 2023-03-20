@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:movie_app/constants/list_page_shimmer.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/data/tv_api_client.dart';
@@ -20,7 +19,7 @@ class ListPage extends StatefulWidget {
   State<ListPage> createState() => _ListPageState();
 }
 
-int genreFilterId = 0;
+int genreFilterId = 28;
 
 class _ListPageState extends State<ListPage> {
   int page = 1;
@@ -53,11 +52,11 @@ class _ListPageState extends State<ListPage> {
     } else if (widget.clickedListName == "Trend Filmler") {
       listDataFuture = MovieApiClient().trendData("movie");
     } else if (widget.clickedListName == "En Çok Oy Alan Diziler") {
-      listDataFuture = TvApiClient().topRatedTvData();
+      listDataFuture = TvApiClient().topRatedTvData(page: page);
     } else if (widget.clickedListName == "Popüler Diziler") {
-      listDataFuture = TvApiClient().popularTvData();
+      listDataFuture = TvApiClient().popularTvData(page: page);
     } else if (widget.clickedListName == "Yayında Olan Diziler") {
-      listDataFuture = TvApiClient().onTheAirTvData();
+      listDataFuture = TvApiClient().onTheAirTvData(page: page);
     } else if (widget.clickedListName == "Haftanın Trend Dizileri") {
       listDataFuture = MovieApiClient().trendData("tv");
     } else {
@@ -71,8 +70,8 @@ class _ListPageState extends State<ListPage> {
         automaticallyImplyLeading: true,
         foregroundColor: Style.blackColor,
         title: Image.asset(
-          "assets/header_logo.png",
-          width: 290.w,
+          "assets/logo/light-lg1.jpg",
+          width: 300.w,
           fit: BoxFit.contain,
         ),
         centerTitle: true,
@@ -81,9 +80,7 @@ class _ListPageState extends State<ListPage> {
         // 2 tane future bekliyor, future icinde future de yapilabilir
         future: Future.wait([listDataFuture, MovieApiClient().genres()]),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData &&
-              snapshot.data != null) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
             var data = snapshot.data![0] as List<Result>;
             var genresData = snapshot.data![1] as Genres;
 
@@ -92,9 +89,8 @@ class _ListPageState extends State<ListPage> {
               child: Column(
                 children: [
                   // Kategori filtre
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: Style.defaultPaddingSizeHorizontal),
+                  /* Padding(
+                    padding: EdgeInsets.only(bottom: Style.defaultPaddingSizeHorizontal),
                     child: SizedBox(
                       width: double.infinity,
                       height: 100.h,
@@ -107,16 +103,14 @@ class _ListPageState extends State<ListPage> {
                               scrollDirection: Axis.horizontal,
                               itemCount: genresData.genres.length,
                               itemBuilder: (context, index) {
-                                return filterGenreItem(
-                                    genresData.genres[index].id,
-                                    genresData.genres[index].name);
+                                return filterGenreItem(genresData.genres[index].id, genresData.genres[index].name);
                               },
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
+                  ), */
 
                   // liste elemanları
                   Expanded(
@@ -130,26 +124,17 @@ class _ListPageState extends State<ListPage> {
                           crossAxisCount: 2,
                           itemBuilder: (BuildContext context, int index) {
                             // film kartları
-                            return (data[index]
-                                        .genreIds
-                                        ?.contains(genreFilterId)) ==
-                                    false
-                                ? ImageDetailCard(
-                                    title: data[index].title,
-                                    id: data[index].id ?? 0,
-                                    posterPath: data[index].posterPath ?? "",
-                                    voteAverageNumber:
-                                        data[index].voteAverage ?? 0,
-                                    dateCard: data[index]
-                                                .releaseDate
-                                                .toString() ==
-                                            "null"
-                                        ? data[index].firstAirDate.toString()
-                                        : data[index].releaseDate.toString(),
-                                    width: width,
-                                    name: data[index].name ?? "",
-                                  )
-                                : Container();
+                            return ImageDetailCard(
+                              title: data[index].title,
+                              id: data[index].id ?? 0,
+                              posterPath: data[index].posterPath ?? "",
+                              voteAverageNumber: data[index].voteAverage ?? 0,
+                              dateCard: data[index].releaseDate.toString() == "null"
+                                  ? data[index].firstAirDate.toString()
+                                  : data[index].releaseDate.toString(),
+                              width: width,
+                              name: data[index].name ?? "",
+                            );
                           },
                         ),
                         // ileri geri sayfa butonları
@@ -161,10 +146,7 @@ class _ListPageState extends State<ListPage> {
               ),
             );
           } else {
-            return const Padding(
-              padding: EdgeInsets.all(16),
-              child: ListPageShimmer(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -234,8 +216,7 @@ class _ListPageState extends State<ListPage> {
                 fillColor: Style.blackColor.withOpacity(0.1),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(Style.defaultRadiusSize / 2),
+                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.zero,
@@ -298,12 +279,9 @@ class _ListPageState extends State<ListPage> {
           });
         },
         style: ButtonStyle(
-          shadowColor: MaterialStateProperty.all<Color>(
-              isSelected ? Colors.grey.shade800 : Colors.white),
-          foregroundColor: MaterialStateProperty.all<Color>(
-              isSelected ? Colors.grey.shade800 : Colors.white),
-          backgroundColor: MaterialStateProperty.all<Color>(
-              isSelected ? Colors.white : Colors.grey.shade800),
+          shadowColor: MaterialStateProperty.all<Color>(isSelected ? Colors.grey.shade800 : Colors.white),
+          foregroundColor: MaterialStateProperty.all<Color>(isSelected ? Colors.grey.shade800 : Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(isSelected ? Colors.white : Colors.grey.shade800),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),

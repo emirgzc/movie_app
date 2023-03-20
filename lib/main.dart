@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Movie App',
+          title: 'Movie Go',
           theme: ThemeData(
             appBarTheme: const AppBarTheme(
               elevation: 0,

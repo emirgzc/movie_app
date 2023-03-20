@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
       shadowLayer2Color: Colors.grey.shade400,
       // drawer ekrani
       menuScreen: Padding(
-        padding:  EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
+        padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
         child: LayoutBuilder(
           builder: (p0, p1) {
             return SingleChildScrollView(
@@ -111,8 +111,7 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
-                      drawerListItem(
-                          "Favoriler", Icons.favorite_border_outlined, () {}),
+                      drawerListItem("Favoriler", Icons.favorite_border_outlined, () {}),
                       const Spacer(
                         flex: 3,
                       ),
@@ -146,8 +145,8 @@ class _HomePageState extends State<HomePage> {
           ),
           // header
           Image.asset(
-            "assets/header_logo.png",
-            width: 290.w,
+            "assets/logo/light-lg1.jpg",
+            width: 300.w,
             fit: BoxFit.contain,
           ),
           // search icon
@@ -167,7 +166,7 @@ class _HomePageState extends State<HomePage> {
   SafeArea bottomNavBar() {
     return SafeArea(
       child: Container(
-        margin:  EdgeInsets.all(Style.defaultPaddingSize / 2),
+        margin: EdgeInsets.all(Style.defaultPaddingSize / 2),
         decoration: BoxDecoration(
           // dış kutu borderradius
           borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
@@ -188,7 +187,7 @@ class _HomePageState extends State<HomePage> {
             gap: 8,
 
             iconSize: Style.defaultIconsSize * (3 / 2),
-            padding:  EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: Style.defaultPaddingSizeHorizontal,
               vertical: (Style.defaultPaddingSizeVertical / 4) * 3,
             ),
@@ -239,9 +238,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget drawerListItem(String text, IconData? icon, void Function()? onTap) {
     return Padding(
-      padding:  EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
+      padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
       child: ListTile(
-        shape:  RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(Style.defaultRadiusSize / 2),
             bottomRight: Radius.circular(Style.defaultRadiusSize / 2),

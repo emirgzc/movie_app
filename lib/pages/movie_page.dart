@@ -40,8 +40,7 @@ class _MoviePageState extends State<MoviePage> {
               ),
 
               Padding(
-                padding:  EdgeInsets.symmetric(
-                    vertical: Style.defaultPaddingSizeVertical),
+                padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
                   listName: "En Çok Oy Alan Filmler",
                   width: width,
@@ -69,9 +68,7 @@ class _MoviePageState extends State<MoviePage> {
     return FutureBuilder(
       future: MovieApiClient().genres(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var genresData = snapshot.data as Genres;
           return SizedBox(
             width: double.infinity,
@@ -84,7 +81,10 @@ class _MoviePageState extends State<MoviePage> {
               itemBuilder: (context, index) {
                 // return Text(genresData.genres[index].name);
                 return createCategoriesItem(
-                    (height / 12) * 2.4, genresData.genres[index].name);
+                  (height / 12) * 2.4,
+                  genresData.genres[index].name,
+                  genresData.genres[index].id,
+                );
               },
             ),
           );
@@ -99,9 +99,7 @@ class _MoviePageState extends State<MoviePage> {
     return FutureBuilder(
       future: MovieApiClient().trendData("movie"),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as List<Result?>;
           return CarouselSlider.builder(
             itemCount: data.length,
@@ -126,17 +124,20 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createCategoriesItem(double categoryItemWidth, String categoryName) {
+  createCategoriesItem(double categoryItemWidth, String categoryName, int? genreId) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Navigator.of(context).pushNamed(
+        "/categoryPage",
+        arguments: genreId,
+      ),
       child: Padding(
-        padding:  EdgeInsets.all(Style.defaultPaddingSize / 2),
+        padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
           shadowColor: Colors.red,
           child: ClipRRect(
-            borderRadius:  BorderRadius.all(
+            borderRadius: BorderRadius.all(
               Radius.circular(
                 Style.defaultRadiusSize / 2,
               ),
@@ -162,22 +163,20 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createTopSliderItem(
-      String? movieName, String? pathImage, List<Result?> data, int index) {
+  createTopSliderItem(String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
         (data[index]?.title != null) ? "/movieDetailPage" : "/tvDetailPage",
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(
-        margin:  EdgeInsets.all(Style.defaultPaddingSize / 4),
-        padding:  EdgeInsets.fromLTRB(
-            0, Style.defaultPaddingSizeVertical / 2, 0, Style.defaultPaddingSizeVertical),
+        margin: EdgeInsets.all(Style.defaultPaddingSize / 4),
+        padding: EdgeInsets.fromLTRB(0, Style.defaultPaddingSizeVertical / 2, 0, Style.defaultPaddingSizeVertical),
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
           child: ClipRRect(
-            borderRadius:  BorderRadius.all(
+            borderRadius: BorderRadius.all(
               Radius.circular(
                 Style.defaultRadiusSize / 2,
               ),
@@ -196,15 +195,12 @@ class _MoviePageState extends State<MoviePage> {
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(200, 0, 0, 0),
-                          Color.fromARGB(0, 0, 0, 0)
-                        ],
+                        colors: [Color.fromARGB(200, 0, 0, 0), Color.fromARGB(0, 0, 0, 0)],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
                     ),
-                    padding:  EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       vertical: Style.defaultPaddingSizeVertical / 2,
                       horizontal: Style.defaultPaddingSizeHorizontal,
                     ),

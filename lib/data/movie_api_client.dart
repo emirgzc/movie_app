@@ -20,8 +20,7 @@ class MovieApiClient {
   final String _languageKey = "language=tr-TR";
 
   Future<List<Result>?> trendData(String mediaType) async {
-    String baseUrl =
-        '$_baseuRL/trending/$mediaType/week?api_key=$apikey&$_languageKey';
+    String baseUrl = '$_baseuRL/trending/$mediaType/week?api_key=$apikey&$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -45,8 +44,7 @@ class MovieApiClient {
   }
 
   Future<List<Result>?> popularMovieData({int page = 1}) async {
-    String baseUrl =
-        '$_baseuRL/movie/popular?api_key=$apikey&$_languageKey&page=$page';
+    String baseUrl = '$_baseuRL/movie/popular?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -70,8 +68,7 @@ class MovieApiClient {
   }
 
   Future<List<Result>?> nowPlayingMovieData({int page = 1}) async {
-    String baseUrl =
-        '$_baseuRL/movie/now_playing?api_key=$apikey&$_languageKey&page=$page';
+    String baseUrl = '$_baseuRL/movie/now_playing?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -95,8 +92,7 @@ class MovieApiClient {
   }
 
   Future<List<Result>?> topRatedMovieData({int page = 1}) async {
-    String baseUrl =
-        '$_baseuRL/movie/top_rated?api_key=$apikey&$_languageKey&page=$page';
+    String baseUrl = '$_baseuRL/movie/top_rated?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -120,8 +116,7 @@ class MovieApiClient {
   }
 
   Future<List<Result>?> upComingMovieData({int page = 1}) async {
-    String baseUrl =
-        '$_baseuRL/movie/upcoming?api_key=$apikey&$_languageKey&page=$page';
+    String baseUrl = '$_baseuRL/movie/upcoming?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -145,8 +140,7 @@ class MovieApiClient {
   }
 
   Future<List<Result>?> similarMoviesData(int movieId, {int page = 1}) async {
-    String baseUrl =
-        '$_baseuRL/movie/$movieId/recommendations?api_key=$apikey&$_languageKey&page=$page';
+    String baseUrl = '$_baseuRL/movie/$movieId/recommendations?api_key=$apikey&$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -159,8 +153,7 @@ class MovieApiClient {
         Trend mapApiModel = Trend.fromMap(responseJson);
 
         // resmi olmayan filmeleri kaldır
-        mapApiModel.results!
-            .removeWhere((element) => element.posterPath == null);
+        mapApiModel.results!.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -214,14 +207,13 @@ class MovieApiClient {
         throw Exception('getImages apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata getImages $e");
     }
     return null;
   }
 
   Future<Trailer?> getTrailer(int movieId) async {
-    String baseUrl =
-        '$_baseuRL/movie/$movieId/videos?api_key=$apikey&language=en-US';
+    String baseUrl = '$_baseuRL/movie/$movieId/videos?api_key=$apikey&language=en-US';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -245,8 +237,7 @@ class MovieApiClient {
   }
 
   Future<Comment?> getComment(int movieId) async {
-    String baseUrl =
-        '$_baseuRL/movie/$movieId/reviews?api_key=$apikey&language=tr-TR';
+    String baseUrl = '$_baseuRL/movie/$movieId/reviews?api_key=$apikey&language=tr-TR';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -294,8 +285,7 @@ class MovieApiClient {
   }
 
   Future<Collection?> collectionData(int collectionId) async {
-    String baseUrl =
-        '$_baseuRL/collection/$collectionId?api_key=$apikey&$_languageKey';
+    String baseUrl = '$_baseuRL/collection/$collectionId?api_key=$apikey&$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -319,8 +309,7 @@ class MovieApiClient {
   }
 
   Future<Credits?> credits(int movieId) async {
-    String baseUrl =
-        '$_baseuRL/movie/$movieId/credits?api_key=$apikey&$_languageKey';
+    String baseUrl = '$_baseuRL/movie/$movieId/credits?api_key=$apikey&$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -350,8 +339,7 @@ class MovieApiClient {
 
   // oyuncunun oynadigi filmler
   Future<CastPersonsMovies?> castPersonsCombined(int personId) async {
-    String baseUrl =
-        '$_baseuRL/person/$personId/combined_credits?api_key=$apikey&$_languageKey';
+    String baseUrl = '$_baseuRL/person/$personId/combined_credits?api_key=$apikey&$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -362,11 +350,9 @@ class MovieApiClient {
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
 
-        CastPersonsMovies mapApiModel =
-            CastPersonsMovies.fromJson(responseJson);
+        CastPersonsMovies mapApiModel = CastPersonsMovies.fromJson(responseJson);
         if (mapApiModel.cast != null) {
-          mapApiModel.cast!
-              .removeWhere((element) => element.posterPath == null);
+          mapApiModel.cast!.removeWhere((element) => element.posterPath == null);
         }
 
         return mapApiModel;
@@ -405,8 +391,7 @@ class MovieApiClient {
   }
 
   Future<List<Keyword>?> keywords(int movieId) async {
-    String baseUrl =
-        '$_baseuRL/movie/$movieId/keywords?api_key=$apikey&$_languageKey';
+    String baseUrl = '$_baseuRL/movie/$movieId/keywords?api_key=$apikey&$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
