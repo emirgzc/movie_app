@@ -79,7 +79,6 @@ class TvApiClient {
       );
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
-        debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
          mapApiModel.results!
             .removeWhere((element) => element.posterPath == null);
