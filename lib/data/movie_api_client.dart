@@ -38,7 +38,7 @@ class MovieApiClient {
         throw Exception('trendData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata trendData $e");
     }
     return null;
   }
@@ -62,7 +62,7 @@ class MovieApiClient {
         throw Exception('popularData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata popularMovieData $e");
     }
     return null;
   }
@@ -86,7 +86,7 @@ class MovieApiClient {
         throw Exception('popularData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata nowPlayingMovieData $e");
     }
     return null;
   }
@@ -110,7 +110,7 @@ class MovieApiClient {
         throw Exception('topRatedData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata topRatedMovieData $e");
     }
     return null;
   }
@@ -134,7 +134,7 @@ class MovieApiClient {
         throw Exception('upComingData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata upComingMovieData $e");
     }
     return null;
   }
@@ -160,7 +160,7 @@ class MovieApiClient {
         throw Exception('similarMoviesData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata similarMoviesData $e");
     }
     return null;
   }
@@ -183,7 +183,7 @@ class MovieApiClient {
         throw Exception('detailMovieData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata detailMovieData $e");
     }
     return null;
   }
@@ -207,7 +207,7 @@ class MovieApiClient {
         throw Exception('getImages apide hata var');
       }
     } catch (e) {
-      debugPrint("hata getImages $e");
+      debugPrint("hata getImages getImages $e");
     }
     return null;
   }
@@ -231,7 +231,7 @@ class MovieApiClient {
         throw Exception('getTrailer apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata getTrailer $e");
     }
     return null;
   }
@@ -255,7 +255,7 @@ class MovieApiClient {
         throw Exception('getComment apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata getComment $e");
     }
     return null;
   }
@@ -279,7 +279,7 @@ class MovieApiClient {
         throw Exception('genres apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata genres $e");
     }
     return null;
   }
@@ -303,7 +303,7 @@ class MovieApiClient {
         throw Exception('collection apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata collectionData $e");
     }
     return null;
   }
@@ -332,7 +332,7 @@ class MovieApiClient {
         throw Exception('credits apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata credits $e");
     }
     return null;
   }
@@ -360,14 +360,14 @@ class MovieApiClient {
         throw Exception('CastPersonsMovies apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata castPersonsCombined $e");
     }
     return null;
   }
 
   Future<Search?> search({String query = "a", int page = 1}) async {
     String baseUrl =
-        '$_baseuRL/search/movie?api_key=2444ef19302975166c670f0e507218ec&$_languageKey&query=$query&page=$page&include_adult=false';
+        '$_baseuRL/search/multi?api_key=2444ef19302975166c670f0e507218ec&$_languageKey&query=$query&page=$page&include_adult=false';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -376,16 +376,16 @@ class MovieApiClient {
         },
       );
       if (response.statusCode == 200) {
-        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        var responseJson  = json.decode(response.body) as Map<String, dynamic>;
 
-        Search mapApiModel = Search.fromMap(responseJson);
+        Search mapApiModel = Search.fromJson(responseJson);
 
         return mapApiModel;
       } else {
         throw Exception('search apide hata var');
       }
     } catch (e) {
-      debugPrint("search $e");
+      debugPrint("search search $e");
     }
     return null;
   }
@@ -409,7 +409,7 @@ class MovieApiClient {
         throw Exception('keywords apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata keywords $e");
     }
     return null;
   }

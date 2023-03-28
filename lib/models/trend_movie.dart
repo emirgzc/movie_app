@@ -103,7 +103,7 @@ class Result {
         originalName: json["original_name"],
         firstAirDate: json["first_air_date"] == null
             ? null
-            : DateTime.parse(json["first_air_date"]),
+            : json["first_air_date"].toString().isEmpty ? DateTime.now() : DateTime.parse(json["first_air_date"]),
         originCountry: json["origin_country"] == null
             ? null
             : List<String>.from(json["origin_country"].map((x) => x)),

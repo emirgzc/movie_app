@@ -37,7 +37,7 @@ class TvApiClient {
         throw Exception('topRatedTvData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata topRatedTvData $e");
     }
     return null;
   }
@@ -63,7 +63,7 @@ class TvApiClient {
         throw Exception('popularTvData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata popularTvData $e");
     }
     return null;
   }
@@ -88,7 +88,7 @@ class TvApiClient {
         throw Exception('onTheAirTvData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata onTheAirTvData $e");
     }
     return null;
   }
@@ -111,7 +111,7 @@ class TvApiClient {
         throw Exception('detailMovieData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata detailMovieData $e");
     }
     return null;
   }
@@ -135,7 +135,7 @@ class TvApiClient {
         throw Exception('getImages apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata getImages $e");
     }
     return null;
   }
@@ -160,7 +160,7 @@ class TvApiClient {
         throw Exception('getTrailer apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata getTrailer $e");
     }
     return null;
   }
@@ -188,7 +188,7 @@ class TvApiClient {
         throw Exception('similarMoviesData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata similarMoviesData $e");
     }
     return null;
   }
@@ -218,7 +218,7 @@ class TvApiClient {
         throw Exception('credits apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata credits $e");
     }
     return null;
   }
@@ -248,7 +248,7 @@ class TvApiClient {
         throw Exception('CastPersonsMovies apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata castPersonsMovies $e");
     }
     return null;
   }
@@ -273,7 +273,7 @@ class TvApiClient {
         throw Exception('getComment apide hata var');
       }
     } catch (e) {
-      debugPrint("hata $e");
+      debugPrint("hata getComment $e");
     }
     return null;
   }

@@ -77,17 +77,16 @@ class DetailMovie {
         overview: json["overview"],
         popularity: json["popularity"].toDouble(),
         posterPath: json["poster_path"],
-        productionCompanies: List<ProductionCompany>.from(
-            json["production_companies"]
-                .map((x) => ProductionCompany.fromMap(x))),
-        productionCountries: List<ProductionCountry>.from(
-            json["production_countries"]
-                .map((x) => ProductionCountry.fromMap(x))),
-        releaseDate: DateTime.parse(json["release_date"]),
+        productionCompanies: List<ProductionCompany>.from(json["production_companies"].map((x) => ProductionCompany.fromMap(x))),
+        productionCountries: List<ProductionCountry>.from(json["production_countries"].map((x) => ProductionCountry.fromMap(x))),
+        releaseDate: json["release_date"] == null
+            ? null
+            : json["release_date"].toString().isEmpty
+                ? DateTime.now()
+                : DateTime.parse(json["release_date"]),
         revenue: json["revenue"],
         runtime: json["runtime"],
-        spokenLanguages: List<SpokenLanguage>.from(
-            json["spoken_languages"].map((x) => SpokenLanguage.fromMap(x))),
+        spokenLanguages: List<SpokenLanguage>.from(json["spoken_languages"].map((x) => SpokenLanguage.fromMap(x))),
         status: json["status"],
         tagline: json["tagline"],
         title: json["title"],
@@ -110,16 +109,13 @@ class DetailMovie {
         "overview": overview,
         "popularity": popularity,
         "poster_path": posterPath,
-        "production_companies":
-            List<dynamic>.from(productionCompanies!.map((x) => x.toMap())),
-        "production_countries":
-            List<dynamic>.from(productionCountries!.map((x) => x.toMap())),
+        "production_companies": List<dynamic>.from(productionCompanies!.map((x) => x.toMap())),
+        "production_countries": List<dynamic>.from(productionCountries!.map((x) => x.toMap())),
         "release_date":
             "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
         "revenue": revenue,
         "runtime": runtime,
-        "spoken_languages":
-            List<dynamic>.from(spokenLanguages!.map((x) => x.toMap())),
+        "spoken_languages": List<dynamic>.from(spokenLanguages!.map((x) => x.toMap())),
         "status": status,
         "tagline": tagline,
         "title": title,
@@ -162,8 +158,7 @@ class ProductionCompany {
   String? name;
   String? originCountry;
 
-  factory ProductionCompany.fromMap(Map<String, dynamic> json) =>
-      ProductionCompany(
+  factory ProductionCompany.fromMap(Map<String, dynamic> json) => ProductionCompany(
         id: json["id"],
         logoPath: json["logo_path"],
         name: json["name"],
@@ -187,8 +182,7 @@ class ProductionCountry {
   String? iso31661;
   String? name;
 
-  factory ProductionCountry.fromMap(Map<String, dynamic> json) =>
-      ProductionCountry(
+  factory ProductionCountry.fromMap(Map<String, dynamic> json) => ProductionCountry(
         iso31661: json["iso_3166_1"],
         name: json["name"],
       );

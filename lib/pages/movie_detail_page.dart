@@ -50,7 +50,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: FutureBuilder(
-        future:  MovieApiClient().detailMovieData(widget.movieId ?? 0),
+        future: MovieApiClient().detailMovieData(widget.movieId ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
             var data = snapshot.data as DetailMovie;
@@ -189,33 +189,39 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
               return Padding(
                 padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: (width / 3) * 1.5,
-                  child: ListView.builder(
-                    clipBehavior: Clip.none,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: collectionData.parts?.length,
-                    // ilk eleman olarak varsa
-                    itemBuilder: (context, index) {
-                      if (collectionData.parts?[index].id == widget.movieId) {
-                        return Container();
-                      } else {
-                        return GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed(
-                            "/movieDetailPage",
-                            arguments: (collectionData.parts?[index].id),
-                          ),
-                          child: BrochureItem(
-                            brochureUrl: "https://image.tmdb.org/t/p/w500${collectionData.parts?[index].posterPath}",
-                            width: width,
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
+                child: (collectionData.parts?.isNotEmpty ?? false)
+                    ? SizedBox(
+                        width: double.infinity,
+                        height: (width / 3) * 1.5,
+                        child: ListView.builder(
+                          clipBehavior: Clip.none,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: collectionData.parts?.length,
+                          // ilk eleman olarak varsa
+                          itemBuilder: (context, index) {
+                            if (collectionData.parts?[index].id == widget.movieId) {
+                              return Container();
+                            } else {
+                              return GestureDetector(
+                                onTap: () => Navigator.of(context).pushNamed(
+                                  "/movieDetailPage",
+                                  arguments: (collectionData.parts?[index].id),
+                                ),
+                                child: BrochureItem(
+                                  brochureUrl: "https://image.tmdb.org/t/p/w500${collectionData.parts?[index].posterPath}",
+                                  width: width,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      )
+                    : const Text(
+                        'Serinin diğer filmleri bulunamadı.',
+                        style: TextStyle(color: Style.whiteColor),
+                        textAlign: TextAlign.left,
+                      ),
               );
             } else {
               return const SizedBox();
@@ -234,29 +240,35 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           var similarMoviesData = snapshot.data as List<Result?>;
           return Padding(
             padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
-            child: SizedBox(
-              width: double.infinity,
-              height: (width / 3) * 1.5,
-              child: ListView.builder(
-                clipBehavior: Clip.none,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: similarMoviesData.length,
-                // ilk eleman olarak varsa
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () => Navigator.of(context).pushNamed(
-                      "/movieDetailPage",
-                      arguments: (similarMoviesData[index]?.id ?? 0),
+            child: (similarMoviesData.isNotEmpty)
+                ? SizedBox(
+                    width: double.infinity,
+                    height: (width / 3) * 1.5,
+                    child: ListView.builder(
+                      clipBehavior: Clip.none,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: similarMoviesData.length,
+                      // ilk eleman olarak varsa
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () => Navigator.of(context).pushNamed(
+                            "/movieDetailPage",
+                            arguments: (similarMoviesData[index]?.id ?? 0),
+                          ),
+                          child: BrochureItem(
+                            brochureUrl: "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
+                            width: width,
+                          ),
+                        );
+                      },
                     ),
-                    child: BrochureItem(
-                      brochureUrl: "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
-                      width: width,
-                    ),
-                  );
-                },
-              ),
-            ),
+                  )
+                : const Text(
+                    'Hoşunuza gidebilecek filmler bulunamadı.',
+                    style: TextStyle(color: Style.whiteColor),
+                    textAlign: TextAlign.left,
+                  ),
           );
         } else {
           return const SizedBox();
@@ -276,34 +288,40 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: EdgeInsets.only(
               top: Style.defaultPaddingSizeVertical / 2,
             ),
-            child: SizedBox(
-              width: double.infinity,
-              // dogru oranin yakalanmasi icin
-              // 281 / 500 : resim cozunurlugu
-              height: (width / 2) * (281 / 500),
-              child: ListView.builder(
-                clipBehavior: Clip.none,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: data.backdrops?.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      showScreenshots(data, index, width);
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        right: Style.defaultPaddingSizeHorizontal * 0.75,
-                      ),
-                      child: screenshotItem(
-                        "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath}",
-                        width / 2,
-                      ),
+            child: (data.backdrops?.isNotEmpty ?? false)
+                ? SizedBox(
+                    width: double.infinity,
+                    // dogru oranin yakalanmasi icin
+                    // 281 / 500 : resim cozunurlugu
+                    height: (width / 2) * (281 / 500),
+                    child: ListView.builder(
+                      clipBehavior: Clip.none,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: data.backdrops?.length ?? 0,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            showScreenshots(data, index, width);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: Style.defaultPaddingSizeHorizontal * 0.75,
+                            ),
+                            child: screenshotItem(
+                              "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath}",
+                              width / 2,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  )
+                : const Text(
+                    'Bu film için henüz görsel bulunmamaktadır.',
+                    style: TextStyle(color: Style.whiteColor),
+                    textAlign: TextAlign.left,
+                  ),
           );
         } else {
           // loading
