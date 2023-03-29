@@ -18,6 +18,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
         automaticallyImplyLeading: true,
         foregroundColor: Style.blackColor,
         title: Text("Oyuncu : $personName"),
+        centerTitle: true,
       ),
       body: Padding(
         padding: Style.pagePadding,

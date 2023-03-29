@@ -29,8 +29,7 @@ class TvApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
-         mapApiModel.results!
-            .removeWhere((element) => element.posterPath == null);
+         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -55,8 +54,7 @@ class TvApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
 
         Trend mapApiModel = Trend.fromMap(responseJson);
-         mapApiModel.results!
-            .removeWhere((element) => element.posterPath == null);
+         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -80,8 +78,7 @@ class TvApiClient {
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         Trend mapApiModel = Trend.fromMap(responseJson);
-         mapApiModel.results!
-            .removeWhere((element) => element.posterPath == null);
+         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -180,8 +177,7 @@ class TvApiClient {
         Trend mapApiModel = Trend.fromMap(responseJson);
 
         // resmi olmayan filmeleri kaldır
-        mapApiModel.results!
-            .removeWhere((element) => element.posterPath == null);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -239,8 +235,7 @@ class TvApiClient {
         CastPersonsMovies mapApiModel =
             CastPersonsMovies.fromJson(responseJson);
         if (mapApiModel.cast != null) {
-          mapApiModel.cast!
-              .removeWhere((element) => element.posterPath == null);
+          mapApiModel.cast?.removeWhere((element) => element.posterPath == null);
         }
 
         return mapApiModel;

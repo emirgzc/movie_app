@@ -32,6 +32,8 @@ class MovieApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
+          mapApiModel.results?.removeWhere((element) => element.posterPath == null);
+        
 
         return mapApiModel.results;
       } else {
@@ -56,6 +58,7 @@ class MovieApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -80,6 +83,7 @@ class MovieApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -104,6 +108,7 @@ class MovieApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -128,6 +133,7 @@ class MovieApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -153,7 +159,7 @@ class MovieApiClient {
         Trend mapApiModel = Trend.fromMap(responseJson);
 
         // resmi olmayan filmeleri kaldır
-        mapApiModel.results!.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -352,7 +358,7 @@ class MovieApiClient {
 
         CastPersonsMovies mapApiModel = CastPersonsMovies.fromJson(responseJson);
         if (mapApiModel.cast != null) {
-          mapApiModel.cast!.removeWhere((element) => element.posterPath == null);
+          mapApiModel.cast?.removeWhere((element) => element.posterPath == null);
         }
 
         return mapApiModel;
@@ -367,7 +373,7 @@ class MovieApiClient {
 
   Future<Search?> search({String query = "a", int page = 1}) async {
     String baseUrl =
-        '$_baseuRL/search/multi?api_key=2444ef19302975166c670f0e507218ec&$_languageKey&query=$query&page=$page&include_adult=false';
+        '$_baseuRL/search/multi?api_key=$apikey&$_languageKey&query=$query&page=$page&include_adult=false';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),

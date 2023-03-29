@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 
@@ -123,7 +124,7 @@ class ImageDetailCard extends StatelessWidget {
         (mediaType == null)
             ? Container()
             : Text(
-                (mediaType ?? "") == "movie" ? "Film Aktörü" : "Dizi Aktörü",
+                (mediaType ?? "") == MediaType.movie.name ? "Film Aktörü" : "Dizi Aktörü",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
                     ),

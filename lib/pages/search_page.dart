@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/search.dart';
+import 'package:movie_app/widgets/person/person_detail_dialog.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -17,11 +19,14 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   late TextEditingController _textEditingController;
+  late final ScrollController _scrollController;
   String searchValue = '';
 
   @override
   void initState() {
     _textEditingController = TextEditingController();
+    _scrollController = ScrollController();
+
     super.initState();
   }
 
@@ -74,11 +79,15 @@ class _SearchPageState extends State<SearchPage> {
                   var data = snapshot.data as Search;
 
                   return Expanded(
-                    child: MasonryGridView.count(
-                      physics: const BouncingScrollPhysics(),
+                    child: MasonryGridView.builder(
+                      scrollDirection: Axis.vertical,
+                      controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: data.results?.length,
-                      crossAxisCount: 2,
+                      gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
                       itemBuilder: (context, index) {
                         if ((data.results?[index].profilePath?.isEmpty == null) && data.results?[index].posterPath?.isEmpty == null) {
                           return const SizedBox();
@@ -112,15 +121,14 @@ class _SearchPageState extends State<SearchPage> {
           currentFocus.unfocus();
         }
 
-        Navigator.of(context).pushNamed(
-          mediaType == 'movie' ? "/movieDetailPage" : (mediaType == 'tv' ? "/tvDetailPage" : "/castPersonsMoviesPage"),
-          arguments: mediaType == 'person'
-              ? [
-                  data.results?[index].id,
-                  data.results?[index].name,
-                ]
-              : data.results?[index].id,
-        );
+        if (mediaType == MediaType.person.name) {
+          showPersonDetail(data.results?[index]);
+        } else {
+          Navigator.of(context).pushNamed(
+            mediaType == MediaType.movie.name ? "/movieDetailPage" : "/tvDetailPage",
+            arguments: data.results?[index].id,
+          );
+        }
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -129,61 +137,25 @@ class _SearchPageState extends State<SearchPage> {
         elevation: Style.defaultElevation,
         child: Padding(
           padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // resim
               image(data, index, mediaType),
 
               // isim, tarih, derecelendirme, kategoriler
-              titleDateStar(data, index, mediaType),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget image(Search data, int index, String? mediaType) {
-    return Padding(
-      padding: EdgeInsets.only(
-        right: Style.defaultPaddingSizeHorizontal / 2,
-      ),
-      child: Hero(
-        tag:
-            'https://image.tmdb.org/t/p/w500${(mediaType == 'movie' || mediaType == 'tv') ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
-        child: CachedNetworkImage(
-          imageUrl:
-              'https://image.tmdb.org/t/p/w500${(mediaType == 'movie' || mediaType == 'tv') ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
-          width: 130.w,
-          height: 250.h,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-
-  Widget titleDateStar(Search data, int index, String? mediaType) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          // film ismi
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
               Text(
-                mediaType == 'movie' ? (data.results?[index].title ?? '-') : (data.results?[index].name ?? '-'),
+                mediaType == MediaType.movie.name ? (data.results?[index].title ?? '-') : (data.results?[index].name ?? '-'),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
+                textAlign: TextAlign.center,
               ),
-              (mediaType == 'person')
+              (mediaType == MediaType.person.name)
                   ? const SizedBox()
                   : Padding(
-                      padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
+                      padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 4),
                       child: Text(
                         toRevolveDate(checkDateType(mediaType, data.results?[index]) ?? DateTime.now().toString()),
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -191,44 +163,67 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                       ),
                     ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 2),
-                child: Text(checkMediaType(data.results?[index].mediaType) ?? '-'),
-              ),
+              (mediaType == MediaType.person.name)
+                  ? const SizedBox()
+                  : RatingBar.builder(
+                      ignoreGestures: true,
+                      itemSize: 36.r,
+                      glowColor: Style.starColor,
+                      unratedColor: Colors.black,
+                      initialRating: (data.results?[index].voteAverage ?? 0.0) / 2,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Style.starColor,
+                      ),
+                      onRatingUpdate: (double value) {},
+                    ),
             ],
           ),
+        ),
+      ),
+    );
+  }
 
-          // rating
-          (mediaType == 'person')
-              ? const SizedBox()
-              : RatingBar.builder(
-                  ignoreGestures: true,
-                  itemSize: 48.r,
-                  glowColor: Style.starColor,
-                  unratedColor: Colors.black,
-                  initialRating: (data.results?[index].voteAverage ?? 0.0) / 2,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemBuilder: (context, _) => const Icon(
-                    Icons.star,
-                    color: Style.starColor,
-                  ),
-                  onRatingUpdate: (double value) {},
-                ),
-        ],
+  Future showPersonDetail(SearchResult? data) {
+    return showDialog(
+      barrierColor: Style.blackColor.withOpacity(0.9),
+      useSafeArea: true,
+      context: context,
+      builder: (context) {
+        return PersonDetailDialog(data: data);
+      },
+    );
+  }
+
+  Widget image(Search data, int index, String? mediaType) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: Style.defaultPaddingSizeHorizontal / 2,
+      ),
+      child: Hero(
+        tag:
+            'https://image.tmdb.org/t/p/w500${(mediaType == MediaType.movie.name || mediaType == MediaType.tv.name) ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
+        child: CachedNetworkImage(
+          imageUrl:
+              'https://image.tmdb.org/t/p/w500${(mediaType == MediaType.movie.name || mediaType == MediaType.tv.name) ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
 
   String? checkMediaType(String? mediaType) {
-    if (mediaType == 'movie') {
-      return 'Film';
-    } else if (mediaType == 'tv') {
-      return 'Dizi';
-    } else if (mediaType == 'person') {
-      return 'Oyuncu';
+    if (mediaType == MediaType.movie.name) {
+      return ConvertToMediaTypes.Film.name.toString();
+    } else if (mediaType == MediaType.tv.name) {
+      return ConvertToMediaTypes.Dizi.name.toString();
+    } else if (mediaType == MediaType.person.name) {
+      return ConvertToMediaTypes.Oyuncu.name.toString();
     } else {
       return null;
     }
@@ -236,9 +231,9 @@ class _SearchPageState extends State<SearchPage> {
 
   String? checkDateType(String? mediaType, SearchResult? result) {
     if (result != null) {
-      if (mediaType == 'movie') {
+      if (mediaType == MediaType.movie.name) {
         return result.releaseDate.toString();
-      } else if (mediaType == 'tv') {
+      } else if (mediaType == MediaType.tv.name) {
         return result.firstAirDate.toString();
       } else {
         return DateTime.now().toString();
@@ -248,3 +243,6 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 }
+
+// ignore: constant_identifier_names
+enum ConvertToMediaTypes { Film, Dizi, Oyuncu }

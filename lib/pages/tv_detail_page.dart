@@ -359,25 +359,27 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        SizedBox(
-                          width: double.infinity,
-                          // dogru oranin yakalanmasi icin
-                          // 281 / 500 : resim cozunurlugu
-                          height: 250.h,
-                          child: ListView.builder(
-                            clipBehavior: Clip.none,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: data.productionCompanies?.length ?? 0,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (data.productionCompanies?[index].logoPath == null) {
-                                return Container();
-                              } else {
-                                return productCompaniesImage(context, data, index, width);
-                              }
-                            },
-                          ),
-                        ),
+                        (data.productionCompanies?.isEmpty ?? false)
+                            ? const Text('Bu dizi hakkında yapımcı şirket bilgisi girilmemiştir.')
+                            : SizedBox(
+                                width: double.infinity,
+                                // dogru oranin yakalanmasi icin
+                                // 281 / 500 : resim cozunurlugu
+                                height: 250.h,
+                                child: ListView.builder(
+                                  clipBehavior: Clip.none,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: data.productionCompanies?.length ?? 0,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    if (data.productionCompanies?[index].logoPath == null) {
+                                      return Container();
+                                    } else {
+                                      return productCompaniesImage(context, data, index, width);
+                                    }
+                                  },
+                                ),
+                              ),
                         Padding(
                           padding: EdgeInsets.only(
                             top: (Style.defaultPaddingSizeVertical / 2) * 3,
@@ -561,7 +563,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: Style.defaultPaddingSizeHorizontal / 2,
+                horizontal: Style.defaultPaddingSizeHorizontal / 3,
               ),
               child: Text(
                 creditsData.cast[index].originalName,
