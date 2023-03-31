@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -19,12 +20,19 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   late TextEditingController _textEditingController;
+  late TextEditingController _textEditingControllerForPage;
+
+  int _page = 1;
   late final ScrollController _scrollController;
   String searchValue = '';
+  int totalPage = 1;
 
   @override
   void initState() {
     _textEditingController = TextEditingController();
+    _textEditingControllerForPage = TextEditingController();
+    _textEditingControllerForPage.text = _page.toString();
+
     _scrollController = ScrollController();
 
     super.initState();
@@ -70,14 +78,14 @@ class _SearchPageState extends State<SearchPage> {
       body: Padding(
         padding: Style.pagePadding,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FutureBuilder(
-              future: MovieApiClient().search(query: searchValue.isNotEmpty ? searchValue : "a"),
+              future: MovieApiClient().search(query: searchValue.isNotEmpty ? searchValue : "", page: _page),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   var data = snapshot.data as Search;
-
+                  totalPage = data.totalPages ?? 1;
                   return Expanded(
                     child: MasonryGridView.builder(
                       scrollDirection: Axis.vertical,
@@ -89,10 +97,6 @@ class _SearchPageState extends State<SearchPage> {
                         crossAxisCount: 2,
                       ),
                       itemBuilder: (context, index) {
-                        if ((data.results?[index].profilePath?.isEmpty == null) && data.results?[index].posterPath?.isEmpty == null) {
-                          return const SizedBox();
-                        }
-
                         return searcItemCard(context, data, index, data.results?[index].mediaType);
                       },
                     ),
@@ -107,8 +111,131 @@ class _SearchPageState extends State<SearchPage> {
                 }
               },
             ),
+            _textEditingController.text.isEmpty ? const SizedBox.shrink() : pageIndicator(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget pageIndicator() {
+    String arrowLeft = "Önceki Sayfa";
+    String arrowRight = "Sonraki Sayfa";
+
+    return Padding(
+      padding: EdgeInsets.only(
+        top: Style.defaultPaddingSizeVertical * 0.5,
+        bottom: Style.defaultPaddingSizeHorizontal * 0.5,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // onceki sayfa
+          Visibility(
+            visible: _page > 1,
+            child: Padding(
+              padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_page > 1) {
+                    setState(() {
+                      _page--;
+                      _textEditingControllerForPage.text = _page.toString();
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+                  elevation: 0,
+                  shadowColor: Style.whiteColor,
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.arrow_back_ios,
+                      color: Style.blackColor,
+                    ),
+                    Text(
+                      arrowLeft,
+                      style: const TextStyle(
+                        color: Style.blackColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // page number
+          SizedBox(
+            width: 100.w,
+            child: TextField(
+              controller: _textEditingControllerForPage,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                LengthLimitingTextInputFormatter(
+                  2,
+                ),
+              ],
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                fillColor: Style.blackColor.withOpacity(0.1),
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.zero,
+              ),
+              onTap: () {},
+              onChanged: (value) {},
+              onSubmitted: (value) {
+                /*
+                                  if (100 > int.parse(value) &&
+                                      0 < int.parse(value)) {
+                                    setState(() {
+                                      page = int.parse(value);
+                                    });
+                                    */
+              },
+            ),
+          ),
+          // sonraki sayfa
+          Visibility(
+            visible: totalPage > _page,
+            child: Padding(
+              padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_page < 101) {
+                    setState(() {
+                      _page++;
+                      _textEditingControllerForPage.text = _page.toString();
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+                  elevation: 0,
+                  shadowColor: Style.whiteColor,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      arrowRight,
+                      style: const TextStyle(color: Style.blackColor),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Style.blackColor),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -121,8 +248,9 @@ class _SearchPageState extends State<SearchPage> {
           currentFocus.unfocus();
         }
 
-        if (mediaType == MediaType.person.name) {
+        if (mediaType == MediaType.person.name && data.results?[index].profilePath != null) {
           showPersonDetail(data.results?[index]);
+        } else if (data.results?[index].posterPath == null) {
         } else {
           Navigator.of(context).pushNamed(
             mediaType == MediaType.movie.name ? "/movieDetailPage" : "/tvDetailPage",
@@ -141,7 +269,14 @@ class _SearchPageState extends State<SearchPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // resim
-              image(data, index, mediaType),
+              (data.results?[index].posterPath != null || data.results?[index].profilePath != null)
+                  ? image(data, index, mediaType)
+                  : Padding(
+                      padding: EdgeInsets.only(bottom: Style.defaultPaddingSize / 2),
+                      child: Placeholder(
+                        fallbackHeight: 600.h,
+                      ),
+                    ),
 
               // isim, tarih, derecelendirme, kategoriler
               Text(

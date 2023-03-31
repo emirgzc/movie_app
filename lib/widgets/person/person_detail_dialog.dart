@@ -29,7 +29,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
       insetPadding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize * 2, horizontal: Style.defaultPaddingSize),
       child: Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.68,
+          maxHeight: MediaQuery.of(context).size.height * 0.65,
           maxWidth: MediaQuery.of(context).size.width * 0.9,
         ),
         padding: EdgeInsets.all(Style.defaultPaddingSize),
@@ -52,13 +52,6 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
                   Text(
                     widget.data?.name ?? "--",
                     style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 4),
-                    child: Text(
-                      'Oyuncu',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
                   ),
                 ],
               ),
@@ -85,6 +78,9 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
                 shrinkWrap: true,
                 itemCount: widget.data?.knownFor?.length ?? 0,
                 itemBuilder: (context, index) {
+                  if (widget.data?.knownFor?[index].posterPath == null) {
+                    return const SizedBox.shrink();
+                  }
                   return InkWell(
                     onTap: () {
                       Navigator.of(context).pushNamed(
