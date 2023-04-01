@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage> {
         child: LayoutBuilder(
           builder: (p0, p1) {
             return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: p1.maxHeight),
                 child: IntrinsicHeight(

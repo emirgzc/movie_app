@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 
 class OpenedTextForOverview extends StatefulWidget {
   OpenedTextForOverview({
@@ -19,7 +21,7 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: Style.defaultPaddingSizeVertical / 2,
       ),
       child: RichText(
@@ -32,7 +34,9 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
                   : ((widget.data?.length ?? 0) > 210)
                       ? "${widget.data?.substring(0, 210)}..."
                       : ((widget.data?.isEmpty ?? false)
-                          ? "Gözterilecek açıklama yazısı bulunmamaktadır. "
+                          ? LocaleKeys
+                              .no_description_text_entered_with_the_serie
+                              .tr()
                           : widget.data),
             ),
             TextSpan(
@@ -44,7 +48,7 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
                 },
               text: (widget.isOpenedText == false &&
                       (widget.data?.length ?? 0) > 210)
-                  ? "devamını oku"
+                  ? LocaleKeys.read.tr()
                   : "",
               style: const TextStyle(
                 color: Colors.red,

@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/models/trailer.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TrailerPage extends StatefulWidget {
@@ -61,6 +63,7 @@ class _TrailerPageState extends State<TrailerPage> {
         ),
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -81,7 +84,11 @@ class _TrailerPageState extends State<TrailerPage> {
                     const SizedBox(height: 32),
                   ],
                 ),
-              Text("Toplam ${_controllers.length} adet fragman bulunmaktadır."),
+              Text(
+                LocaleKeys.there_are_x_trailers_total.tr(
+                  args: [_controllers.length.toString()],
+                ),
+              ),
             ],
           ),
         ),

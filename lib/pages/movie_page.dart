@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _MoviePageState extends State<MoviePage> {
 
     return Scaffold(
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Padding(
           padding: Style.pagePadding,
           child: Column(
@@ -86,6 +88,7 @@ class _MoviePageState extends State<MoviePage> {
             width: double.infinity,
             height: height / 12,
             child: ListView.builder(
+              physics: BouncingScrollPhysics(),
               clipBehavior: Clip.none,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -200,8 +203,8 @@ class _MoviePageState extends State<MoviePage> {
             ),
             child: Stack(
               children: [
-                Image.network(
-                  "https://image.tmdb.org/t/p/w500$pathImage",
+                CachedNetworkImage(
+                  imageUrl: "https://image.tmdb.org/t/p/w500$pathImage",
                   fit: BoxFit.cover,
                   width: 1000.0,
                 ),

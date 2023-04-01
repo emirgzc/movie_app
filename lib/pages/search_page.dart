@@ -10,6 +10,7 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/search.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/person/person_detail_dialog.dart';
 
 class SearchPage extends StatefulWidget {
@@ -69,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
                     _textEditingController.text = "";
                   }),
                 ),
-                hintText: 'Aramak için yazınız...',
+                hintText: LocaleKeys.search.tr(),
                 border: InputBorder.none,
               ),
             ),
@@ -128,8 +129,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget pageIndicator() {
-    String arrowLeft = "Önceki Sayfa";
-    String arrowRight = "Sonraki Sayfa";
+    String arrowLeft = LocaleKeys.previous_page.tr();
+    String arrowRight = LocaleKeys.next_page.tr();
 
     return Padding(
       padding: EdgeInsets.only(

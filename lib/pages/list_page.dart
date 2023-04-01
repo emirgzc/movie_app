@@ -140,6 +140,7 @@ class _ListPageState extends State<ListPage> {
                   // liste elemanları
                   Expanded(
                     child: ListView(
+                      physics: BouncingScrollPhysics(),
                       children: [
                         // filmler
                         MasonryGridView.count(

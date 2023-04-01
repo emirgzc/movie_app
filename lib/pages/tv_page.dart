@@ -21,39 +21,43 @@ class _TVPageState extends State<TVPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Padding(
-        padding: Style.pagePadding,
-        child: Column(
-          children: [
-            CreatePosterList(
-              listName: LocaleKeys.trending_series_of_the_week.tr(),
-              listType: ListType.trending_series_of_the_week,
-              width: width,
-              futureGetDataFunc:
-                  MovieApiClient().trendData("tv", context.locale),
+            padding: Style.pagePadding,
+            child: Column(
+              children: [
+                CreatePosterList(
+                  listName: LocaleKeys.trending_series_of_the_week.tr(),
+                  listType: ListType.trending_series_of_the_week,
+                  width: width,
+                  futureGetDataFunc:
+                      MovieApiClient().trendData("tv", context.locale),
+                ),
+                CreatePosterList(
+                  listName: LocaleKeys.top_rated_series.tr(),
+                  listType: ListType.top_rated_series,
+                  width: width,
+                  futureGetDataFunc:
+                      TvApiClient().topRatedTvData(context.locale),
+                ),
+                CreatePosterList(
+                  listName: LocaleKeys.popular_series.tr(),
+                  listType: ListType.popular_series,
+                  width: width,
+                  futureGetDataFunc:
+                      TvApiClient().popularTvData(context.locale),
+                ),
+                CreatePosterList(
+                  listName: LocaleKeys.serials_on_air.tr(),
+                  listType: ListType.series_on_air,
+                  width: width,
+                  futureGetDataFunc:
+                      TvApiClient().onTheAirTvData(context.locale),
+                ),
+                const SizedBox(height: 200),
+              ],
             ),
-            CreatePosterList(
-              listName: LocaleKeys.top_rated_series.tr(),
-              listType: ListType.top_rated_series,
-              width: width,
-              futureGetDataFunc: TvApiClient().topRatedTvData(context.locale),
-            ),
-            CreatePosterList(
-              listName: LocaleKeys.popular_series.tr(),
-              listType: ListType.popular_series,
-              width: width,
-              futureGetDataFunc: TvApiClient().popularTvData(context.locale),
-            ),
-            CreatePosterList(
-              listName: LocaleKeys.serials_on_air.tr(),
-              listType: ListType.series_on_air,
-              width: width,
-              futureGetDataFunc: TvApiClient().onTheAirTvData(context.locale),
-            ),
-            const SizedBox(height: 200),
-          ],
-        ),
-      )),
+          )),
     );
   }
 }

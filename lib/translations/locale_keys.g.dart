@@ -19,6 +19,9 @@ abstract class  LocaleKeys {
   static const top_rated_series = 'top_rated_series';
   static const popular_series = 'popular_series';
   static const serials_on_air = 'serials_on_air';
+  static const time_not_specified = 'time_not_specified';
+  static const no_producer_company_information_about_this_series_has_been_entered = 'no_producer_company_information_about_this_series_has_been_entered';
+  static const no_description_text_entered_with_the_serie = 'no_description_text_entered_with_the_serie';
   static const screenshots = 'screenshots';
   static const you_may_like = 'you_may_like';
   static const other_movies_in_the_series = 'other_movies_in_the_series';
@@ -27,9 +30,9 @@ abstract class  LocaleKeys {
   static const rating = 'rating';
   static const cast_players = 'cast_players';
   static const comments = 'comments';
-  static const minute = 'minute';
-  static const season = 'season';
-  static const episode = 'episode';
+  static const minutes = 'minutes';
+  static const seasons = 'seasons';
+  static const episodes = 'episodes';
   static const read = 'read';
   static const production_companies = 'production_companies';
   static const there_are_x_trailers_total = 'there_are_x_trailers_total';

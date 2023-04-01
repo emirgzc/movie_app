@@ -62,6 +62,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 snapshot.data != null) {
               var data = snapshot.data as List<Result>;
               return ListView(
+                physics: BouncingScrollPhysics(),
                 children: [
                   MasonryGridView.count(
                     physics: const BouncingScrollPhysics(),

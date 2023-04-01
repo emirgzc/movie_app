@@ -75,6 +75,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         width: double.infinity,
                         height: double.infinity,
                         child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
                           child: Column(
                             children: [
                               appBar(context),
@@ -202,6 +203,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         width: double.infinity,
                         height: (width / 3) * 1.5,
                         child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
                           clipBehavior: Clip.none,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -258,6 +260,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     width: double.infinity,
                     height: (width / 3) * 1.5,
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       clipBehavior: Clip.none,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -311,6 +314,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     // 281 / 500 : resim cozunurlugu
                     height: (width / 2) * (281 / 500),
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       clipBehavior: Clip.none,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -351,6 +355,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               width: double.infinity,
               height: (width / 2) * (281 / 500),
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 clipBehavior: Clip.none,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
@@ -394,6 +399,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         width: double.infinity,
         height: (width - 90) / 6,
         child: ListView(
+          physics: BouncingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           children: [
@@ -552,6 +558,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: Scrollbar(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -660,8 +667,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             Icons.nature_people_outlined,
                             color: Style.whiteColor,
                           )
-                        : Image.network(
-                            "https://image.tmdb.org/t/p/w500${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
+                        : CachedNetworkImage(
+                            imageUrl:
+                                "https://image.tmdb.org/t/p/w500${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
                             fit: BoxFit.cover,
                             width: 120.w,
                             height: 120.h,
@@ -706,6 +714,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: Scrollbar(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -832,6 +841,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize),
             child: Scrollbar(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -883,6 +893,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           child: Padding(
             padding: EdgeInsets.all(Style.defaultPaddingSize),
             child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -897,6 +908,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         Flexible(
                           fit: FlexFit.loose,
                           child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: data?.genres?.length ?? 0,
                             shrinkWrap: true,
@@ -1004,8 +1016,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         borderRadius: BorderRadius.all(
           Radius.circular(Style.defaultRadiusSize / 2),
         ),
-        child: Image.network(
-          url,
+        child: CachedNetworkImage(
+          imageUrl: url,
           fit: BoxFit.cover,
           width: width,
           // 281 / 500 : resim cozunurlugu

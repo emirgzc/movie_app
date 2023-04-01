@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/models/images.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/tv/opened_text_for_overview.dart';
 
@@ -58,6 +60,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
               snapshot.data != null) {
             var data = snapshot.data as TvDetail;
             return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Column(
                 children: [
                   Stack(
@@ -72,8 +75,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             data,
                             Text(
                               (data.episodeRunTime?.isEmpty ?? false)
-                                  ? "Süre Belirtilmemiş"
-                                  : "${data.episodeRunTime?[0].toString()} dakika",
+                                  ? LocaleKeys.time_not_specified.tr()
+                                  : "${data.episodeRunTime?[0].toString()} ${LocaleKeys.minutes.tr()}",
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -139,7 +142,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             textItemForContainer(
                               data,
                               Text(
-                                "${data.numberOfSeasons} sezon",
+                                "${data.numberOfSeasons} ${LocaleKeys.seasons.tr()}",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -148,7 +151,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             textItemForContainer(
                               data,
                               Text(
-                                "${data.numberOfEpisodes} bölüm",
+                                "${data.numberOfEpisodes} ${LocaleKeys.episodes.tr()}",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -172,7 +175,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                     ),
                                     child: Text(
                                       (data.voteAverage.toString().isEmpty)
-                                          ? "Belirtilmemiş"
+                                          ? LocaleKeys.unspecified.tr()
                                           : ((data.voteAverage))
                                               .toString()
                                               .substring(0, 3),
@@ -233,13 +236,13 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           ),
                           child: Text(
                             (data.productionCountries?.isEmpty ?? false)
-                                ? "Ülke : Belirtilmemiş"
-                                : "Ülke : ${data.productionCountries?[0].name ?? "-"}",
+                                ? "${LocaleKeys.country.tr()} : ${LocaleKeys.unspecified.tr()}"
+                                : "${LocaleKeys.country.tr()} : ${data.productionCountries?[0].name ?? "-"}",
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ),
                         Text(
-                          "Çıkış Tarihi : ${toRevolveDate((data.firstAirDate.toString().split(" ")[0]))}",
+                          "${LocaleKeys.relase_date.tr()} : ${toRevolveDate((data.firstAirDate.toString().split(" ")[0]))}",
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Padding(
@@ -248,7 +251,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             bottom: Style.defaultPaddingSizeVertical,
                           ),
                           child: Text(
-                            "Oyuncular",
+                            LocaleKeys.cast_players.tr(),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
@@ -263,6 +266,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                               var creditsData = snapshot.data as Credits;
 
                               return SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,7 +290,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             bottom: Style.defaultPaddingSizeVertical / 2,
                           ),
                           child: Text(
-                            "Görüntüler",
+                            LocaleKeys.screenshots.tr(),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
@@ -309,14 +313,14 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                   // 281 / 500 : resim cozunurlugu
                                   height: (width / 2) * (281 / 500),
                                   child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
                                     clipBehavior: Clip.none,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
                                     itemCount: data.backdrops?.length ?? 0,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      return screenshootCard(
-                                          data, index, width);
+                                      return screenshotCard(data, index, width);
                                     },
                                   ),
                                 ),
@@ -333,7 +337,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             bottom: Style.defaultPaddingSizeVertical / 3,
                           ),
                           child: Text(
-                            "Hoşunuza Gidebilir",
+                            LocaleKeys.you_may_like.tr(),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
@@ -355,6 +359,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                                   width: double.infinity,
                                   height: (width / 3) * 1.5,
                                   child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
                                     clipBehavior: Clip.none,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
@@ -390,19 +395,22 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             bottom: Style.defaultPaddingSizeVertical / 3,
                           ),
                           child: Text(
-                            "Yapımcı Şirketler",
+                            LocaleKeys.production_companies.tr(),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                         (data.productionCompanies?.isEmpty ?? false)
                             ? const Text(
-                                'Bu dizi hakkında yapımcı şirket bilgisi girilmemiştir.')
+                                LocaleKeys
+                                    .no_producer_company_information_about_this_series_has_been_entered,
+                              )
                             : SizedBox(
                                 width: double.infinity,
                                 // dogru oranin yakalanmasi icin
                                 // 281 / 500 : resim cozunurlugu
                                 height: 250.h,
                                 child: ListView.builder(
+                                  physics: BouncingScrollPhysics(),
                                   clipBehavior: Clip.none,
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
@@ -431,6 +439,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             // 281 / 500 : resim cozunurlugu
                             height: 80.h,
                             child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
                               clipBehavior: Clip.none,
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
@@ -499,8 +508,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
                   padding: EdgeInsets.symmetric(
                     horizontal: Style.defaultPaddingSizeHorizontal * 3,
                   ),
-                  child: Image.network(
-                    "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
                     fit: BoxFit.contain,
                     width: width,
                   ),
@@ -535,8 +545,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
               boxShadow: [Style.defaultShadow],
               color: Style.whiteColor,
             ),
-            child: Image.network(
-              "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
+            child: CachedNetworkImage(
+              imageUrl:
+                  "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
               fit: BoxFit.contain,
             ),
           ),
@@ -545,7 +556,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
-  Widget screenshootCard(Images data, int index, double width) {
+  Widget screenshotCard(Images data, int index, double width) {
     return GestureDetector(
       onTap: () {
         showScreenshots(data, index, width);
@@ -598,8 +609,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 ),
                 child: Material(
                   elevation: Style.defaultElevation,
-                  child: Image.network(
-                    "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -667,8 +679,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
   }
 
   Widget topImage(TvDetail data, double height, double width) {
-    return Image.network(
-      "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
+    return CachedNetworkImage(
+      imageUrl: "https://image.tmdb.org/t/p/w500${data.posterPath.toString()}",
       height: height * 0.58,
       width: width,
       fit: BoxFit.cover,
@@ -683,8 +695,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
         borderRadius: BorderRadius.all(
           Radius.circular(Style.defaultRadiusSize / 4),
         ),
-        child: Image.network(
-          url,
+        child: CachedNetworkImage(
+          imageUrl: url,
           fit: BoxFit.cover,
           // 281 / 500 : resim cozunurlugu
         ),

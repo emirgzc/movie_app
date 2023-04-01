@@ -21,6 +21,11 @@
     "popular_series": "Popüler Diziler",
     "serials_on_air": "Yayında Olan Diziler",
 
+    "time_not_specified": "Süre Belirtilmemiş",
+    "no_producer_company_information_about_this_series_has_been_entered": "Bu dizi hakkında yapımcı şirket bilgisi girilmemiştir.",
+    "no_description_text_entered_with_the_serie": "Dizi ile girilmiş bir açıklama metni yok.",
+
+
     "screenshots": "Ekran Görüntüleri",
     "you_may_like": "Hoşunuza Gidebilir",
     "other_movies_in_the_series": "Serinin Diğer Filmleri",
