@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
-import 'package:movie_app/models/collection.dart';
 import 'package:movie_app/models/comment.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_tv.dart';
@@ -14,10 +13,13 @@ import 'package:http/http.dart' as http;
 class TvApiClient {
   final String apikey = "2444ef19302975166c670f0e507218ec";
   final String _baseuRL = "https://api.themoviedb.org/3";
-  final String _languageKey = "language=tr-TR";
+  // final String _languageKey = "language=tr-TR";
 
-  Future<List<Result>?> topRatedTvData({int page = 1}) async {
-    String baseUrl = '$_baseuRL/tv/top_rated?api_key=$apikey&$_languageKey&page=$page';
+  Future<List<Result>?> topRatedTvData(Locale locale, {int page = 1}) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
+    String baseUrl =
+        '$_baseuRL/tv/top_rated?api_key=$apikey&langauge=$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -29,7 +31,8 @@ class TvApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
-         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results
+            ?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -41,8 +44,11 @@ class TvApiClient {
     return null;
   }
 
-  Future<List<Result>?> popularTvData({int page = 1}) async {
-    String baseUrl = '$_baseuRL/tv/popular?api_key=$apikey&$_languageKey&page=$page';
+  Future<List<Result>?> popularTvData(Locale locale, {int page = 1}) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
+    String baseUrl =
+        '$_baseuRL/tv/popular?api_key=$apikey&language=$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -54,7 +60,8 @@ class TvApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
 
         Trend mapApiModel = Trend.fromMap(responseJson);
-         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results
+            ?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -66,8 +73,11 @@ class TvApiClient {
     return null;
   }
 
-  Future<List<Result>?> onTheAirTvData({int page = 1}) async {
-    String baseUrl = '$_baseuRL/tv/on_the_air?api_key=$apikey&$_languageKey&page=$page';
+  Future<List<Result>?> onTheAirTvData(Locale locale, {int page = 1}) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
+    String baseUrl =
+        '$_baseuRL/tv/on_the_air?api_key=$apikey&language=$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -78,7 +88,8 @@ class TvApiClient {
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         Trend mapApiModel = Trend.fromMap(responseJson);
-         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results
+            ?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -90,8 +101,11 @@ class TvApiClient {
     return null;
   }
 
-  Future<TvDetail?> detailMovieData(int movieId) async {
-    String baseUrl = '$_baseuRL/tv/$movieId?api_key=$apikey&$_languageKey';
+  Future<TvDetail?> detailMovieData(int movieId, Locale locale) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
+    String baseUrl =
+        '$_baseuRL/tv/$movieId?api_key=$apikey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -137,9 +151,11 @@ class TvApiClient {
     return null;
   }
 
-  Future<Trailer?> getTrailer(int movieId) async {
+  Future<Trailer?> getTrailer(int movieId, Locale locale) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
     String baseUrl =
-        '$_baseuRL/tv/$movieId/videos?api_key=$apikey&language=en-US';
+        '$_baseuRL/tv/$movieId/videos?api_key=$apikey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -162,9 +178,12 @@ class TvApiClient {
     return null;
   }
 
-  Future<List<Result>?> similarMoviesData(int movieId, {int page = 1}) async {
+  Future<List<Result>?> similarMoviesData(int movieId, Locale locale,
+      {int page = 1}) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
     String baseUrl =
-        '$_baseuRL/tv/$movieId/recommendations?api_key=$apikey&$_languageKey&page=$page';
+        '$_baseuRL/tv/$movieId/recommendations?api_key=$apikey&language=$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -177,7 +196,8 @@ class TvApiClient {
         Trend mapApiModel = Trend.fromMap(responseJson);
 
         // resmi olmayan filmeleri kaldır
-        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results
+            ?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
@@ -189,9 +209,11 @@ class TvApiClient {
     return null;
   }
 
-  Future<Credits?> credits(int movieId) async {
+  Future<Credits?> credits(int movieId, Locale locale) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
     String baseUrl =
-        '$_baseuRL/tv/$movieId/credits?api_key=$apikey&$_languageKey';
+        '$_baseuRL/tv/$movieId/credits?api_key=$apikey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -219,9 +241,12 @@ class TvApiClient {
     return null;
   }
 
-  Future<CastPersonsMovies?> castPersonsMovies(int personId) async {
+  Future<CastPersonsMovies?> castPersonsMovies(
+      int personId, Locale locale) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
     String baseUrl =
-        '$_baseuRL/person/$personId/tv_credits?api_key=$apikey&$_languageKey';
+        '$_baseuRL/person/$personId/tv_credits?api_key=$apikey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -235,7 +260,8 @@ class TvApiClient {
         CastPersonsMovies mapApiModel =
             CastPersonsMovies.fromJson(responseJson);
         if (mapApiModel.cast != null) {
-          mapApiModel.cast?.removeWhere((element) => element.posterPath == null);
+          mapApiModel.cast
+              ?.removeWhere((element) => element.posterPath == null);
         }
 
         return mapApiModel;
@@ -248,9 +274,11 @@ class TvApiClient {
     return null;
   }
 
-  Future<Comment?> getComment(int movieId) async {
+  Future<Comment?> getComment(int movieId, Locale locale) async {
+    String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
+
     String baseUrl =
-        '$_baseuRL/tv/$movieId/reviews?api_key=$apikey&language=tr-TR';
+        '$_baseuRL/tv/$movieId/reviews?api_key=$apikey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),

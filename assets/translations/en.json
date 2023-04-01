@@ -1,0 +1,68 @@
+{
+    "movie":"Movie",
+    "tv_series": "Tv Series",
+    "favorites": "Favorites",
+    "settings": "Settings",
+    "movies_in_cinemas": "Movies In Cinemas",
+    "trend_movies": "Trend Movies",
+    "upcoming_movies": "Upcoming Movies",
+
+    "no_description_text_entered_with_the_movie": "No description text entered with the movie.",
+    "unspecified": "Unspecified",
+    "there_are_no_images_for_this_movie":"There are no images for this movie.",
+    "no_movie_you_might_like": "No movie you might like.",
+
+    "popular_movies": "Popular Movies",
+    "top_rated_movies": "Top Rated Movies",
+    
+    "trending_series_of_the_week": "Trending Series of the Week",
+    "top_rated_series": "Top Rated Series",
+    "popular_series": "Popular Series",
+    "serials_on_air": "Serials On Air",
+
+    "screenshots": "Screenshots",
+    "you_may_like": "You May Like",
+    "other_movies_in_the_series": "Other Movies in the Series",
+    "relase_date": "Relase Date",
+    "country": "Country",
+    "rating": "Rating",
+    "cast_players": "Cast Players",
+    "comments": "Comments",
+
+    "minute": "minute",
+    "season": "season",
+    "episode": "episode",
+    "read": "read more",
+    "production_companies": "Production Companies",
+
+    "there_are_x_trailers_total": "There are {} trailers total.",
+
+    "january":"January",
+    "february":"February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December",
+
+    "search": "Search",
+    "score":"Score",
+    "featured_movies": "Featured Movies",
+    "see_all_movies": "See All Movies",
+    "actor": "Actor",
+    "movie_actor": "Movie Actor",
+    "seral_actor": "Serial Actor"
+
+
+    
+
+
+    
+
+
+}

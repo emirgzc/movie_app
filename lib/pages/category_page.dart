@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,9 +53,12 @@ class _CategoryPageState extends State<CategoryPage> {
       body: Padding(
         padding: Style.pagePadding,
         child: FutureBuilder(
-          future: MovieApiClient().nowPlayingMovieData(page: page),
+          future:
+              MovieApiClient().nowPlayingMovieData(context.locale, page: page),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData &&
+                snapshot.data != null) {
               var data = snapshot.data as List<Result>;
               return ListView(
                 children: [
@@ -64,7 +68,8 @@ class _CategoryPageState extends State<CategoryPage> {
                     itemCount: data.length,
                     crossAxisCount: 2,
                     itemBuilder: (BuildContext context, int index) {
-                      if (data[index].genreIds?.contains(widget.genreId) ?? false) {
+                      if (data[index].genreIds?.contains(widget.genreId) ??
+                          false) {
                         return ImageDetailCard(
                           title: data[index].title,
                           id: data[index].id ?? 0,
@@ -161,7 +166,8 @@ class _CategoryPageState extends State<CategoryPage> {
                 fillColor: Style.blackColor.withOpacity(0.1),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+                  borderRadius:
+                      BorderRadius.circular(Style.defaultRadiusSize / 2),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.zero,

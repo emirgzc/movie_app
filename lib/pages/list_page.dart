@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,25 +43,30 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     if (widget.clickedListName == "En Çok Oy Alan Filmler") {
-      listDataFuture = MovieApiClient().topRatedMovieData(page: page);
+      listDataFuture =
+          MovieApiClient().topRatedMovieData(context.locale, page: page);
     } else if (widget.clickedListName == "Gelmekte Olan Filmler") {
-      listDataFuture = MovieApiClient().upComingMovieData(page: page);
+      listDataFuture =
+          MovieApiClient().upComingMovieData(context.locale, page: page);
     } else if (widget.clickedListName == "Popüler Filmler") {
-      listDataFuture = MovieApiClient().popularMovieData(page: page);
+      listDataFuture =
+          MovieApiClient().popularMovieData(context.locale, page: page);
     } else if (widget.clickedListName == "Yayında Olan Filmler") {
-      listDataFuture = MovieApiClient().nowPlayingMovieData(page: page);
+      listDataFuture =
+          MovieApiClient().nowPlayingMovieData(context.locale, page: page);
     } else if (widget.clickedListName == "Trend Filmler") {
-      listDataFuture = MovieApiClient().trendData("movie");
+      listDataFuture = MovieApiClient().trendData("movie", context.locale);
     } else if (widget.clickedListName == "En Çok Oy Alan Diziler") {
-      listDataFuture = TvApiClient().topRatedTvData(page: page);
+      listDataFuture = TvApiClient().topRatedTvData(context.locale, page: page);
     } else if (widget.clickedListName == "Popüler Diziler") {
-      listDataFuture = TvApiClient().popularTvData(page: page);
+      listDataFuture = TvApiClient().popularTvData(context.locale, page: page);
     } else if (widget.clickedListName == "Yayında Olan Diziler") {
-      listDataFuture = TvApiClient().onTheAirTvData(page: page);
+      listDataFuture = TvApiClient().onTheAirTvData(context.locale, page: page);
     } else if (widget.clickedListName == "Haftanın Trend Dizileri") {
-      listDataFuture = MovieApiClient().trendData("tv");
+      listDataFuture = MovieApiClient().trendData("tv", context.locale);
     } else {
-      listDataFuture = MovieApiClient().topRatedMovieData(page: page);
+      listDataFuture =
+          MovieApiClient().topRatedMovieData(context.locale, page: page);
     }
 
     double width = MediaQuery.of(context).size.width;
@@ -78,9 +84,12 @@ class _ListPageState extends State<ListPage> {
       ),
       body: FutureBuilder(
         // 2 tane future bekliyor, future icinde future de yapilabilir
-        future: Future.wait([listDataFuture, MovieApiClient().genres()]),
+        future: Future.wait(
+            [listDataFuture, MovieApiClient().genres(context.locale)]),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData &&
+              snapshot.data != null) {
             var data = snapshot.data![0] as List<Result>;
             var genresData = snapshot.data![1] as Genres;
 
@@ -129,9 +138,10 @@ class _ListPageState extends State<ListPage> {
                               id: data[index].id ?? 0,
                               posterPath: data[index].posterPath ?? "",
                               voteAverageNumber: data[index].voteAverage ?? 0,
-                              dateCard: data[index].releaseDate.toString() == "null"
-                                  ? data[index].firstAirDate.toString()
-                                  : data[index].releaseDate.toString(),
+                              dateCard:
+                                  data[index].releaseDate.toString() == "null"
+                                      ? data[index].firstAirDate.toString()
+                                      : data[index].releaseDate.toString(),
                               width: width,
                               name: data[index].name ?? "",
                             );
@@ -216,7 +226,8 @@ class _ListPageState extends State<ListPage> {
                 fillColor: Style.blackColor.withOpacity(0.1),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+                  borderRadius:
+                      BorderRadius.circular(Style.defaultRadiusSize / 2),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.zero,
@@ -279,9 +290,12 @@ class _ListPageState extends State<ListPage> {
           });
         },
         style: ButtonStyle(
-          shadowColor: MaterialStateProperty.all<Color>(isSelected ? Colors.grey.shade800 : Colors.white),
-          foregroundColor: MaterialStateProperty.all<Color>(isSelected ? Colors.grey.shade800 : Colors.white),
-          backgroundColor: MaterialStateProperty.all<Color>(isSelected ? Colors.white : Colors.grey.shade800),
+          shadowColor: MaterialStateProperty.all<Color>(
+              isSelected ? Colors.grey.shade800 : Colors.white),
+          foregroundColor: MaterialStateProperty.all<Color>(
+              isSelected ? Colors.grey.shade800 : Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              isSelected ? Colors.white : Colors.grey.shade800),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),

@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 
 class ImageDetailCard extends StatelessWidget {
   const ImageDetailCard({
@@ -64,7 +66,7 @@ class ImageDetailCard extends StatelessWidget {
     return Hero(
       tag: "https://image.tmdb.org/t/p/w500$image",
       child: ClipRRect(
-        borderRadius:  BorderRadius.only(
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(
             Style.defaultRadiusSize / 2,
           ),
@@ -95,7 +97,7 @@ class ImageDetailCard extends StatelessWidget {
             color: Style.starColor,
           ),
           Text(
-            "Puan : ${voteAverage.toString().substring(0, 3)}",
+            "${LocaleKeys.score.tr()} : ${voteAverage.toString().substring(0, 3)}",
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
@@ -124,14 +126,16 @@ class ImageDetailCard extends StatelessWidget {
         (mediaType == null)
             ? Container()
             : Text(
-                (mediaType ?? "") == MediaType.movie.name ? "Film Aktörü" : "Dizi Aktörü",
+                (mediaType ?? "") == MediaType.movie.name
+                    ? LocaleKeys.movie_actor.tr()
+                    : LocaleKeys.seral_actor.tr(),
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                 textAlign: TextAlign.center,
               ),
         Padding(
-          padding:  EdgeInsets.only(
+          padding: EdgeInsets.only(
             top: Style.defaultPaddingSizeVertical / 3,
           ),
           child: Text(

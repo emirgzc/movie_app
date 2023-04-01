@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/style.dart';
@@ -36,22 +37,26 @@ class _MoviePageState extends State<MoviePage> {
               CreatePosterList(
                 listName: "Popüler Filmler",
                 width: width,
-                futureGetDataFunc: MovieApiClient().popularMovieData(),
+                futureGetDataFunc:
+                    MovieApiClient().popularMovieData(context.locale),
               ),
 
               Padding(
-                padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical),
+                padding: EdgeInsets.symmetric(
+                    vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
                   listName: "En Çok Oy Alan Filmler",
                   width: width,
-                  futureGetDataFunc: MovieApiClient().topRatedMovieData(),
+                  futureGetDataFunc:
+                      MovieApiClient().topRatedMovieData(context.locale),
                 ),
               ),
 
               CreatePosterList(
                 listName: "Gelmekte Olan Filmler",
                 width: width,
-                futureGetDataFunc: MovieApiClient().upComingMovieData(),
+                futureGetDataFunc:
+                    MovieApiClient().upComingMovieData(context.locale),
               ),
               /* createPosterList("En Çok Oy Alan Diziler", width,
                   TvApiClient().topRatedTvData()), */
@@ -66,9 +71,11 @@ class _MoviePageState extends State<MoviePage> {
 
   FutureBuilder<Genres?> genresList(double height) {
     return FutureBuilder(
-      future: MovieApiClient().genres(),
+      future: MovieApiClient().genres(context.locale),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var genresData = snapshot.data as Genres;
           return SizedBox(
             width: double.infinity,
@@ -97,9 +104,11 @@ class _MoviePageState extends State<MoviePage> {
 
   FutureBuilder<List<Result>?> sliderList() {
     return FutureBuilder(
-      future: MovieApiClient().trendData("movie"),
+      future: MovieApiClient().trendData("movie", context.locale),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var data = snapshot.data as List<Result?>;
           return CarouselSlider.builder(
             itemCount: data.length,
@@ -124,7 +133,8 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createCategoriesItem(double categoryItemWidth, String categoryName, int? genreId) {
+  createCategoriesItem(
+      double categoryItemWidth, String categoryName, int? genreId) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
         "/categoryPage",
@@ -163,7 +173,8 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createTopSliderItem(String? movieName, String? pathImage, List<Result?> data, int index) {
+  createTopSliderItem(
+      String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
         (data[index]?.title != null) ? "/movieDetailPage" : "/tvDetailPage",
@@ -171,7 +182,8 @@ class _MoviePageState extends State<MoviePage> {
       ),
       child: Container(
         margin: EdgeInsets.all(Style.defaultPaddingSize / 4),
-        padding: EdgeInsets.fromLTRB(0, Style.defaultPaddingSizeVertical / 2, 0, Style.defaultPaddingSizeVertical),
+        padding: EdgeInsets.fromLTRB(0, Style.defaultPaddingSizeVertical / 2, 0,
+            Style.defaultPaddingSizeVertical),
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
@@ -195,7 +207,10 @@ class _MoviePageState extends State<MoviePage> {
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Color.fromARGB(200, 0, 0, 0), Color.fromARGB(0, 0, 0, 0)],
+                        colors: [
+                          Color.fromARGB(200, 0, 0, 0),
+                          Color.fromARGB(0, 0, 0, 0)
+                        ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),

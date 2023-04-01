@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_zoom_drawer/config.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/pages/movie_page.dart';
+import 'package:movie_app/pages/settings_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,11 +37,12 @@ class _HomePageState extends State<HomePage> {
     const MoviePage(),
     const TVPage(),
     Container(color: Colors.purple.shade200),
-    Container(color: Colors.cyan.shade200),
+    SettingsPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    print(context.locale);
     return Scaffold(
       backgroundColor: Style.whiteColor,
       extendBody: true,
@@ -111,7 +114,8 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
-                      drawerListItem("Favoriler", Icons.favorite_border_outlined, () {}),
+                      drawerListItem(
+                          "Favoriler", Icons.favorite_border_outlined, () {}),
                       const Spacer(
                         flex: 3,
                       ),

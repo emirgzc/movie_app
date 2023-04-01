@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
@@ -25,22 +26,23 @@ class _TVPageState extends State<TVPage> {
             CreatePosterList(
               listName: "Haftanın Trend Dizileri",
               width: width,
-              futureGetDataFunc: MovieApiClient().trendData("tv"),
+              futureGetDataFunc:
+                  MovieApiClient().trendData("tv", context.locale),
             ),
             CreatePosterList(
               listName: "En Çok Oy Alan Diziler",
               width: width,
-              futureGetDataFunc: TvApiClient().topRatedTvData(),
+              futureGetDataFunc: TvApiClient().topRatedTvData(context.locale),
             ),
             CreatePosterList(
               listName: "Popüler Diziler",
               width: width,
-              futureGetDataFunc: TvApiClient().popularTvData(),
+              futureGetDataFunc: TvApiClient().popularTvData(context.locale),
             ),
             CreatePosterList(
               listName: "Yayında Olan Diziler",
               width: width,
-              futureGetDataFunc: TvApiClient().onTheAirTvData(),
+              futureGetDataFunc: TvApiClient().onTheAirTvData(context.locale),
             ),
             const SizedBox(height: 200),
           ],
