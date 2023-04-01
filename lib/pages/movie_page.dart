@@ -38,6 +38,7 @@ class _MoviePageState extends State<MoviePage> {
 
               CreatePosterList(
                 listName: LocaleKeys.popular_movies.tr(),
+                listType: ListType.popular_movies,
                 width: width,
                 futureGetDataFunc:
                     MovieApiClient().popularMovieData(context.locale),
@@ -48,6 +49,7 @@ class _MoviePageState extends State<MoviePage> {
                     vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
                   listName: LocaleKeys.top_rated_movies.tr(),
+                  listType: ListType.top_rated_movies,
                   width: width,
                   futureGetDataFunc:
                       MovieApiClient().topRatedMovieData(context.locale),
@@ -56,6 +58,7 @@ class _MoviePageState extends State<MoviePage> {
 
               CreatePosterList(
                 listName: LocaleKeys.upcoming_movies.tr(),
+                listType: ListType.upcoming_movies,
                 width: width,
                 futureGetDataFunc:
                     MovieApiClient().upComingMovieData(context.locale),

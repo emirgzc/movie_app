@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/data/tv_api_client.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/create_poster_list.dart';
 
 class TVPage extends StatefulWidget {
@@ -24,23 +26,27 @@ class _TVPageState extends State<TVPage> {
         child: Column(
           children: [
             CreatePosterList(
-              listName: "Haftanın Trend Dizileri",
+              listName: LocaleKeys.trending_series_of_the_week.tr(),
+              listType: ListType.trending_series_of_the_week,
               width: width,
               futureGetDataFunc:
                   MovieApiClient().trendData("tv", context.locale),
             ),
             CreatePosterList(
-              listName: "En Çok Oy Alan Diziler",
+              listName: LocaleKeys.top_rated_series.tr(),
+              listType: ListType.top_rated_series,
               width: width,
               futureGetDataFunc: TvApiClient().topRatedTvData(context.locale),
             ),
             CreatePosterList(
-              listName: "Popüler Diziler",
+              listName: LocaleKeys.popular_series.tr(),
+              listType: ListType.popular_series,
               width: width,
               futureGetDataFunc: TvApiClient().popularTvData(context.locale),
             ),
             CreatePosterList(
-              listName: "Yayında Olan Diziler",
+              listName: LocaleKeys.serials_on_air.tr(),
+              listType: ListType.series_on_air,
               width: width,
               futureGetDataFunc: TvApiClient().onTheAirTvData(context.locale),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/widgets/card/brochure_item.dart';
@@ -6,9 +7,11 @@ import 'package:movie_app/widgets/card/brochure_item.dart';
 class CreatePosterList extends StatelessWidget {
   const CreatePosterList(
       {super.key,
+      required this.listType,
       required this.listName,
       required this.width,
       required this.futureGetDataFunc});
+  final ListType listType;
   final String listName;
   final double width;
   final Future<List<dynamic>?> futureGetDataFunc;
@@ -32,7 +35,7 @@ class CreatePosterList extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   Navigator.of(context)
-                      .pushNamed("/listPage", arguments: listName);
+                      .pushNamed("/listPage", arguments: listType);
                 },
                 icon: const Icon(Icons.arrow_forward),
               )

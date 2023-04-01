@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/pages/cast_persons_movies_page.dart';
 import 'package:movie_app/pages/category_page.dart';
@@ -57,7 +58,7 @@ class RouteGenerator {
       case "/listPage":
         return _generateRoute(
           ListPage(
-            clickedListName: settings.arguments as String,
+            clickedListType: settings.arguments as ListType,
           ),
           settings,
         );
