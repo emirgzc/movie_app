@@ -12,6 +12,7 @@ abstract class  LocaleKeys {
   static const unspecified = 'unspecified';
   static const there_are_no_images_for_this_movie = 'there_are_no_images_for_this_movie';
   static const no_movie_you_might_like = 'no_movie_you_might_like';
+  static const other_movies_in_the_series_were_not_found = 'other_movies_in_the_series_were_not_found';
   static const popular_movies = 'popular_movies';
   static const top_rated_movies = 'top_rated_movies';
   static const trending_series_of_the_week = 'trending_series_of_the_week';
@@ -51,5 +52,7 @@ abstract class  LocaleKeys {
   static const actor = 'actor';
   static const movie_actor = 'movie_actor';
   static const seral_actor = 'seral_actor';
+  static const next_page = 'next_page';
+  static const previous_page = 'previous_page';
 
 }

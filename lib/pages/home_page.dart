@@ -8,6 +8,7 @@ import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/pages/movie_page.dart';
 import 'package:movie_app/pages/settings_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       const Spacer(),
                       drawerListItem(
-                        "Vizyondaki Filmler",
+                        LocaleKeys.movies_in_cinemas.tr(),
                         Icons.person_outline_outlined,
                         () {
                           Navigator.of(context).pushNamed(
@@ -95,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                       drawerListItem(
-                        "Trend Filmler",
+                        LocaleKeys.trend_movies.tr(),
                         Icons.star_border_outlined,
                         () {
                           Navigator.of(context).pushNamed(
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                       drawerListItem(
-                        "Gelecek Filmler",
+                        LocaleKeys.upcoming_movies.tr(),
                         Icons.hourglass_empty_outlined,
                         () {
                           Navigator.of(context).pushNamed(
@@ -114,8 +115,8 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
-                      drawerListItem(
-                          "Favoriler", Icons.favorite_border_outlined, () {}),
+                      drawerListItem(LocaleKeys.favorites.tr(),
+                          Icons.favorite_border_outlined, () {}),
                       const Spacer(
                         flex: 3,
                       ),
@@ -204,28 +205,28 @@ class _HomePageState extends State<HomePage> {
                 iconActiveColor: Colors.red,
                 textColor: Colors.red,
                 icon: Icons.movie_creation_outlined,
-                text: 'Film',
+                text: LocaleKeys.movie.tr(),
               ),
               GButton(
                 backgroundColor: Colors.blue.withOpacity(0.2),
                 iconActiveColor: Colors.blue,
                 textColor: Colors.blue,
                 icon: Icons.tv_outlined,
-                text: 'Dizi',
+                text: LocaleKeys.tv_series.tr(),
               ),
               GButton(
                 backgroundColor: Colors.purple.withOpacity(0.2),
                 iconActiveColor: Colors.purple,
                 textColor: Colors.purple,
                 icon: Icons.favorite_border_outlined,
-                text: 'Favori',
+                text: LocaleKeys.favorites.tr(),
               ),
               GButton(
                 backgroundColor: Colors.cyan.withOpacity(0.2),
                 iconActiveColor: Colors.cyan,
                 textColor: Colors.cyan,
                 icon: Icons.settings_outlined,
-                text: 'Ayarlar',
+                text: LocaleKeys.settings.tr(),
               ),
             ],
             selectedIndex: _selectedIndex,

@@ -13,11 +13,14 @@ import 'package:movie_app/pages/tv_detail_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
 
 class RouteGenerator {
-  static Route<dynamic>? _generateRoute(Widget togoPage, RouteSettings settings) {
+  static Route<dynamic>? _generateRoute(
+      Widget togoPage, RouteSettings settings) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return MaterialPageRoute(builder: (context) => togoPage, settings: settings);
+      return MaterialPageRoute(
+          builder: (context) => togoPage, settings: settings);
     } else {
-      return CupertinoPageRoute(builder: (context) => togoPage, settings: settings);
+      return CupertinoPageRoute(
+          builder: (context) => togoPage, settings: settings);
     }
   }
 
@@ -29,15 +32,24 @@ class RouteGenerator {
 
       // detail page
       case "/movieDetailPage":
-        return CupertinoPageRoute(builder: (context) => MovieDetailPage(movieId: settings.arguments as int), settings: settings);
+        return CupertinoPageRoute(
+            builder: (context) =>
+                MovieDetailPage(movieId: settings.arguments as int),
+            settings: settings);
 
       case "/tvDetailPage":
-        return CupertinoPageRoute(builder: (context) => TVDetailPage(movieId: settings.arguments as int), settings: settings);
+        return CupertinoPageRoute(
+            builder: (context) =>
+                TVDetailPage(movieId: settings.arguments as int),
+            settings: settings);
 
       // tariler page
       case "/trailerPage":
         return _generateRoute(
-          TrailerPage(id: (settings.arguments as List)[0] as int, videoURL: (settings.arguments as List)[1] as List<List<Results>?>?),
+          TrailerPage(
+              id: (settings.arguments as List)[0] as int,
+              videoURL:
+                  (settings.arguments as List)[1] as List<List<Results>?>?),
           settings,
         );
 
@@ -70,10 +82,12 @@ class RouteGenerator {
 
       // search page
       case "/searchPage":
-        return CupertinoPageRoute(builder: (context) => const SearchPage(), settings: settings);
+        return CupertinoPageRoute(
+            builder: (context) => const SearchPage(), settings: settings);
 
       case "/tvPage":
-        return CupertinoPageRoute(builder: (context) => const TVPage(), settings: settings);
+        return CupertinoPageRoute(
+            builder: (context) => const TVPage(), settings: settings);
 
       // unknown page
       default:

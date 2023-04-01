@@ -11,6 +11,7 @@
     "unspecified": "Belirtilmemiş",
     "there_are_no_images_for_this_movie":"Bu film için henüz görsel bulunmamaktadır.",
     "no_movie_you_might_like": "Hoşunuza gidebilecek filmler bulunamadı.",
+    "other_movies_in_the_series_were_not_found": "Serinin diğer filmleri bulunamadı.",
 
     "popular_movies": "Popüler Filmler",
     "top_rated_movies": "En Çok Oy Alan Filmler",
@@ -50,14 +51,16 @@
     "november": "Kasım",
     "december": "Aralık",
 
-    
     "search": "Ara",
     "score":"Puan",
     "featured_movies": "Öne Çıkan Filmleri",
     "see_all_movies": "Bütün Filmleri Gör",
     "actor": "Oyuncu",
     "movie_actor": "Film Aktörü",
-    "seral_actor": "Dizi Aktörü"
+    "seral_actor": "Dizi Aktörü",
+
+    "next_page": "Sonraki Sayfa",
+    "previous_page": "Önceki Sayfa"
 
     
 

@@ -10,6 +10,7 @@ import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/data/tv_api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 
 class ListPage extends StatefulWidget {
@@ -164,8 +165,8 @@ class _ListPageState extends State<ListPage> {
   }
 
   Widget pageIndicator() {
-    String arrowLeft = "Önceki Sayfa";
-    String arrowRight = "Sonraki Sayfa";
+    String arrowLeft = LocaleKeys.previous_page.tr();
+    String arrowRight = LocaleKeys.next_page.tr();
 
     return Padding(
       padding: EdgeInsets.only(

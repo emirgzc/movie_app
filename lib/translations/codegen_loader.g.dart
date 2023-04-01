@@ -26,6 +26,7 @@ class CodegenLoader extends AssetLoader{
   "unspecified": "Unspecified",
   "there_are_no_images_for_this_movie": "There are no images for this movie.",
   "no_movie_you_might_like": "No movie you might like.",
+  "other_movies_in_the_series_were_not_found": "Other movies in the series were not found.",
   "popular_movies": "Popular Movies",
   "top_rated_movies": "Top Rated Movies",
   "trending_series_of_the_week": "Trending Series of the Week",
@@ -64,7 +65,9 @@ class CodegenLoader extends AssetLoader{
   "see_all_movies": "See All Movies",
   "actor": "Actor",
   "movie_actor": "Movie Actor",
-  "seral_actor": "Serial Actor"
+  "seral_actor": "Serial Actor",
+  "next_page": "Next Page",
+  "previous_page": "Previous Page"
 };
 static const Map<String,dynamic> tr = {
   "movie": "Film",
@@ -78,6 +81,7 @@ static const Map<String,dynamic> tr = {
   "unspecified": "Belirtilmemiş",
   "there_are_no_images_for_this_movie": "Bu film için henüz görsel bulunmamaktadır.",
   "no_movie_you_might_like": "Hoşunuza gidebilecek filmler bulunamadı.",
+  "other_movies_in_the_series_were_not_found": "Serinin diğer filmleri bulunamadı.",
   "popular_movies": "Popüler Filmler",
   "top_rated_movies": "En Çok Oy Alan Filmler",
   "trending_series_of_the_week": "Haftanın Trend Dizileri",
@@ -116,7 +120,9 @@ static const Map<String,dynamic> tr = {
   "see_all_movies": "Bütün Filmleri Gör",
   "actor": "Oyuncu",
   "movie_actor": "Film Aktörü",
-  "seral_actor": "Dizi Aktörü"
+  "seral_actor": "Dizi Aktörü",
+  "next_page": "Sonraki Sayfa",
+  "previous_page": "Önceki Sayfa"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en, "tr": tr};
 }

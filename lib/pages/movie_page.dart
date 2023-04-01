@@ -2,10 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/create_poster_list.dart';
 
 class MoviePage extends StatefulWidget {
@@ -35,7 +37,7 @@ class _MoviePageState extends State<MoviePage> {
               genresList(height),
 
               CreatePosterList(
-                listName: "Popüler Filmler",
+                listName: LocaleKeys.popular_movies.tr(),
                 width: width,
                 futureGetDataFunc:
                     MovieApiClient().popularMovieData(context.locale),
@@ -45,7 +47,7 @@ class _MoviePageState extends State<MoviePage> {
                 padding: EdgeInsets.symmetric(
                     vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
-                  listName: "En Çok Oy Alan Filmler",
+                  listName: LocaleKeys.top_rated_movies.tr(),
                   width: width,
                   futureGetDataFunc:
                       MovieApiClient().topRatedMovieData(context.locale),
@@ -53,7 +55,7 @@ class _MoviePageState extends State<MoviePage> {
               ),
 
               CreatePosterList(
-                listName: "Gelmekte Olan Filmler",
+                listName: LocaleKeys.upcoming_movies.tr(),
                 width: width,
                 futureGetDataFunc:
                     MovieApiClient().upComingMovieData(context.locale),

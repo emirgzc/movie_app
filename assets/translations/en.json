@@ -11,6 +11,8 @@
     "unspecified": "Unspecified",
     "there_are_no_images_for_this_movie":"There are no images for this movie.",
     "no_movie_you_might_like": "No movie you might like.",
+    "other_movies_in_the_series_were_not_found": "Other movies in the series were not found.",
+
 
     "popular_movies": "Popular Movies",
     "top_rated_movies": "Top Rated Movies",
@@ -56,7 +58,10 @@
     "see_all_movies": "See All Movies",
     "actor": "Actor",
     "movie_actor": "Movie Actor",
-    "seral_actor": "Serial Actor"
+    "seral_actor": "Serial Actor",
+
+    "next_page": "Next Page",
+    "previous_page": "Previous Page"
 
 
     
