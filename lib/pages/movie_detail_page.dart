@@ -138,12 +138,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               oneriler(data, width),
 
                               // serinin diger filmleri*
-                              data.belongsToCollection != null
+                              data.belongsToCollection?.posterPath != null
                                   ? serininDigerFilmleri(
                                       width,
-                                      data.belongsToCollection["id"] ?? 0,
+                                      data.belongsToCollection?.id ?? 0,
                                     )
-                                  : const SizedBox(),
+                                  : const SizedBox.shrink(),
 
                               SizedBox(height: 500.h),
                             ],
