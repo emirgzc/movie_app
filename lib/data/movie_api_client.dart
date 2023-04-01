@@ -139,7 +139,7 @@ class MovieApiClient {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
     String baseUrl =
-        '$_baseuRL/movie/upcoming?api_key=$apikey&language= $_languageKey&page=$page';
+        '$_baseuRL/movie/upcoming?api_key=$apikey&language=$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),

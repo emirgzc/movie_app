@@ -228,8 +228,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ),
                       )
                     : Text(
-                        LocaleKeys.other_movies_in_the_series_were_not_found
-                            .tr(),
+                        LocaleKeys.other_movies_in_the_series_were_not_found.tr(),
                         style: TextStyle(color: Style.whiteColor),
                         textAlign: TextAlign.left,
                       ),
@@ -561,15 +560,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             shrinkWrap: true,
                             itemCount: creditsData.results?.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pushNamed("/castPersonsMoviesPage", arguments: [
-                                    creditsData.results?[index].id,
-                                    creditsData.results?[index].author,
-                                  ]);
-                                },
-                                child: commentCard(creditsData, index),
-                              );
+                              return commentCard(creditsData, index);
                             },
                           );
                         } else {
@@ -637,8 +628,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             color: Style.whiteColor,
                           )
                         : CachedNetworkImage(
-                            imageUrl:
-                                "https://image.tmdb.org/t/p/w500${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
+                            imageUrl: "https://www.gravatar.com/avatar/${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
                             fit: BoxFit.cover,
                             width: 120.w,
                             height: 120.h,
@@ -817,9 +807,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                     Text(
                       data.overview.toString().isEmpty
-                          ? LocaleKeys
-                              .no_description_text_entered_with_the_movie
-                              .tr()
+                          ? LocaleKeys.no_description_text_entered_with_the_movie.tr()
                           : data.overview.toString(),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 100,
