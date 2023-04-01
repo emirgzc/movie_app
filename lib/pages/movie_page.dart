@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/create_poster_list.dart';
 
 class MoviePage extends StatefulWidget {
@@ -23,6 +26,7 @@ class _MoviePageState extends State<MoviePage> {
 
     return Scaffold(
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Padding(
           padding: Style.pagePadding,
           child: Column(
@@ -35,7 +39,8 @@ class _MoviePageState extends State<MoviePage> {
               genresList(height),
 
               CreatePosterList(
-                listName: "Popüler Filmler",
+                listName: LocaleKeys.popular_movies.tr(),
+                listType: ListType.popular_movies,
                 width: width,
                 futureGetDataFunc:
                     MovieApiClient().popularMovieData(context.locale),
@@ -45,7 +50,8 @@ class _MoviePageState extends State<MoviePage> {
                 padding: EdgeInsets.symmetric(
                     vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
-                  listName: "En Çok Oy Alan Filmler",
+                  listName: LocaleKeys.top_rated_movies.tr(),
+                  listType: ListType.top_rated_movies,
                   width: width,
                   futureGetDataFunc:
                       MovieApiClient().topRatedMovieData(context.locale),
@@ -53,7 +59,8 @@ class _MoviePageState extends State<MoviePage> {
               ),
 
               CreatePosterList(
-                listName: "Gelmekte Olan Filmler",
+                listName: LocaleKeys.upcoming_movies.tr(),
+                listType: ListType.upcoming_movies,
                 width: width,
                 futureGetDataFunc:
                     MovieApiClient().upComingMovieData(context.locale),
@@ -81,6 +88,7 @@ class _MoviePageState extends State<MoviePage> {
             width: double.infinity,
             height: height / 12,
             child: ListView.builder(
+              physics: BouncingScrollPhysics(),
               clipBehavior: Clip.none,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -195,8 +203,8 @@ class _MoviePageState extends State<MoviePage> {
             ),
             child: Stack(
               children: [
-                Image.network(
-                  "https://image.tmdb.org/t/p/w500$pathImage",
+                CachedNetworkImage(
+                  imageUrl: "https://image.tmdb.org/t/p/w500$pathImage",
                   fit: BoxFit.cover,
                   width: 1000.0,
                 ),

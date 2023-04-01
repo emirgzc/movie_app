@@ -11,6 +11,7 @@
     "unspecified": "Unspecified",
     "there_are_no_images_for_this_movie":"There are no images for this movie.",
     "no_movie_you_might_like": "No movie you might like.",
+    "other_movies_in_the_series_were_not_found": "Other movies in the series were not found.",
 
     "popular_movies": "Popular Movies",
     "top_rated_movies": "Top Rated Movies",
@@ -19,6 +20,10 @@
     "top_rated_series": "Top Rated Series",
     "popular_series": "Popular Series",
     "serials_on_air": "Serials On Air",
+    
+    "time_not_specified": "Time Not Specified",
+    "no_producer_company_information_about_this_series_has_been_entered": "No producer company information about this series has been entered.",
+    "no_description_text_entered_with_the_serie": "No description text entered with the serie.",
 
     "screenshots": "Screenshots",
     "you_may_like": "You May Like",
@@ -29,9 +34,9 @@
     "cast_players": "Cast Players",
     "comments": "Comments",
 
-    "minute": "minute",
-    "season": "season",
-    "episode": "episode",
+    "minutes": "minutes",
+    "seasons": "seasons",
+    "episodes": "episodes",
     "read": "read more",
     "production_companies": "Production Companies",
 
@@ -56,7 +61,10 @@
     "see_all_movies": "See All Movies",
     "actor": "Actor",
     "movie_actor": "Movie Actor",
-    "seral_actor": "Serial Actor"
+    "seral_actor": "Serial Actor",
+
+    "next_page": "Next Page",
+    "previous_page": "Previous Page"
 
 
     

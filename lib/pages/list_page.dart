@@ -5,16 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/movie_api_client.dart';
 import 'package:movie_app/data/tv_api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 
 class ListPage extends StatefulWidget {
-  ListPage({super.key, required this.clickedListName});
-  String clickedListName;
+  ListPage({super.key, required this.clickedListType});
+  ListType clickedListType;
 
   @override
   State<ListPage> createState() => _ListPageState();
@@ -42,31 +44,45 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.clickedListName == "En Çok Oy Alan Filmler") {
-      listDataFuture =
-          MovieApiClient().topRatedMovieData(context.locale, page: page);
-    } else if (widget.clickedListName == "Gelmekte Olan Filmler") {
-      listDataFuture =
-          MovieApiClient().upComingMovieData(context.locale, page: page);
-    } else if (widget.clickedListName == "Popüler Filmler") {
-      listDataFuture =
-          MovieApiClient().popularMovieData(context.locale, page: page);
-    } else if (widget.clickedListName == "Yayında Olan Filmler") {
-      listDataFuture =
-          MovieApiClient().nowPlayingMovieData(context.locale, page: page);
-    } else if (widget.clickedListName == "Trend Filmler") {
-      listDataFuture = MovieApiClient().trendData("movie", context.locale);
-    } else if (widget.clickedListName == "En Çok Oy Alan Diziler") {
-      listDataFuture = TvApiClient().topRatedTvData(context.locale, page: page);
-    } else if (widget.clickedListName == "Popüler Diziler") {
-      listDataFuture = TvApiClient().popularTvData(context.locale, page: page);
-    } else if (widget.clickedListName == "Yayında Olan Diziler") {
-      listDataFuture = TvApiClient().onTheAirTvData(context.locale, page: page);
-    } else if (widget.clickedListName == "Haftanın Trend Dizileri") {
-      listDataFuture = MovieApiClient().trendData("tv", context.locale);
-    } else {
-      listDataFuture =
-          MovieApiClient().topRatedMovieData(context.locale, page: page);
+    switch (widget.clickedListType) {
+      case ListType.top_rated_movies:
+        listDataFuture =
+            MovieApiClient().topRatedMovieData(context.locale, page: page);
+        break;
+      case ListType.upcoming_movies:
+        listDataFuture =
+            MovieApiClient().upComingMovieData(context.locale, page: page);
+        break;
+      case ListType.popular_movies:
+        listDataFuture =
+            MovieApiClient().popularMovieData(context.locale, page: page);
+        break;
+      case ListType.movies_in_cinemas:
+        listDataFuture =
+            MovieApiClient().nowPlayingMovieData(context.locale, page: page);
+        break;
+      case ListType.trend_movies:
+        listDataFuture = MovieApiClient().trendData("movie", context.locale);
+        break;
+      case ListType.top_rated_series:
+        listDataFuture =
+            TvApiClient().topRatedTvData(context.locale, page: page);
+        break;
+      case ListType.popular_series:
+        listDataFuture =
+            TvApiClient().popularTvData(context.locale, page: page);
+        break;
+      case ListType.series_on_air:
+        listDataFuture =
+            TvApiClient().onTheAirTvData(context.locale, page: page);
+        break;
+      case ListType.trending_series_of_the_week:
+        listDataFuture = MovieApiClient().trendData("tv", context.locale);
+        break;
+
+      default:
+        listDataFuture =
+            MovieApiClient().topRatedMovieData(context.locale, page: page);
     }
 
     double width = MediaQuery.of(context).size.width;
@@ -124,6 +140,7 @@ class _ListPageState extends State<ListPage> {
                   // liste elemanları
                   Expanded(
                     child: ListView(
+                      physics: BouncingScrollPhysics(),
                       children: [
                         // filmler
                         MasonryGridView.count(
@@ -164,8 +181,8 @@ class _ListPageState extends State<ListPage> {
   }
 
   Widget pageIndicator() {
-    String arrowLeft = "Önceki Sayfa";
-    String arrowRight = "Sonraki Sayfa";
+    String arrowLeft = LocaleKeys.previous_page.tr();
+    String arrowRight = LocaleKeys.next_page.tr();
 
     return Padding(
       padding: EdgeInsets.only(

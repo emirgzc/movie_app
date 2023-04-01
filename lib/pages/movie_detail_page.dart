@@ -16,6 +16,7 @@ import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/blurry_image.dart';
 import 'package:movie_app/widgets/detail_page/movie/button_for_detail_movie.dart';
@@ -71,6 +72,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         width: double.infinity,
                         height: double.infinity,
                         child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
                           child: Column(
                             children: [
                               appBar(context),
@@ -114,7 +116,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 ),
                                 child: Row(
                                   children: [
-                                    titleHead("Ekran Görüntüleri"),
+                                    titleHead(LocaleKeys.screenshots.tr()),
                                   ],
                                 ),
                               ),
@@ -130,7 +132,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 ),
                                 child: Row(
                                   children: [
-                                    titleHead("Hoşunuza Gidebilir"),
+                                    titleHead(LocaleKeys.you_may_like.tr()),
                                   ],
                                 ),
                               ),
@@ -178,7 +180,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           ),
           child: Row(
             children: [
-              titleHead("Serinin Diğer Filmleri"),
+              titleHead(LocaleKeys.other_movies_in_the_series.tr()),
             ],
           ),
         ),
@@ -195,6 +197,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         width: double.infinity,
                         height: (width / 3) * 1.5,
                         child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
                           clipBehavior: Clip.none,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -224,8 +227,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           },
                         ),
                       )
-                    : const Text(
-                        'Serinin diğer filmleri bulunamadı.',
+                    : Text(
+                        LocaleKeys.other_movies_in_the_series_were_not_found
+                            .tr(),
                         style: TextStyle(color: Style.whiteColor),
                         textAlign: TextAlign.left,
                       ),
@@ -252,6 +256,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     width: double.infinity,
                     height: (width / 3) * 1.5,
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       clipBehavior: Clip.none,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -271,8 +276,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       },
                     ),
                   )
-                : const Text(
-                    'Hoşunuza gidebilecek filmler bulunamadı.',
+                : Text(
+                    LocaleKeys.no_movie_you_might_like.tr(),
                     style: TextStyle(color: Style.whiteColor),
                     textAlign: TextAlign.left,
                   ),
@@ -302,6 +307,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     // 281 / 500 : resim cozunurlugu
                     height: (width / 2) * (281 / 500),
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       clipBehavior: Clip.none,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -324,8 +330,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       },
                     ),
                   )
-                : const Text(
-                    'Bu film için henüz görsel bulunmamaktadır.',
+                : Text(
+                    LocaleKeys.there_are_no_images_for_this_movie.tr(),
                     style: TextStyle(color: Style.whiteColor),
                     textAlign: TextAlign.left,
                   ),
@@ -342,6 +348,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               width: double.infinity,
               height: (width / 2) * (281 / 500),
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 clipBehavior: Clip.none,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
@@ -385,6 +392,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         width: double.infinity,
         height: (width - 90) / 6,
         child: ListView(
+          physics: BouncingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           children: [
@@ -529,11 +537,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: Scrollbar(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Yorumlar",
+                      LocaleKeys.comments.tr(),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.w600,
@@ -627,8 +636,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             Icons.nature_people_outlined,
                             color: Style.whiteColor,
                           )
-                        : Image.network(
-                            "https://image.tmdb.org/t/p/w500${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
+                        : CachedNetworkImage(
+                            imageUrl:
+                                "https://image.tmdb.org/t/p/w500${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
                             fit: BoxFit.cover,
                             width: 120.w,
                             height: 120.h,
@@ -671,11 +681,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: Scrollbar(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Oyuncular: ",
+                      LocaleKeys.cast_players.tr(),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.w600,
@@ -788,6 +799,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize),
             child: Scrollbar(
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -804,7 +816,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       ),
                     ),
                     Text(
-                      data.overview.toString().isEmpty ? "Film ile ilgili girilmiş bir açıklama metni yok" : data.overview.toString(),
+                      data.overview.toString().isEmpty
+                          ? LocaleKeys
+                              .no_description_text_entered_with_the_movie
+                              .tr()
+                          : data.overview.toString(),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 100,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -834,6 +850,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           child: Padding(
             padding: EdgeInsets.all(Style.defaultPaddingSize),
             child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -847,6 +864,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         Flexible(
                           fit: FlexFit.loose,
                           child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: data?.genres?.length ?? 0,
                             shrinkWrap: true,
@@ -878,14 +896,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           // yil
                           movieDetailItem(
                             data,
-                            "Yayın Tarihi : ",
+                            "${LocaleKeys.relase_date.tr()} : ",
                             toRevolveDate(
                               (data?.releaseDate.toString().split(" ")[0] ?? DateTime.now().toString()),
                             ),
                           ),
                           movieDetailItem(
                             data,
-                            "Ülke : ",
+                            "${LocaleKeys.country.tr()} : ",
                             (data?.productionCountries?.isEmpty ?? false)
                                 ? "Belirtilmemiş"
                                 : (data?.productionCountries?[0].name ?? "-").toString(),
@@ -893,7 +911,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
                           movieDetailItem(
                             data,
-                            "Değerlendirme : ",
+                            "${LocaleKeys.rating.tr()} : ",
                             (data?.voteAverage.toString().isEmpty ?? false)
                                 ? "Belirtilmemiş"
                                 : ((data?.voteAverage)).toString().substring(0, 3),
@@ -945,8 +963,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         borderRadius: BorderRadius.all(
           Radius.circular(Style.defaultRadiusSize / 2),
         ),
-        child: Image.network(
-          url,
+        child: CachedNetworkImage(
+          imageUrl: url,
           fit: BoxFit.cover,
           width: width,
           // 281 / 500 : resim cozunurlugu

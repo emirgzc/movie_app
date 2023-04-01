@@ -26,12 +26,16 @@ class CodegenLoader extends AssetLoader{
   "unspecified": "Unspecified",
   "there_are_no_images_for_this_movie": "There are no images for this movie.",
   "no_movie_you_might_like": "No movie you might like.",
+  "other_movies_in_the_series_were_not_found": "Other movies in the series were not found.",
   "popular_movies": "Popular Movies",
   "top_rated_movies": "Top Rated Movies",
   "trending_series_of_the_week": "Trending Series of the Week",
   "top_rated_series": "Top Rated Series",
   "popular_series": "Popular Series",
   "serials_on_air": "Serials On Air",
+  "time_not_specified": "Time Not Specified",
+  "no_producer_company_information_about_this_series_has_been_entered": "No producer company information about this series has been entered.",
+  "no_description_text_entered_with_the_serie": "No description text entered with the serie.",
   "screenshots": "Screenshots",
   "you_may_like": "You May Like",
   "other_movies_in_the_series": "Other Movies in the Series",
@@ -40,9 +44,9 @@ class CodegenLoader extends AssetLoader{
   "rating": "Rating",
   "cast_players": "Cast Players",
   "comments": "Comments",
-  "minute": "minute",
-  "season": "season",
-  "episode": "episode",
+  "minutes": "minutes",
+  "seasons": "seasons",
+  "episodes": "episodes",
   "read": "read more",
   "production_companies": "Production Companies",
   "there_are_x_trailers_total": "There are {} trailers total.",
@@ -64,7 +68,9 @@ class CodegenLoader extends AssetLoader{
   "see_all_movies": "See All Movies",
   "actor": "Actor",
   "movie_actor": "Movie Actor",
-  "seral_actor": "Serial Actor"
+  "seral_actor": "Serial Actor",
+  "next_page": "Next Page",
+  "previous_page": "Previous Page"
 };
 static const Map<String,dynamic> tr = {
   "movie": "Film",
@@ -78,12 +84,16 @@ static const Map<String,dynamic> tr = {
   "unspecified": "Belirtilmemiş",
   "there_are_no_images_for_this_movie": "Bu film için henüz görsel bulunmamaktadır.",
   "no_movie_you_might_like": "Hoşunuza gidebilecek filmler bulunamadı.",
+  "other_movies_in_the_series_were_not_found": "Serinin diğer filmleri bulunamadı.",
   "popular_movies": "Popüler Filmler",
   "top_rated_movies": "En Çok Oy Alan Filmler",
   "trending_series_of_the_week": "Haftanın Trend Dizileri",
   "top_rated_series": "En Çok Oy Alan Diziler",
   "popular_series": "Popüler Diziler",
   "serials_on_air": "Yayında Olan Diziler",
+  "time_not_specified": "Süre Belirtilmemiş",
+  "no_producer_company_information_about_this_series_has_been_entered": "Bu dizi hakkında yapımcı şirket bilgisi girilmemiştir.",
+  "no_description_text_entered_with_the_serie": "Dizi ile girilmiş bir açıklama metni yok.",
   "screenshots": "Ekran Görüntüleri",
   "you_may_like": "Hoşunuza Gidebilir",
   "other_movies_in_the_series": "Serinin Diğer Filmleri",
@@ -116,7 +126,9 @@ static const Map<String,dynamic> tr = {
   "see_all_movies": "Bütün Filmleri Gör",
   "actor": "Oyuncu",
   "movie_actor": "Film Aktörü",
-  "seral_actor": "Dizi Aktörü"
+  "seral_actor": "Dizi Aktörü",
+  "next_page": "Sonraki Sayfa",
+  "previous_page": "Önceki Sayfa"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en, "tr": tr};
 }

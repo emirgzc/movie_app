@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class BlurryImage extends StatelessWidget {
@@ -9,8 +10,8 @@ class BlurryImage extends StatelessWidget {
     return ConstrainedBox(
       constraints: const BoxConstraints.expand(),
       child: path != null
-          ? Image.network(
-              "https://image.tmdb.org/t/p/w500${path.toString()}",
+          ? CachedNetworkImage(
+              imageUrl: "https://image.tmdb.org/t/p/w500${path.toString()}",
               fit: BoxFit.cover,
             )
           : const SizedBox(),
