@@ -55,7 +55,7 @@ class _SwitchFowSettingsState extends State<SwitchFowSettings> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          !widget.isChanged ? 'Türkçe' : 'English',
+          !widget.isChanged ? 'English' : 'Türkçe',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         Switch.adaptive(
