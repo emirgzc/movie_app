@@ -7,13 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/data/movie_api_client.dart';
-import 'package:movie_app/data/tv_api_client.dart';
+import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 
+// ignore: must_be_immutable
 class ListPage extends StatefulWidget {
   ListPage({super.key, required this.clickedListType});
   ListType clickedListType;
@@ -22,17 +22,16 @@ class ListPage extends StatefulWidget {
   State<ListPage> createState() => _ListPageState();
 }
 
-int genreFilterId = 28;
 
 class _ListPageState extends State<ListPage> {
-  int page = 1;
+  int _page = 1;
   late TextEditingController _textEditingController;
   late Future<List<Result>?> listDataFuture;
 
   @override
   void initState() {
     _textEditingController = TextEditingController();
-    _textEditingController.text = page.toString();
+    _textEditingController.text = _page.toString();
     super.initState();
   }
 
@@ -46,46 +45,40 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     switch (widget.clickedListType) {
       case ListType.top_rated_movies:
-        listDataFuture =
-            MovieApiClient().topRatedMovieData(context.locale, page: page);
+        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page,);
         break;
       case ListType.upcoming_movies:
-        listDataFuture =
-            MovieApiClient().upComingMovieData(context.locale, page: page);
+        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
         break;
       case ListType.popular_movies:
-        listDataFuture =
-            MovieApiClient().popularMovieData(context.locale, page: page);
+        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale, page: _page);
         break;
       case ListType.movies_in_cinemas:
-        listDataFuture =
-            MovieApiClient().nowPlayingMovieData(context.locale, page: page);
+        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.now_playing.name, context.locale, page: _page);
         break;
       case ListType.trend_movies:
-        listDataFuture = MovieApiClient().trendData("movie", context.locale);
+        listDataFuture = ApiClient().trendData("movie", context.locale);
         break;
       case ListType.top_rated_series:
-        listDataFuture =
-            TvApiClient().topRatedTvData(context.locale, page: page);
+        listDataFuture = ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
         break;
       case ListType.popular_series:
-        listDataFuture =
-            TvApiClient().popularTvData(context.locale, page: page);
+      listDataFuture = ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
+
         break;
       case ListType.series_on_air:
-        listDataFuture =
-            TvApiClient().onTheAirTvData(context.locale, page: page);
+      listDataFuture = ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
         break;
       case ListType.trending_series_of_the_week:
-        listDataFuture = MovieApiClient().trendData("tv", context.locale);
+        listDataFuture = ApiClient().trendData("tv", context.locale);
         break;
 
       default:
-        listDataFuture =
-            MovieApiClient().topRatedMovieData(context.locale, page: page);
+        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
     }
 
     double width = MediaQuery.of(context).size.width;
+    int _crossAxisCount = 2;
 
     return Scaffold(
       appBar: AppBar(
@@ -98,85 +91,60 @@ class _ListPageState extends State<ListPage> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder(
-        // 2 tane future bekliyor, future icinde future de yapilabilir
-        future: Future.wait(
-            [listDataFuture, MovieApiClient().genres(context.locale)]),
-        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData &&
-              snapshot.data != null) {
-            var data = snapshot.data![0] as List<Result>;
-            var genresData = snapshot.data![1] as Genres;
+      body: bodyList(_crossAxisCount, width),
+    );
+  }
 
-            return Padding(
-              padding: Style.pagePadding,
-              child: Column(
-                children: [
-                  // Kategori filtre
-                  /* Padding(
-                    padding: EdgeInsets.only(bottom: Style.defaultPaddingSizeHorizontal),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 100.h,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              clipBehavior: Clip.none,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: genresData.genres.length,
-                              itemBuilder: (context, index) {
-                                return filterGenreItem(genresData.genres[index].id, genresData.genres[index].name);
-                              },
-                            ),
-                          ),
-                        ],
+  FutureBuilder<List<List<Result>?>> bodyList(int _crossAxisCount, double width) {
+    return FutureBuilder(
+      // 2 tane future bekliyor, future icinde future de yapilabilir
+      future: Future.wait([listDataFuture]),
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var data = snapshot.data![0] as List<Result>;
+
+          return Padding(
+            padding: Style.pagePadding,
+            child: Column(
+              children: [
+                // liste elemanları
+                Expanded(
+                  child: ListView(
+                    physics: BouncingScrollPhysics(),
+                    children: [
+                      // filmler
+                      MasonryGridView.count(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: data.length,
+                        crossAxisCount: _crossAxisCount,
+                        itemBuilder: (BuildContext context, int index) {
+                          // film kartları
+                          return ImageDetailCard(
+                            title: data[index].title,
+                            id: data[index].id ,
+                            posterPath: data[index].posterPath ,
+                            voteAverageNumber: data[index].voteAverage,
+                            dateCard: data[index].releaseDate.toString() == "null"
+                                ? data[index].firstAirDate.toString()
+                                : data[index].releaseDate.toString(),
+                            width: width,
+                            name: data[index].name ,
+                          );
+                        },
                       ),
-                    ),
-                  ), */
-
-                  // liste elemanları
-                  Expanded(
-                    child: ListView(
-                      physics: BouncingScrollPhysics(),
-                      children: [
-                        // filmler
-                        MasonryGridView.count(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: data.length,
-                          crossAxisCount: 2,
-                          itemBuilder: (BuildContext context, int index) {
-                            // film kartları
-                            return ImageDetailCard(
-                              title: data[index].title,
-                              id: data[index].id ?? 0,
-                              posterPath: data[index].posterPath ?? "",
-                              voteAverageNumber: data[index].voteAverage ?? 0,
-                              dateCard:
-                                  data[index].releaseDate.toString() == "null"
-                                      ? data[index].firstAirDate.toString()
-                                      : data[index].releaseDate.toString(),
-                              width: width,
-                              name: data[index].name ?? "",
-                            );
-                          },
-                        ),
-                        // ileri geri sayfa butonları
-                        pageIndicator(),
-                      ],
-                    ),
+                      // ileri geri sayfa butonları
+                      pageIndicator(),
+                    ],
                   ),
-                ],
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
@@ -197,10 +165,10 @@ class _ListPageState extends State<ListPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
-                if (page > 1) {
+                if (_page > 1) {
                   setState(() {
-                    page--;
-                    _textEditingController.text = page.toString();
+                    _page--;
+                    _textEditingController.text = _page.toString();
                   });
                 }
               },
@@ -243,8 +211,7 @@ class _ListPageState extends State<ListPage> {
                 fillColor: Style.blackColor.withOpacity(0.1),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(Style.defaultRadiusSize / 2),
+                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.zero,
@@ -267,10 +234,10 @@ class _ListPageState extends State<ListPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
-                if (page < 101) {
+                if (_page < 101) {
                   setState(() {
-                    page++;
-                    _textEditingController.text = page.toString();
+                    _page++;
+                    _textEditingController.text = _page.toString();
                   });
                 }
               },
@@ -296,39 +263,4 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  Widget filterGenreItem(int genreId, String genreName) {
-    bool isSelected = genreId == genreFilterId;
-    return Padding(
-      padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 4),
-      child: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            isSelected ? genreFilterId = 0 : genreFilterId = genreId;
-          });
-        },
-        style: ButtonStyle(
-          shadowColor: MaterialStateProperty.all<Color>(
-              isSelected ? Colors.grey.shade800 : Colors.white),
-          foregroundColor: MaterialStateProperty.all<Color>(
-              isSelected ? Colors.grey.shade800 : Colors.white),
-          backgroundColor: MaterialStateProperty.all<Color>(
-              isSelected ? Colors.white : Colors.grey.shade800),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-            ),
-          ),
-        ),
-        child: Center(
-          child: Text(
-            genreName,
-            style: TextStyle(
-              fontSize: 32.sp,
-              color: isSelected ? Colors.grey.shade800 : Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

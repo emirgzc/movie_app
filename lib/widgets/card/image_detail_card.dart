@@ -89,7 +89,7 @@ class ImageDetailCard extends StatelessWidget {
       padding: EdgeInsets.only(bottom: Style.defaultPaddingSize.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
             Icons.star_outlined,
@@ -105,8 +105,7 @@ class ImageDetailCard extends StatelessWidget {
     );
   }
 
-  Widget titleAndDate(
-      String? titleCard, String? name, String? dateCard, BuildContext context) {
+  Widget titleAndDate(String? titleCard, String? name, String? dateCard, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -124,12 +123,10 @@ class ImageDetailCard extends StatelessWidget {
           ),
         ),
         (mediaType == null)
-            ? Container()
+            ? SizedBox.shrink()
             : Text(
-                (mediaType ?? "") == MediaType.movie.name
-                    ? LocaleKeys.movie_actor.tr()
-                    : LocaleKeys.seral_actor.tr(),
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                (mediaType ?? "") == MediaTypes.movie.name ? LocaleKeys.movie_actor.tr() : LocaleKeys.seral_actor.tr(),
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                 textAlign: TextAlign.center,
@@ -139,9 +136,7 @@ class ImageDetailCard extends StatelessWidget {
             top: Style.defaultPaddingSizeVertical / 3,
           ),
           child: Text(
-            (dateCard ?? DateTime.now()).toString().isNotEmpty
-                ? toRevolveDate((dateCard ?? DateTime.now()).toString())
-                : "-",
+            (dateCard ?? DateTime.now()).toString().isNotEmpty ? toRevolveDate((dateCard ?? DateTime.now()).toString()) : "-",
             style: const TextStyle(
               color: Style.dateColor,
             ),

@@ -1,4 +1,4 @@
-enum MediaType {
+enum MediaTypes {
   movie,
   tv,
   person,
@@ -14,4 +14,18 @@ enum ListType {
   popular_series,
   series_on_air,
   trending_series_of_the_week,
+}
+
+enum LanguageCodes{
+  en,
+  tr,
+}
+
+enum MovieApiType{
+  popular,
+  top_rated,
+  upcoming,
+  now_playing,
+  trending,
+  on_the_air,
 }

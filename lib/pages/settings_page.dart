@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -10,8 +11,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _isChanged = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                child: SwitchFowSettings(isChanged: _isChanged),
+                child: SwitchFowSettings(),
               ),
             ],
           ),
@@ -41,8 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
 // ignore: must_be_immutable
 class SwitchFowSettings extends StatefulWidget {
-  SwitchFowSettings({super.key, required this.isChanged});
-  bool isChanged;
+  SwitchFowSettings({super.key});
 
   @override
   State<SwitchFowSettings> createState() => _SwitchFowSettingsState();
@@ -55,16 +53,13 @@ class _SwitchFowSettingsState extends State<SwitchFowSettings> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          !widget.isChanged ? 'English' : 'Türkçe',
+          context.locale.languageCode == LanguageCodes.tr.name ? 'Türkçe' : 'English',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         Switch.adaptive(
           activeColor: Colors.red,
-          value: widget.isChanged,
+          value: context.locale.languageCode == LanguageCodes.tr.name ? true : false,
           onChanged: (value) {
-            setState(() {
-              widget.isChanged = value;
-            });
             context.locale == const Locale("tr")
                 ? context.setLocale(
                     const Locale("en"),

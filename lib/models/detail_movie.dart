@@ -39,6 +39,7 @@ class DetailMovie {
 
   bool? adult;
   String? backdropPath;
+  
   BelongsToCollection? belongsToCollection;
   int? budget;
   List<Genre>? genres;

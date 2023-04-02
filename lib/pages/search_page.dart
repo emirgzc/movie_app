@@ -8,7 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/data/movie_api_client.dart';
+import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/search.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/person/person_detail_dialog.dart';
@@ -28,6 +28,7 @@ class _SearchPageState extends State<SearchPage> {
   late final ScrollController _scrollController;
   String searchValue = '';
   int totalPage = 1;
+  int _crossAxisCount = 2;
 
   @override
   void initState() {
@@ -49,46 +50,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.grey.shade800,
-        title: SizedBox(
-          width: double.infinity,
-          height: 160.h,
-          child: Center(
-            child: TextField(
-              autofocus: true,
-              controller: _textEditingController,
-              onChanged: (value) => setState(() => searchValue = value),
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    Icons.delete_forever,
-                    color: Colors.red.shade700,
-                  ),
-                  onPressed: () => setState(
-                    () {
-                      _textEditingController.clear();
-                      _textEditingControllerForPage.text='1';
-
-                      _page = 1;
-                    },
-                  ),
-                ),
-                hintText: LocaleKeys.search.tr(),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ),
-      ),
+      appBar: getAppBar(),
       body: Padding(
         padding: Style.pagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FutureBuilder(
-              future: MovieApiClient().search(context.locale, query: searchValue.isNotEmpty ? searchValue : "", page: _page),
+              future: ApiClient().search(context.locale, query: searchValue.isNotEmpty ? searchValue : "", page: _page),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   var data = snapshot.data as Search;
@@ -100,8 +69,8 @@ class _SearchPageState extends State<SearchPage> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: data.results?.length,
-                      gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                      gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: _crossAxisCount,
                       ),
                       itemBuilder: (context, index) {
                         return searcItemCard(context, data, index, data.results?[index].mediaType);
@@ -120,6 +89,41 @@ class _SearchPageState extends State<SearchPage> {
             ),
             _textEditingController.text.isEmpty ? const SizedBox.shrink() : pageIndicator(),
           ],
+        ),
+      ),
+    );
+  }
+
+  AppBar getAppBar() {
+    return AppBar(
+      foregroundColor: Colors.grey.shade800,
+      title: SizedBox(
+        width: double.infinity,
+        height: 160.h,
+        child: Center(
+          child: TextFormField(
+            autofocus: true,
+            controller: _textEditingController,
+            onChanged: (value) => setState(() => searchValue = value),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  Icons.delete_forever,
+                  color: Colors.red.shade700,
+                ),
+                onPressed: () => setState(
+                  () {
+                    _textEditingController.clear();
+                    _textEditingControllerForPage.text = '1';
+                    _page = 1;
+                  },
+                ),
+              ),
+              hintText: LocaleKeys.search.tr(),
+              border: InputBorder.none,
+            ),
+          ),
         ),
       ),
     );
@@ -248,6 +252,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget searcItemCard(BuildContext context, Search data, int index, String? mediaType) {
+    int _starCount = 5;
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -255,12 +260,12 @@ class _SearchPageState extends State<SearchPage> {
           currentFocus.unfocus();
         }
 
-        if (mediaType == MediaType.person.name && data.results?[index].profilePath != null) {
+        if (mediaType == MediaTypes.person.name && data.results?[index].profilePath != null) {
           showPersonDetail(data.results?[index]);
         } else if (data.results?[index].posterPath == null) {
         } else {
           Navigator.of(context).pushNamed(
-            mediaType == MediaType.movie.name ? "/movieDetailPage" : "/tvDetailPage",
+            mediaType == MediaTypes.movie.name ? "/movieDetailPage" : "/tvDetailPage",
             arguments: data.results?[index].id,
           );
         }
@@ -287,26 +292,25 @@ class _SearchPageState extends State<SearchPage> {
 
               // isim, tarih, derecelendirme, kategoriler
               Text(
-                mediaType == MediaType.movie.name ? (data.results?[index].title ?? '-') : (data.results?[index].name ?? '-'),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+                mediaType == MediaTypes.movie.name ? (data.results?[index].title ?? '-') : (data.results?[index].name ?? '-'),
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                 textAlign: TextAlign.center,
               ),
-              (mediaType == MediaType.person.name)
-                  ? const SizedBox()
+              (mediaType == MediaTypes.person.name)
+                  ? const SizedBox.shrink()
                   : Padding(
                       padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 4),
                       child: Text(
                         toRevolveDate(checkDateType(mediaType, data.results?[index]) ?? DateTime.now().toString()),
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: Colors.grey.shade600,
                             ),
                       ),
                     ),
-              (mediaType == MediaType.person.name)
-                  ? const SizedBox()
+              (mediaType == MediaTypes.person.name)
+                  ? const SizedBox.shrink()
                   : RatingBar.builder(
                       ignoreGestures: true,
                       itemSize: 36.r,
@@ -316,7 +320,7 @@ class _SearchPageState extends State<SearchPage> {
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
-                      itemCount: 5,
+                      itemCount: _starCount,
                       itemBuilder: (context, _) => const Icon(
                         Icons.star,
                         color: Style.starColor,
@@ -348,10 +352,10 @@ class _SearchPageState extends State<SearchPage> {
       ),
       child: Hero(
         tag:
-            'https://image.tmdb.org/t/p/w500${(mediaType == MediaType.movie.name || mediaType == MediaType.tv.name) ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
+            'https://image.tmdb.org/t/p/w500${(mediaType == MediaTypes.movie.name || mediaType == MediaTypes.tv.name) ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
         child: CachedNetworkImage(
           imageUrl:
-              'https://image.tmdb.org/t/p/w500${(mediaType == MediaType.movie.name || mediaType == MediaType.tv.name) ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
+              'https://image.tmdb.org/t/p/w500${(mediaType == MediaTypes.movie.name || mediaType == MediaTypes.tv.name) ? (data.results?[index].posterPath) : data.results?[index].profilePath}',
           width: double.infinity,
           fit: BoxFit.cover,
         ),
@@ -360,11 +364,11 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   String? checkMediaType(String? mediaType) {
-    if (mediaType == MediaType.movie.name) {
+    if (mediaType == MediaTypes.movie.name) {
       return ConvertToMediaTypes.Film.name.toString();
-    } else if (mediaType == MediaType.tv.name) {
+    } else if (mediaType == MediaTypes.tv.name) {
       return ConvertToMediaTypes.Dizi.name.toString();
-    } else if (mediaType == MediaType.person.name) {
+    } else if (mediaType == MediaTypes.person.name) {
       return ConvertToMediaTypes.Oyuncu.name.toString();
     } else {
       return null;
@@ -373,9 +377,9 @@ class _SearchPageState extends State<SearchPage> {
 
   String? checkDateType(String? mediaType, SearchResult? result) {
     if (result != null) {
-      if (mediaType == MediaType.movie.name) {
+      if (mediaType == MediaTypes.movie.name) {
         return result.releaseDate.toString();
-      } else if (mediaType == MediaType.tv.name) {
+      } else if (mediaType == MediaTypes.tv.name) {
         return result.firstAirDate.toString();
       } else {
         return DateTime.now().toString();

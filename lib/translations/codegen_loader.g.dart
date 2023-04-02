@@ -97,7 +97,7 @@ static const Map<String,dynamic> tr = {
   "screenshots": "Ekran Görüntüleri",
   "you_may_like": "Hoşunuza Gidebilir",
   "other_movies_in_the_series": "Serinin Diğer Filmleri",
-  "relase_date": "Yayın Tarihi",
+  "relase_date": "Çıkış Tarihi",
   "country": "Ülke",
   "rating": "Değerlendirme",
   "cast_players": "Oyuncular",

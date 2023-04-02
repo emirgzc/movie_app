@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/constants/style.dart';
 
 class PublicImage extends StatelessWidget {
-  const PublicImage(
-      {super.key,
-      required this.path,
-      required this.width,
-      required this.height});
+  const PublicImage({super.key, required this.path, required this.width, required this.height});
   final String? path;
   final double width;
   final double height;
@@ -34,8 +30,7 @@ class PublicImage extends StatelessWidget {
                   //elevation: 14,
                   color: Colors.transparent,
                   child: CachedNetworkImage(
-                    imageUrl:
-                        "https://image.tmdb.org/t/p/w500${path.toString()}",
+                    imageUrl: "https://image.tmdb.org/t/p/w500${path.toString()}",
                     fit: BoxFit.contain,
                     width: width,
                   ),
@@ -52,8 +47,7 @@ class PublicImage extends StatelessWidget {
             Radius.circular(Style.defaultRadiusSize / 3),
           ),
           child: SizedBox(
-            width: width - 200,
-            height: height * 0.4,
+            width: width * 0.56,
             child: CachedNetworkImage(
               imageUrl: "https://image.tmdb.org/t/p/w500${path.toString()}",
               fit: BoxFit.fitHeight,

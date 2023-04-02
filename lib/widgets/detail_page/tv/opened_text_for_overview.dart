@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
+// ignore: must_be_immutable
 class OpenedTextForOverview extends StatefulWidget {
   OpenedTextForOverview({
     super.key,

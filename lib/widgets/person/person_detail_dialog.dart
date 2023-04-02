@@ -28,9 +28,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(
-          vertical: Style.defaultPaddingSize * 2,
-          horizontal: Style.defaultPaddingSize),
+      insetPadding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize * 2, horizontal: Style.defaultPaddingSize),
       child: Container(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.65,
@@ -45,113 +43,29 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
           physics: BouncingScrollPhysics(),
           children: [
             CachedNetworkImage(
-              imageUrl:
-                  'https://image.tmdb.org/t/p/w500${widget.data?.profilePath}',
+              imageUrl: 'https://image.tmdb.org/t/p/w500${widget.data?.profilePath}',
               height: 600.h,
               fit: BoxFit.contain,
             ),
             Padding(
-              padding:
-                  EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.data?.name ?? "--",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ],
+              padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2),
+              child: Text(
+                widget.data?.name ?? "--",
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
               padding: EdgeInsets.only(bottom: Style.defaultPaddingSize / 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    LocaleKeys.featured_movies.tr(),
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 450.h,
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: widget.data?.knownFor?.length ?? 0,
-                itemBuilder: (context, index) {
-                  if (widget.data?.knownFor?[index].posterPath == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                        (widget.data?.knownFor?[index].mediaType ==
-                                MediaType.movie.name)
-                            ? "/movieDetailPage"
-                            : "/tvDetailPage",
-                        arguments: widget.data?.knownFor?[index].id,
-                      );
-                    },
-                    child: Container(
-                      margin:
-                          EdgeInsets.only(right: Style.defaultPaddingSize / 2),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Material(
-                              elevation: Style.defaultElevation,
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    'https://image.tmdb.org/t/p/w500${widget.data?.knownFor?[index].posterPath}',
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: Style.defaultPaddingSize / 4),
-                            child: Row(
-                              children: [
-                                RatingBar.builder(
-                                  ignoreGestures: true,
-                                  itemSize: 32.r,
-                                  glowColor: Style.starColor,
-                                  unratedColor: Colors.black,
-                                  initialRating: (widget.data?.knownFor?[index]
-                                              .voteAverage ??
-                                          0.0) /
-                                      2,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemBuilder: (context, _) => const Icon(
-                                    Icons.star,
-                                    color: Style.starColor,
-                                  ),
-                                  onRatingUpdate: (double value) {},
-                                ),
-                                Text(
-                                  '(${(widget.data?.knownFor?[index].voteAverage).toString().substring(0, 3).toString()})',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+              child: Text(
+                LocaleKeys.featured_movies.tr(),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                },
               ),
             ),
+            topRatedList(),
             Padding(
               padding: EdgeInsets.only(top: Style.defaultPaddingSize / 2),
               child: ElevatedButton(
@@ -174,5 +88,74 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
         ),
       ),
     );
+  }
+
+  Widget topRatedList() {
+    return SizedBox(
+            height: 450.h,
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: widget.data?.knownFor?.length ?? 0,
+              itemBuilder: (context, index) {
+                if (widget.data?.knownFor?[index].posterPath == null) {
+                  return const SizedBox.shrink();
+                }
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      (widget.data?.knownFor?[index].mediaType == MediaTypes.movie.name) ? "/movieDetailPage" : "/tvDetailPage",
+                      arguments: widget.data?.knownFor?[index].id,
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: Style.defaultPaddingSize / 2),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Material(
+                            elevation: Style.defaultElevation,
+                            child: CachedNetworkImage(
+                              imageUrl: 'https://image.tmdb.org/t/p/w500${widget.data?.knownFor?[index].posterPath}',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: Style.defaultPaddingSize / 4),
+                          child: Row(
+                            children: [
+                              RatingBar.builder(
+                                ignoreGestures: true,
+                                itemSize: 32.r,
+                                glowColor: Style.starColor,
+                                unratedColor: Colors.black,
+                                initialRating: (widget.data?.knownFor?[index].voteAverage ?? 0.0) / 2,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemBuilder: (context, _) => const Icon(
+                                  Icons.star,
+                                  color: Style.starColor,
+                                ),
+                                onRatingUpdate: (double value) {},
+                              ),
+                              Text(
+                                '(${(widget.data?.knownFor?[index].voteAverage).toString().substring(0, 3).toString()})',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
   }
 }

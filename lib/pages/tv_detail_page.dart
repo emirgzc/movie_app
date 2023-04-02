@@ -5,9 +5,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/data/tv_api_client.dart';
+import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/models/images.dart';
@@ -52,7 +53,10 @@ class _TVDetailPageState extends State<TVDetailPage> {
   Scaffold newBody(double height, double width) {
     return Scaffold(
       body: FutureBuilder(
-        future: TvApiClient().detailMovieData(widget.movieId ?? 0, context.locale),
+        future: ApiClient().detailTvData(
+          widget.movieId ?? 0,
+          context.locale,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
             var data = snapshot.data as TvDetail;
@@ -60,147 +64,17 @@ class _TVDetailPageState extends State<TVDetailPage> {
               physics: BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  Stack(
-                    children: [
-                      topImage(data, height, width),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: Padding(
-                          padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-                          child: textItemForContainer(
-                            data,
-                            Text(
-                              (data.episodeRunTime?.isEmpty ?? false)
-                                  ? LocaleKeys.time_not_specified.tr()
-                                  : "${data.episodeRunTime?[0].toString()} ${LocaleKeys.minutes.tr()}",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        bottom: 0,
-                        child: circleItem(
-                          context,
-                          () => Navigator.pop(context),
-                          Icons.arrow_back,
-                        ),
-                      ),
-                      FutureBuilder(
-                        future: TvApiClient().getTrailer(widget.movieId ?? 0, context.locale),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-                            var data = snapshot.data as Trailer;
-                            return Positioned(
-                              left: 180.w,
-                              bottom: 0,
-                              child: circleItem(
-                                context,
-                                () {
-                                  Navigator.of(context).pushNamed("/trailerPage", arguments: [
-                                    widget.movieId ?? 0,
-                                    [data.results],
-                                  ]);
-                                },
-                                Icons.play_arrow_rounded,
-                              ),
-                            );
-                          } else {
-                            return Positioned(
-                              left: 180.w,
-                              bottom: 0,
-                              child: circleItem(
-                                context,
-                                () {},
-                                Icons.play_disabled_rounded,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                  imageAndCircleItem(data, height, width, context),
                   Container(
                     padding: Style.pagePadding,
                     color: Style.whiteColor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            textItemForContainer(
-                              data,
-                              Text(
-                                "${data.numberOfSeasons} ${LocaleKeys.seasons.tr()}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            textItemForContainer(
-                              data,
-                              Text(
-                                "${data.numberOfEpisodes} ${LocaleKeys.episodes.tr()}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            textItemForContainer(
-                              data,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Style.starColor,
-                                    size: Style.defaultIconsSize,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: Style.defaultPaddingSizeHorizontal / 3,
-                                    ),
-                                    child: Text(
-                                      (data.voteAverage.toString().isEmpty)
-                                          ? LocaleKeys.unspecified.tr()
-                                          : ((data.voteAverage))
-                                              .toString()
-                                              .substring(0, 3),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Spacer(),
-                            Icon(
-                              Icons.favorite_border,
-                              size: Style.iconSizeTv,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: (Style.defaultPaddingSizeHorizontal / 4) * 3,
-                              ),
-                              child: Icon(
-                                Icons.add_box_outlined,
-                                size: Style.iconSizeTv,
-                              ),
-                            ),
-                            Icon(
-                              Icons.share_outlined,
-                              size: Style.iconSizeTv,
-                            ),
-                          ],
-                        ),
+                        detailTop(data),
                         Padding(
                           padding: EdgeInsets.only(
-                            top: (Style.defaultPaddingSizeVertical / 2) * 4,
+                            top: (Style.defaultPaddingSizeVertical / 2) * 3,
                             bottom: Style.defaultPaddingSizeVertical / 2,
                           ),
                           child: Text(
@@ -209,7 +83,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           ),
                         ),
                         (data.tagline?.isEmpty ?? false)
-                            ? Container()
+                            ? SizedBox.shrink()
                             : Text(
                                 data.tagline ?? "-",
                                 style: Theme.of(context).textTheme.titleSmall,
@@ -227,12 +101,12 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             (data.productionCountries?.isEmpty ?? false)
                                 ? "${LocaleKeys.country.tr()} : ${LocaleKeys.unspecified.tr()}"
                                 : "${LocaleKeys.country.tr()} : ${data.productionCountries?[0].name ?? "-"}",
-                            style: Theme.of(context).textTheme.bodyLarge,
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),
                         Text(
                           "${LocaleKeys.relase_date.tr()} : ${toRevolveDate((data.firstAirDate.toString().split(" ")[0]))}",
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -244,30 +118,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        FutureBuilder(
-                          future: TvApiClient().credits(widget.movieId ?? 0, context.locale),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-                              var creditsData = snapshot.data as Credits;
-
-                              return SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ...List.generate(
-                                      creditsData.cast.length,
-                                      (index) => peopleCard(context, creditsData, index),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ),
+                        peopleList(context),
                         Padding(
                           padding: EdgeInsets.only(
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
@@ -278,40 +129,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        FutureBuilder(
-                          future: TvApiClient().getImages(widget.movieId ?? 0),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-                              var data = snapshot.data as Images;
-
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  top: Style.defaultPaddingSizeVertical / 2,
-                                ),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  // dogru oranin yakalanmasi icin
-                                  // 281 / 500 : resim cozunurlugu
-                                  height: (width / 2) * (281 / 500),
-                                  child: ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    clipBehavior: Clip.none,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: data.backdrops?.length ?? 0,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return screenshotCard(data, index, width);
-                                    },
-                                  ),
-                                ),
-                              );
-                            } else {
-                              // loading
-                              return const SizedBox();
-                            }
-                          },
-                        ),
+                        imageList(width),
                         Padding(
                           padding: EdgeInsets.only(
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
@@ -322,44 +140,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        FutureBuilder(
-                          future: TvApiClient().similarMoviesData(data.id ?? 0, context.locale),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-                              var similarMoviesData = snapshot.data as List<Result?>;
-
-                              return Padding(
-                                padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: (width / 3) * 1.5,
-                                  child: ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    clipBehavior: Clip.none,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: similarMoviesData.length,
-                                    // ilk eleman olarak varsa
-                                    itemBuilder: (context, index) {
-                                      return GestureDetector(
-                                        onTap: () => Navigator.of(context).pushNamed(
-                                          "/tvDetailPage",
-                                          arguments: (similarMoviesData[index]?.id ?? 0),
-                                        ),
-                                        child: BrochureItem(
-                                          brochureUrl: "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
-                                          width: width,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ),
+                        similarList(data, context, width),
                         Padding(
                           padding: EdgeInsets.only(
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
@@ -372,48 +153,14 @@ class _TVDetailPageState extends State<TVDetailPage> {
                         ),
                         (data.productionCompanies?.isEmpty ?? false)
                             ? const Text(
-                                LocaleKeys
-                                    .no_producer_company_information_about_this_series_has_been_entered,
+                                LocaleKeys.no_producer_company_information_about_this_series_has_been_entered,
                               )
-                            : SizedBox(
-                                width: double.infinity,
-                                // dogru oranin yakalanmasi icin
-                                // 281 / 500 : resim cozunurlugu
-                                height: 250.h,
-                                child: ListView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  clipBehavior: Clip.none,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: data.productionCompanies?.length ?? 0,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    if (data.productionCompanies?[index].logoPath != null) {
-                                      return productCompaniesImage(context, data, index, width);
-                                    }
-                                    return Text('Bu dizi hakkında yapımcı şirket bilgisi girilmemiştir.');
-                                  },
-                                ),
-                              ),
+                            : companyList(data, width),
                         Padding(
                           padding: EdgeInsets.only(
                             top: (Style.defaultPaddingSizeVertical / 2) * 3,
                           ),
-                          child: SizedBox(
-                            width: double.infinity,
-                            // dogru oranin yakalanmasi icin
-                            // 281 / 500 : resim cozunurlugu
-                            height: 80.h,
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              clipBehavior: Clip.none,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: data.genres?.length ?? 0,
-                              itemBuilder: (BuildContext context, int index) {
-                                return genresCard(data, index);
-                              },
-                            ),
-                          ),
+                          child: genresList(data),
                         ),
                         SizedBox(height: 400.h),
                       ],
@@ -423,10 +170,293 @@ class _TVDetailPageState extends State<TVDetailPage> {
               ),
             );
           } else {
-            return Container();
+            return SizedBox.shrink();
           }
         },
       ),
+    );
+  }
+
+  Widget genresList(TvDetail data) {
+    return SizedBox(
+      width: double.infinity,
+      // dogru oranin yakalanmasi icin
+      // 281 / 500 : resim cozunurlugu
+      height: 80.h,
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        clipBehavior: Clip.none,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: data.genres?.length ?? 0,
+        itemBuilder: (BuildContext context, int index) {
+          return genresCard(data, index);
+        },
+      ),
+    );
+  }
+
+  Widget companyList(TvDetail data, double width) {
+    return SizedBox(
+      width: double.infinity,
+      // dogru oranin yakalanmasi icin
+      // 281 / 500 : resim cozunurlugu
+      height: 250.h,
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        clipBehavior: Clip.none,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: data.productionCompanies?.length ?? 0,
+        itemBuilder: (BuildContext context, int index) {
+          if (data.productionCompanies?[index].logoPath != null) {
+            return productCompaniesImage(context, data, index, width);
+          }
+          return Text('Bu dizi hakkında yapımcı şirket bilgisi girilmemiştir.');
+        },
+      ),
+    );
+  }
+
+  FutureBuilder<List<Result>?> similarList(TvDetail data, BuildContext context, double width) {
+    return FutureBuilder(
+      future: ApiClient().similarMoviesData(data.id ?? 0, context.locale, type: MediaTypes.tv.name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var similarMoviesData = snapshot.data as List<Result?>;
+
+          return Padding(
+            padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
+            child: SizedBox(
+              width: double.infinity,
+              height: (width / 3) * 1.5,
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                clipBehavior: Clip.none,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: similarMoviesData.length,
+                // ilk eleman olarak varsa
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed(
+                      "/tvDetailPage",
+                      arguments: (similarMoviesData[index]?.id),
+                    ),
+                    child: BrochureItem(
+                      brochureUrl: "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
+                      width: width,
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  FutureBuilder<Images?> imageList(double width) {
+    return FutureBuilder(
+      future: ApiClient().getImages(widget.movieId ?? 0, type: MediaTypes.tv.name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var data = snapshot.data as Images;
+
+          return Padding(
+            padding: EdgeInsets.only(
+              top: Style.defaultPaddingSizeVertical / 2,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              // dogru oranin yakalanmasi icin
+              // 281 / 500 : resim cozunurlugu
+              height: (width / 2) * (281 / 500),
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                clipBehavior: Clip.none,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: data.backdrops?.length ?? 0,
+                itemBuilder: (BuildContext context, int index) {
+                  return screenshotCard(data, index, width);
+                },
+              ),
+            ),
+          );
+        } else {
+          // loading
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  FutureBuilder<Credits?> peopleList(BuildContext context) {
+    return FutureBuilder(
+      future: ApiClient().getCredits(widget.movieId ?? 0, context.locale, type: MediaTypes.tv.name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var creditsData = snapshot.data as Credits;
+
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...List.generate(
+                  creditsData.cast.length,
+                  (index) => peopleCard(context, creditsData, index),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  Widget detailTop(TvDetail data) {
+    return Row(
+      children: [
+        textItemForContainer(
+          data,
+          Text(
+            "${data.numberOfSeasons} ${LocaleKeys.seasons.tr()}",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        textItemForContainer(
+          data,
+          Text(
+            "${data.numberOfEpisodes} ${LocaleKeys.episodes.tr()}",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        textItemForContainer(
+          data,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.star,
+                color: Style.starColor,
+                size: Style.defaultIconsSize,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: Style.defaultPaddingSizeHorizontal / 3,
+                ),
+                child: Text(
+                  (data.voteAverage.toString().isEmpty) ? LocaleKeys.unspecified.tr() : ((data.voteAverage)).toString().substring(0, 3),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Spacer(),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: (Style.defaultPaddingSizeHorizontal / 4) * 3,
+          ),
+          child: Icon(
+            Icons.add_box_outlined,
+            size: Style.iconSizeTv,
+          ),
+        ),
+        Icon(
+          Icons.share_outlined,
+          size: Style.iconSizeTv,
+        ),
+      ],
+    );
+  }
+
+  Stack imageAndCircleItem(TvDetail data, double height, double width, BuildContext context) {
+    return Stack(
+      children: [
+        topImage(data, height, width),
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: Padding(
+            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+            child: textItemForContainer(
+              data,
+              Text(
+                (data.episodeRunTime?.isEmpty ?? false)
+                    ? LocaleKeys.time_not_specified.tr()
+                    : "${data.episodeRunTime?[0].toString()} ${LocaleKeys.minutes.tr()}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          bottom: 0,
+          child: circleItem(
+            context,
+            () => Navigator.pop(context),
+            Icons.arrow_back,
+          ),
+        ),
+        FutureBuilder(
+          future: ApiClient().getTrailer(widget.movieId ?? 0, context.locale, type: MediaTypes.tv.name),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+              var data = snapshot.data as Trailer;
+              return Positioned(
+                left: 180.w,
+                bottom: 0,
+                child: circleItem(
+                  context,
+                  () {
+                    Navigator.of(context).pushNamed("/trailerPage", arguments: [
+                      widget.movieId ?? 0,
+                      [data.results],
+                    ]);
+                  },
+                  Icons.play_arrow_rounded,
+                ),
+              );
+            } else {
+              return Positioned(
+                left: 180.w,
+                bottom: 0,
+                child: circleItem(
+                  context,
+                  () {},
+                  Icons.play_disabled_rounded,
+                ),
+              );
+            }
+          },
+        ),
+        Positioned(
+          left: 360.w,
+          bottom: 0,
+          child: circleItem(
+            context,
+            () {},
+            Icons.favorite_border_outlined,
+          ),
+        ),
+      ],
     );
   }
 
@@ -467,14 +497,13 @@ class _TVDetailPageState extends State<TVDetailPage> {
               ),
               child: Material(
                 //elevation: 14,
-                color: Colors.transparent,
+                color: Style.transparentColor,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: Style.defaultPaddingSizeHorizontal * 3,
                   ),
                   child: CachedNetworkImage(
-                    imageUrl:
-                        "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
+                    imageUrl: "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
                     fit: BoxFit.contain,
                     width: width,
                   ),
@@ -489,29 +518,25 @@ class _TVDetailPageState extends State<TVDetailPage> {
           top: (Style.defaultPaddingSizeVertical / 2) * 3,
           right: Style.defaultPaddingSizeHorizontal,
         ),
-        child: SizedBox(
+        child: Container(
+          padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+          margin: EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2, right: Style.defaultPaddingSizeHorizontal / 2),
+          height: 140.h,
           width: 400.w,
-          child: Container(
-            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-            margin: EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2, right: Style.defaultPaddingSizeHorizontal / 2),
-            height: 140.h,
-            width: 400.w,
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Style.blackColor.withOpacity(0.2),
-              ),
-              borderRadius: BorderRadius.circular(
-                Style.defaultRadiusSize / 4,
-              ),
-              boxShadow: [Style.defaultShadow],
-              color: Style.whiteColor,
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 1,
+              color: Style.blackColor.withOpacity(0.2),
             ),
-            child: CachedNetworkImage(
-              imageUrl:
-                  "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
-              fit: BoxFit.contain,
+            borderRadius: BorderRadius.circular(
+              Style.defaultRadiusSize / 4,
             ),
+            boxShadow: [Style.defaultShadow],
+            color: Style.whiteColor,
+          ),
+          child: CachedNetworkImage(
+            imageUrl: "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
+            fit: BoxFit.contain,
           ),
         ),
       ),
@@ -527,18 +552,15 @@ class _TVDetailPageState extends State<TVDetailPage> {
         padding: EdgeInsets.only(
           right: Style.defaultPaddingSizeHorizontal / 2,
         ),
-        child: SizedBox(
+        child: Container(
+          margin: EdgeInsets.only(
+            bottom: Style.defaultPaddingSize / 2,
+            right: Style.defaultPaddingSize / 2,
+          ),
+          height: 220.h,
           width: 470.w,
-          child: Container(
-            margin: const EdgeInsets.only(
-              bottom: 8,
-              right: 8,
-            ),
-            height: 220.h,
-            width: 470.w,
-            child: screenshotItem(
-              "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath}",
-            ),
+          child: screenshotItem(
+            "https://image.tmdb.org/t/p/w500${data.backdrops?[index].filePath}",
           ),
         ),
       ),
@@ -572,8 +594,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 child: Material(
                   elevation: Style.defaultElevation,
                   child: CachedNetworkImage(
-                    imageUrl:
-                        "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
+                    imageUrl: "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -651,7 +672,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
   Widget screenshotItem(String url) {
     return Material(
       elevation: Style.defaultElevation,
-      color: Colors.transparent,
+      color: Style.transparentColor,
       child: ClipRRect(
         borderRadius: BorderRadius.all(
           Radius.circular(Style.defaultRadiusSize / 4),
@@ -684,7 +705,12 @@ class _TVDetailPageState extends State<TVDetailPage> {
                       ))
                   .toList(),
               options: CarouselOptions(
-                  initialPage: clickedIndex, autoPlay: true, aspectRatio: 2.0, enlargeCenterPage: true, enableInfiniteScroll: false),
+                initialPage: clickedIndex,
+                autoPlay: true,
+                aspectRatio: 2.0,
+                enlargeCenterPage: true,
+                enableInfiniteScroll: false,
+              ),
             ),
           ),
         );

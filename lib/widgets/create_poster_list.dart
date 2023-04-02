@@ -24,68 +24,76 @@ class CreatePosterList extends StatelessWidget {
         Padding(
           padding:
               EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                listName,
-                textScaleFactor: 1.2,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed("/listPage", arguments: listType);
-                },
-                icon: const Icon(Icons.arrow_forward),
-              )
-            ],
-          ),
+          child: titleHead(context),
         ),
         // film afis resmi
-        FutureBuilder(
-          future: futureGetDataFunc,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasData &&
-                snapshot.data != null) {
-              var data = snapshot.data as List<dynamic>;
-              return SizedBox(
-                width: double.infinity,
-                height: (width / 3) * 1.5,
-                child: ListView.builder(
-                  clipBehavior: Clip.none,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () => Navigator.of(context).pushNamed(
-                        (data[index].name == null)
-                            ? "/movieDetailPage"
-                            : "/tvDetailPage",
-                        arguments: (data[index]?.id ?? 0),
-                      ),
-                      child: BrochureItem(
-                        brochureUrl:
-                            "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
-                        width: width,
-                      ),
-                    );
-                  },
-                ),
-              );
-            } else {
-              return buildLastProcessCardEffect(
-                const SizedBox(
-                  child: CircularProgressIndicator(),
-                ),
-                context,
-              );
-            }
-          },
-        ),
+        listAllItem(),
       ],
     );
+  }
+
+  FutureBuilder<List<dynamic>?> listAllItem() {
+    return FutureBuilder(
+        future: futureGetDataFunc,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData &&
+              snapshot.data != null) {
+            var data = snapshot.data as List<dynamic>;
+            return SizedBox(
+              width: double.infinity,
+              height: (width / 3) * 1.5,
+              child: ListView.builder(
+                clipBehavior: Clip.none,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed(
+                      (data[index].name == null)
+                          ? "/movieDetailPage"
+                          : "/tvDetailPage",
+                      arguments: (data[index]?.id ?? 0),
+                    ),
+                    child: BrochureItem(
+                      brochureUrl:
+                          "https://image.tmdb.org/t/p/w500${data[index]?.posterPath.toString()}",
+                      width: width,
+                    ),
+                  );
+                },
+              ),
+            );
+          } else {
+            return buildLastProcessCardEffect(
+              const SizedBox(
+                child: CircularProgressIndicator(),
+              ),
+              context,
+            );
+          }
+        },
+      );
+  }
+
+  Widget titleHead(BuildContext context) {
+    return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              listName,
+              textScaleFactor: 1.2,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed("/listPage", arguments: listType);
+              },
+              icon: const Icon(Icons.arrow_forward),
+            )
+          ],
+        );
   }
 }

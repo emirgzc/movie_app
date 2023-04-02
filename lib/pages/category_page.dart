@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:movie_app/constants/enums.dart';
+
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/data/movie_api_client.dart';
+import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
@@ -19,14 +21,13 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  int page = 1;
+  int _page = 1;
   late TextEditingController _textEditingController;
-  late Future<List<Result>?> listDataFuture;
 
   @override
   void initState() {
     _textEditingController = TextEditingController();
-    _textEditingController.text = page.toString();
+    _textEditingController.text = _page.toString();
     super.initState();
   }
 
@@ -39,69 +40,78 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    int _crossAxisCount = 2;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        foregroundColor: Style.blackColor,
-        title: Image.asset(
-          "assets/logo/light-lg1.jpg",
-          width: 300.w,
-          fit: BoxFit.contain,
-        ),
-        centerTitle: true,
-      ),
+      appBar: getAppBar(),
       body: Padding(
         padding: Style.pagePadding,
-        child: FutureBuilder(
-          future:
-              MovieApiClient().nowPlayingMovieData(context.locale, page: page),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasData &&
-                snapshot.data != null) {
-              var data = snapshot.data as List<Result>;
-              return ListView(
-                physics: BouncingScrollPhysics(),
-                children: [
-                  MasonryGridView.count(
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    crossAxisCount: 2,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (data[index].genreIds?.contains(widget.genreId) ??
-                          false) {
-                        return ImageDetailCard(
-                          title: data[index].title,
-                          id: data[index].id ?? 0,
-                          posterPath: data[index].posterPath ?? "",
-                          voteAverageNumber: data[index].voteAverage ?? 0,
-                          dateCard: data[index].releaseDate.toString() == "null"
-                              ? data[index].firstAirDate.toString()
-                              : data[index].releaseDate.toString(),
-                          width: width,
-                          name: data[index].name ?? "",
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
-                  pageIndicator(),
-                ],
-              );
-            } else {
-              return buildLastProcessCardEffect(
-                const SizedBox(
-                  child: CircularProgressIndicator(),
-                ),
-                context,
-              );
-            }
-          },
-        ),
+        child: bodyList(context, _crossAxisCount, width),
       ),
+    );
+  }
+
+  FutureBuilder<List<Result>?> bodyList(BuildContext context, int _crossAxisCount, double width) {
+    return FutureBuilder(
+        future: ApiClient().getMovieData(
+          dataWay: MovieApiType.now_playing.name,
+          context.locale,
+          page: _page,
+          type: MediaTypes.movie.name,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+            var data = snapshot.data as List<Result>;
+            return ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                MasonryGridView.count(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: data.length,
+                  crossAxisCount: _crossAxisCount,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (data[index].genreIds?.contains(widget.genreId) ?? false) {
+                      return ImageDetailCard(
+                        title: data[index].title,
+                        id: data[index].id,
+                        posterPath: data[index].posterPath,
+                        voteAverageNumber: data[index].voteAverage,
+                        dateCard: data[index].releaseDate.toString() == "null"
+                            ? data[index].firstAirDate.toString()
+                            : data[index].releaseDate.toString(),
+                        width: width,
+                        name: data[index].name,
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+                pageIndicator(),
+              ],
+            );
+          } else {
+            return buildLastProcessCardEffect(
+              const SizedBox(
+                child: CircularProgressIndicator(),
+              ),
+              context,
+            );
+          }
+        },
+      );
+  }
+
+  PreferredSizeWidget getAppBar() {
+    return AppBar(
+      automaticallyImplyLeading: true,
+      foregroundColor: Style.blackColor,
+      title: Image.asset(
+        "assets/logo/light-lg1.jpg",
+        width: 300.w,
+        fit: BoxFit.contain,
+      ),
+      centerTitle: true,
     );
   }
 
@@ -122,10 +132,10 @@ class _CategoryPageState extends State<CategoryPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
-                if (page > 1) {
+                if (_page > 1) {
                   setState(() {
-                    page--;
-                    _textEditingController.text = page.toString();
+                    _page--;
+                    _textEditingController.text = _page.toString();
                   });
                 }
               },
@@ -168,8 +178,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 fillColor: Style.blackColor.withOpacity(0.1),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(Style.defaultRadiusSize / 2),
+                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.zero,
@@ -177,13 +186,6 @@ class _CategoryPageState extends State<CategoryPage> {
               onTap: () {},
               onChanged: (value) {},
               onSubmitted: (value) {
-                /*
-                                  if (100 > int.parse(value) &&
-                                      0 < int.parse(value)) {
-                                    setState(() {
-                                      page = int.parse(value);
-                                    });
-                                    */
               },
             ),
           ),
@@ -192,10 +194,10 @@ class _CategoryPageState extends State<CategoryPage> {
             padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
             child: ElevatedButton(
               onPressed: () {
-                if (page < 101) {
+                if (_page < 101) {
                   setState(() {
-                    page++;
-                    _textEditingController.text = page.toString();
+                    _page++;
+                    _textEditingController.text = _page.toString();
                   });
                 }
               },

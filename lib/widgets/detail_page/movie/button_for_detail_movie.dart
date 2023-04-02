@@ -24,8 +24,8 @@ class ButtonForDetailMovie extends StatelessWidget {
           Radius.circular(Style.defaultRadiusSize / 2),
         ),
         child: Container(
-          width: (width - 90) / 6,
-          height: (width - 90) / 6,
+          width: (width) / 7.4,
+          height: (width) / 7.4,
           color: Style.widgetBackgroundColor,
           child: MaterialButton(
             padding: EdgeInsets.zero,

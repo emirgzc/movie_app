@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/data/movie_api_client.dart';
+import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/collection.dart';
 import 'package:movie_app/models/comment.dart';
 import 'package:movie_app/models/credits.dart';
@@ -51,118 +51,133 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: FutureBuilder(
-        future: MovieApiClient().detailMovieData(widget.movieId ?? 0, context.locale),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-            var data = snapshot.data as DetailMovie;
-            return Stack(
-              children: [
-                // arkaplandaki bulanik resim
-                BlurryImage(path: data.posterPath),
+      body: bodyList(context, width, height),
+    );
+  }
 
-                // ondeki widgetlar
-                ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                    child: Container(
-                      color: Style.whiteColor.withOpacity(0.01),
-                      padding: Style.pagePadding,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
-                          child: Column(
-                            children: [
-                              appBar(context),
-                              // film resmi
-                              PublicImage(
-                                path: data.posterPath,
-                                width: width,
-                                height: height,
+  FutureBuilder<DetailMovie?> bodyList(BuildContext context, double width, double height) {
+    return FutureBuilder(
+      future: ApiClient().detailMovieData(widget.movieId ?? 0, context.locale),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var data = snapshot.data as DetailMovie;
+          return Stack(
+            children: [
+              // arkaplandaki bulanik resim
+              BlurryImage(path: data.posterPath),
+
+              // ondeki widgetlar
+              ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                  child: Container(
+                    color: Style.whiteColor.withOpacity(0.01),
+                    padding: Style.pagePadding,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            appBar(context),
+                            // film resmi
+                            PublicImage(
+                              path: data.posterPath,
+                              width: width,
+                              height: height,
+                            ),
+
+                            // acıklama ve detaylar
+                            SizedBox(
+                              width: double.infinity,
+                              height: 540.h,
+                              child: PageView(
+                                controller: _pageController,
+                                children: [
+                                  // acıklama
+                                  movieDescription(data),
+
+                                  // detaylar
+                                  movieDetails(data, width),
+
+                                  // cast oyunculari
+                                  castPlayers(data.id ?? 0),
+
+                                  // yorumlar
+                                  commentForUsers(data.id ?? 0),
+                                ],
                               ),
+                            ),
 
-                              // acıklama ve detaylar
-                              SizedBox(
-                                width: double.infinity,
-                                height: 540.h,
-                                child: PageView(
-                                  controller: _pageController,
-                                  children: [
-                                    // acıklama
-                                    movieDescription(data),
+                            // butonlar
+                            buttons(width, height),
 
-                                    // detaylar
-                                    movieDetails(data, width),
-
-                                    // cast oyunculari
-                                    castPlayers(data.id ?? 0),
-
-                                    // yorumlar
-                                    commentForUsers(data.id ?? 0),
-                                  ],
-                                ),
+                            // Ekran Görüntüleri text
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: Style.defaultPaddingSizeVertical,
+                                bottom: Style.defaultPaddingSizeVertical / 2,
                               ),
-
-                              // butonlar
-                              buttons(width, height),
-
-                              // Ekran Görüntüleri text
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  top: Style.defaultPaddingSizeVertical,
-                                  bottom: Style.defaultPaddingSizeVertical / 2,
-                                ),
-                                child: Row(
-                                  children: [
-                                    titleHead(LocaleKeys.screenshots.tr()),
-                                  ],
-                                ),
+                              child: Row(
+                                children: [
+                                  titleHead(LocaleKeys.screenshots.tr()),
+                                ],
                               ),
+                            ),
 
-                              // ekran goruntuleri
-                              images(width),
+                            // ekran goruntuleri
+                            images(width),
 
-                              // Hoşunuza Gidebilir
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  top: Style.defaultPaddingSizeVertical,
-                                  bottom: Style.defaultPaddingSizeVertical / 2,
-                                ),
-                                child: Row(
-                                  children: [
-                                    titleHead(LocaleKeys.you_may_like.tr()),
-                                  ],
-                                ),
+                            // Hoşunuza Gidebilir
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: Style.defaultPaddingSizeVertical,
+                                bottom: Style.defaultPaddingSizeVertical / 2,
                               ),
+                              child: Row(
+                                children: [
+                                  titleHead(LocaleKeys.you_may_like.tr()),
+                                ],
+                              ),
+                            ),
 
-                              // önerilen filmler
-                              oneriler(data, width),
+                            // önerilen filmler
+                            oneriler(data, width),
 
-                              // serinin diger filmleri*
-                              data.belongsToCollection != null
-                                  ? serininDigerFilmleri(
-                                      width,
-                                      data.belongsToCollection?.id ?? 0,
-                                    )
-                                  : const SizedBox.shrink(),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: Style.defaultPaddingSizeVertical,
+                                bottom: Style.defaultPaddingSizeVertical / 2,
+                              ),
+                              child: Row(
+                                children: [
+                                  titleHead(LocaleKeys.other_movies_in_the_series.tr()),
+                                ],
+                              ),
+                            ),
+                            // serinin diger filmleri*
+                            data.belongsToCollection != null
+                                ? serininDigerFilmleri(
+                                    width,
+                                    data.belongsToCollection?.id ?? 0,
+                                  )
+                                : const SizedBox.shrink(),
 
-                              SizedBox(height: 500.h),
-                            ],
-                          ),
+                            SizedBox(height: 500.h),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
-              ],
-            );
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
+              ),
+            ],
+          );
+        } else {
+          return Center(child: const LinearProgressIndicator());
+        }
+      },
     );
   }
 
@@ -170,81 +185,65 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     double width,
     int collectionId,
   ) {
-    return Column(
-      children: [
-        // Serinin diğer filmleri text
-        Padding(
-          padding: EdgeInsets.only(
-            top: Style.defaultPaddingSizeVertical,
-            bottom: Style.defaultPaddingSizeVertical / 2,
-          ),
-          child: Row(
-            children: [
-              titleHead(LocaleKeys.other_movies_in_the_series.tr()),
-            ],
-          ),
-        ),
-        FutureBuilder(
-          future: MovieApiClient().collectionData(collectionId, context.locale),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-              Collection collectionData = snapshot.data as Collection;
+    return FutureBuilder(
+      future: ApiClient().collectionData(collectionId, context.locale),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          Collection collectionData = snapshot.data as Collection;
 
-              return Padding(
-                padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
-                child: (collectionData.parts?.isNotEmpty ?? false)
-                    ? SizedBox(
-                        width: double.infinity,
-                        height: (width / 3) * 1.5,
-                        child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          clipBehavior: Clip.none,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: collectionData.parts?.length,
-                          // ilk eleman olarak varsa
-                          itemBuilder: (context, index) {
-                            if (collectionData.parts?[index].id == widget.movieId) {
-                              return Container();
-                            } else {
-                              return GestureDetector(
-                                onTap: () => Navigator.of(context).pushNamed(
-                                  "/movieDetailPage",
-                                  arguments: (collectionData.parts?[index].id),
-                                ),
-                                child: (collectionData.parts?[index].posterPath == null)
-                                    ? Container(
-                                        width: 360.w,
-                                        margin: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal),
-                                        child: Placeholder(),
-                                      )
-                                    : BrochureItem(
-                                        brochureUrl: "https://image.tmdb.org/t/p/w500${collectionData.parts?[index].posterPath}",
-                                        width: width,
-                                      ),
-                              );
-                            }
-                          },
-                        ),
-                      )
-                    : Text(
-                        LocaleKeys.other_movies_in_the_series_were_not_found.tr(),
-                        style: TextStyle(color: Style.whiteColor),
-                        textAlign: TextAlign.left,
-                      ),
-              );
-            } else {
-              return const SizedBox();
-            }
-          },
-        ),
-      ],
+          return Padding(
+            padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
+            child: (collectionData.parts?.isNotEmpty ?? false)
+                ? SizedBox(
+                    width: double.infinity,
+                    height: (width / 3) * 1.5,
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      clipBehavior: Clip.none,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: collectionData.parts?.length,
+                      // ilk eleman olarak varsa
+                      itemBuilder: (context, index) {
+                        if (collectionData.parts?[index].id == widget.movieId) {
+                          return SizedBox.shrink();
+                        } else {
+                          return GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                              "/movieDetailPage",
+                              arguments: (collectionData.parts?[index].id),
+                            ),
+                            child: (collectionData.parts?[index].posterPath == null)
+                                ? Container(
+                                    width: 360.w,
+                                    margin: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal),
+                                    child: Placeholder(),
+                                  )
+                                : BrochureItem(
+                                    brochureUrl: "https://image.tmdb.org/t/p/w500${collectionData.parts?[index].posterPath}",
+                                    width: width,
+                                  ),
+                          );
+                        }
+                      },
+                    ),
+                  )
+                : Text(
+                    LocaleKeys.other_movies_in_the_series_were_not_found.tr(),
+                    style: TextStyle(color: Style.whiteColor),
+                    textAlign: TextAlign.left,
+                  ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 
   FutureBuilder<List<Result>?> oneriler(DetailMovie data, double width) {
     return FutureBuilder(
-      future: MovieApiClient().similarMoviesData(data.id ?? 0, context.locale),
+      future: ApiClient().similarMoviesData(data.id ?? 0, context.locale),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var similarMoviesData = snapshot.data as List<Result?>;
@@ -282,7 +281,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   ),
           );
         } else {
-          return const SizedBox();
+          return const SizedBox.shrink();
         }
       },
     );
@@ -290,7 +289,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   FutureBuilder<Images?> images(double width) {
     return FutureBuilder(
-      future: MovieApiClient().getImages(widget.movieId ?? 0),
+      future: ApiClient().getImages(widget.movieId ?? 0),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as Images;
@@ -337,35 +336,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           );
         } else {
           // loading
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: 25,
-              right: 25,
-              top: 12,
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              height: (width / 2) * (281 / 500),
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                clipBehavior: Clip.none,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: SizedBox(
-                      width: width / 2,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
+          return SizedBox.shrink();
         }
       },
     );
@@ -389,7 +360,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       ),
       child: SizedBox(
         width: double.infinity,
-        height: (width - 90) / 6,
+        height: (width) / 7.5,
         child: ListView(
           physics: BouncingScrollPhysics(),
           shrinkWrap: true,
@@ -397,14 +368,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           children: [
             // oynat butonu
             FutureBuilder(
-              future: MovieApiClient().getTrailer(widget.movieId ?? 0, context.locale),
+              future: ApiClient().getTrailer(widget.movieId ?? 0, context.locale),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   var data = snapshot.data as Trailer;
                   return ButtonForDetailMovie(
                     onPressed: () {
                       Navigator.of(context).pushNamed("/trailerPage", arguments: [
-                        widget.movieId ?? 0,
+                        widget.movieId,
                         [data.results],
                       ]);
                     },
@@ -469,7 +440,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   Widget appBar(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Style.defaultPaddingSizeVertical * 3.25,
+        top: Style.defaultPaddingSizeVertical * 2.5,
         bottom: Style.defaultPaddingSizeVertical * 1.25,
       ),
       child: Row(
@@ -483,7 +454,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
                 color: Style.widgetBackgroundColor,
               ),
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
               child: const Icon(
                 Icons.arrow_back,
@@ -506,7 +477,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
                 color: Style.widgetBackgroundColor,
               ),
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
               child: Icon(
                 Icons.favorite,
@@ -550,7 +521,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           ),
                     ),
                     FutureBuilder(
-                      future: MovieApiClient().getComment(movieId, context.locale),
+                      future: ApiClient().getComment(movieId, context.locale),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                           var creditsData = snapshot.data as Comment;
@@ -564,7 +535,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             },
                           );
                         } else {
-                          return const SizedBox();
+                          return const SizedBox.shrink();
                         }
                       },
                     ),
@@ -685,7 +656,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           ),
                     ),
                     FutureBuilder(
-                      future: MovieApiClient().credits(movieId, context.locale),
+                      future: ApiClient().getCredits(movieId, context.locale),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                           var creditsData = snapshot.data as Credits;
@@ -708,7 +679,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             },
                           );
                         } else {
-                          return const SizedBox();
+                          return const SizedBox.shrink();
                         }
                       },
                     ),
@@ -787,38 +758,31 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           color: Style.widgetBackgroundColor,
           child: Padding(
             padding: EdgeInsets.all(Style.defaultPaddingSize),
-            child: Scrollbar(
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        bottom: Style.defaultPaddingSizeVertical / 2,
-                      ),
-                      child: Text(
-                        data.title.toString(),
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                              color: Style.whiteColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                    Text(
-                      data.overview.toString().isEmpty
-                          ? LocaleKeys.no_description_text_entered_with_the_movie.tr()
-                          : data.overview.toString(),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 100,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            height: 1.4,
-                            color: Style.whiteColor.withOpacity(0.8),
-                          ),
-                    ),
-                  ],
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: Style.defaultPaddingSizeVertical / 2,
+                  ),
+                  child: Text(
+                    data.title.toString(),
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Style.whiteColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ),
-              ),
+                Text(
+                  data.overview.toString().isEmpty ? LocaleKeys.no_description_text_entered_with_the_movie.tr() : data.overview.toString(),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 30,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        height: 1.4,
+                        color: Style.whiteColor.withOpacity(0.8),
+                      ),
+                ),
+              ],
             ),
           ),
         ),
