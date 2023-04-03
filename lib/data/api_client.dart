@@ -12,13 +12,14 @@ import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/images.dart';
 import 'package:movie_app/models/search.dart';
+import 'package:movie_app/models/to_watch.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
 
 class ApiClient {
   final String _apiKey = "2444ef19302975166c670f0e507218ec";
   final String _baseuRL = "https://api.themoviedb.org/3";
-  
+
   Future<List<Result>?> trendData(String mediaType, Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
     String baseUrl = '$_baseuRL/trending/$mediaType/week?api_key=$_apiKey&language=$_languageKey';
@@ -71,11 +72,16 @@ class ApiClient {
     return null;
   }
 
-  Future<List<Result>?> similarMoviesData(int movieId, Locale locale, {int page = 1, String type='movie',}) async {
+  Future<List<Result>?> similarMoviesData(
+    int movieId,
+    Locale locale, {
+    int page = 1,
+    String type = 'movie',
+  }) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
     String baseUrl = '$_baseuRL/$type/$movieId/recommendations?api_key=$_apiKey&language=$_languageKey&page=$page';
-    
+
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -125,7 +131,10 @@ class ApiClient {
     return null;
   }
 
-  Future<Images?> getImages(int movieId,{ String type='movie',}) async {
+  Future<Images?> getImages(
+    int movieId, {
+    String type = 'movie',
+  }) async {
     String baseUrl = '$_baseuRL/$type/$movieId/images?api_key=$_apiKey';
     try {
       final response = await http.get(
@@ -149,7 +158,11 @@ class ApiClient {
     return null;
   }
 
-  Future<Trailer?> getTrailer(int movieId, Locale locale,{ String type='movie',}) async {
+  Future<Trailer?> getTrailer(
+    int movieId,
+    Locale locale, {
+    String type = 'movie',
+  }) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
     String baseUrl = '$_baseuRL/$type/$movieId/videos?api_key=$_apiKey&language=$_languageKey';
@@ -253,11 +266,15 @@ class ApiClient {
     return null;
   }
 
-  Future<Credits?> getCredits(int movieId, Locale locale,{String type='movie',}) async {
+  Future<Credits?> getCredits(
+    int movieId,
+    Locale locale, {
+    String type = 'movie',
+  }) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
     String baseUrl = '$_baseuRL/$type/$movieId/credits?api_key=$_apiKey&language=$_languageKey';
-    
+
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -284,6 +301,7 @@ class ApiClient {
     }
     return null;
   }
+
   // oyuncunun oynadigi filmler
   Future<CastPersonsMovies?> castPersonsCombined(
     int personId,
@@ -347,8 +365,7 @@ class ApiClient {
   Future<TvDetail?> detailTvData(int movieId, Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/tv/$movieId?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/tv/$movieId?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -366,6 +383,28 @@ class ApiClient {
       }
     } catch (e) {
       debugPrint("hata detailMovieData $e");
+    }
+    return null;
+  }
+
+  Future<WhereToWatch?> getToWatch(int movieId, {String type = 'movie'}) async {
+    String baseUrl = '$_baseuRL/$type/$movieId/watch/providers?api_key=$_apiKey';
+    try {
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'api_key': _apiKey,
+        },
+      );
+      if (response.statusCode == 200) {
+        var responseJson = json.decode(response.body) as Map<String, dynamic>;
+        WhereToWatch mapApiModel = WhereToWatch.fromJson(responseJson);
+        return mapApiModel;
+      } else {
+        throw Exception('getToWatch ($type) apide hata var');
+      }
+    } catch (e) {
+      debugPrint("hata getToWatch ($type) $e");
     }
     return null;
   }

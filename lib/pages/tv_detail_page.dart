@@ -12,11 +12,13 @@ import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/models/images.dart';
+import 'package:movie_app/models/to_watch.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/tv/opened_text_for_overview.dart';
+import 'package:movie_app/widgets/detail_page/watch_card.dart';
 
 class TVDetailPage extends StatefulWidget {
   const TVDetailPage({super.key, required this.movieId});
@@ -58,9 +60,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           context.locale,
         ),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData &&
-              snapshot.data != null) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
             var data = snapshot.data as TvDetail;
             return SingleChildScrollView(
               physics: BouncingScrollPhysics(),
@@ -103,18 +103,12 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             (data.productionCountries?.isEmpty ?? false)
                                 ? "${LocaleKeys.country.tr()} : ${LocaleKeys.unspecified.tr()}"
                                 : "${LocaleKeys.country.tr()} : ${data.productionCountries?[0].name ?? "-"}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),
                         Text(
                           "${LocaleKeys.relase_date.tr()} : ${toRevolveDate((data.firstAirDate.toString().split(" ")[0]))}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -161,10 +155,31 @@ class _TVDetailPageState extends State<TVDetailPage> {
                         ),
                         (data.productionCompanies?.isEmpty ?? false)
                             ? const Text(
-                                LocaleKeys
-                                    .no_producer_company_information_about_this_series_has_been_entered,
+                                LocaleKeys.no_producer_company_information_about_this_series_has_been_entered,
                               )
                             : companyList(data, width),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 2,
+                            bottom: Style.defaultPaddingSizeVertical / 3,
+                          ),
+                          child: Text(
+                            LocaleKeys.where_to_watch.tr(),
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                        whereToWatchList(data, context, width),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: (Style.defaultPaddingSizeVertical / 2) * 2,
+                            bottom: Style.defaultPaddingSizeVertical / 3,
+                          ),
+                          child: Text(
+                            LocaleKeys.where_to_watch_buy.tr(),
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                        whereToBuyForWacthList(data, context, width),
                         Padding(
                           padding: EdgeInsets.only(
                             top: (Style.defaultPaddingSizeVertical / 2) * 3,
@@ -221,21 +236,17 @@ class _TVDetailPageState extends State<TVDetailPage> {
           if (data.productionCompanies?[index].logoPath != null) {
             return productCompaniesImage(context, data, index, width);
           }
-          return Container();
+          return SizedBox.shrink();
         },
       ),
     );
   }
 
-  FutureBuilder<List<Result>?> similarList(
-      TvDetail data, BuildContext context, double width) {
+  FutureBuilder<List<Result>?> similarList(TvDetail data, BuildContext context, double width) {
     return FutureBuilder(
-      future: ApiClient().similarMoviesData(data.id ?? 0, context.locale,
-          type: MediaTypes.tv.name),
+      future: ApiClient().similarMoviesData(data.id ?? 0, context.locale, type: MediaTypes.tv.name),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var similarMoviesData = snapshot.data as List<Result?>;
 
           return Padding(
@@ -257,8 +268,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                       arguments: (similarMoviesData[index]?.id),
                     ),
                     child: BrochureItem(
-                      brochureUrl:
-                          "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
+                      brochureUrl: "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
                       width: width,
                     ),
                   );
@@ -273,14 +283,59 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
+  FutureBuilder<WhereToWatch?> whereToWatchList(TvDetail data, BuildContext context, double width) {
+    return FutureBuilder(
+      future: ApiClient().getToWatch(data.id ?? 0, type: MediaTypes.tv.name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var watchResult = snapshot.data as WhereToWatch;
+          late List<Flatrate> result;
+          if (context.locale.languageCode == LanguageCodes.tr.name) {
+            result = watchResult.results?.tr?.flatrate ?? [];
+          } else {
+            result = watchResult.results?.us?.flatrate ?? [];
+          }
+          return (result.isNotEmpty)
+              ? WatchCard(result: result, width: width)
+              : Text(
+                  LocaleKeys.no_watch_to_description.tr(),
+                );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  FutureBuilder<WhereToWatch?> whereToBuyForWacthList(TvDetail data, BuildContext context, double width) {
+    return FutureBuilder(
+      future: ApiClient().getToWatch(data.id ?? 0, type: MediaTypes.tv.name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var watchResult = snapshot.data as WhereToWatch;
+          late List<Flatrate> result;
+          if (context.locale.languageCode == LanguageCodes.tr.name) {
+            result = watchResult.results?.tr?.buy ?? [];
+          } else {
+            result = watchResult.results?.us?.buy ?? [];
+          }
+          return (result.isNotEmpty)
+              ? WatchCard(result: result, width: width)
+              : Text(
+                  LocaleKeys.no_watch_to_description.tr(),
+                );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
   FutureBuilder<Images?> imageList(double width) {
     return FutureBuilder(
-      future:
-          ApiClient().getImages(widget.movieId ?? 0, type: MediaTypes.tv.name),
+      future: ApiClient().getImages(widget.movieId ?? 0, type: MediaTypes.tv.name),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as Images;
 
           return Padding(
@@ -314,12 +369,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   FutureBuilder<Credits?> peopleList(BuildContext context) {
     return FutureBuilder(
-      future: ApiClient().getCredits(widget.movieId ?? 0, context.locale,
-          type: MediaTypes.tv.name),
+      future: ApiClient().getCredits(widget.movieId ?? 0, context.locale, type: MediaTypes.tv.name),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var creditsData = snapshot.data as Credits;
 
           return SingleChildScrollView(
@@ -379,9 +431,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                   left: Style.defaultPaddingSizeHorizontal / 3,
                 ),
                 child: Text(
-                  (data.voteAverage.toString().isEmpty)
-                      ? LocaleKeys.unspecified.tr()
-                      : ((data.voteAverage)).toString().substring(0, 3),
+                  (data.voteAverage.toString().isEmpty) ? LocaleKeys.unspecified.tr() : ((data.voteAverage)).toString().substring(0, 3),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -408,8 +458,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
-  Stack imageAndCircleItem(
-      TvDetail data, double height, double width, BuildContext context) {
+  Stack imageAndCircleItem(TvDetail data, double height, double width, BuildContext context) {
     return Stack(
       children: [
         topImage(data, height, width),
@@ -439,12 +488,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
           ),
         ),
         FutureBuilder(
-          future: ApiClient().getTrailer(widget.movieId ?? 0, context.locale,
-              type: MediaTypes.tv.name),
+          future: ApiClient().getTrailer(widget.movieId ?? 0, context.locale, type: MediaTypes.tv.name),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasData &&
-                snapshot.data != null) {
+            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
               var data = snapshot.data as Trailer;
               return Positioned(
                 left: 180.w,
@@ -507,8 +553,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
-  Widget productCompaniesImage(
-      BuildContext context, TvDetail data, int index, double width) {
+  Widget productCompaniesImage(BuildContext context, TvDetail data, int index, double width) {
     return GestureDetector(
       onTap: () => showDialog(
         context: context,
@@ -530,8 +575,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                     horizontal: Style.defaultPaddingSizeHorizontal * 3,
                   ),
                   child: CachedNetworkImage(
-                    imageUrl:
-                        "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
+                    imageUrl: "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
                     fit: BoxFit.contain,
                     width: width,
                   ),
@@ -548,9 +592,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
         ),
         child: Container(
           padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-          margin: EdgeInsets.only(
-              bottom: Style.defaultPaddingSizeVertical / 2,
-              right: Style.defaultPaddingSizeHorizontal / 2),
+          margin: EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2, right: Style.defaultPaddingSizeHorizontal / 2),
           height: 140.h,
           width: 400.w,
           decoration: BoxDecoration(
@@ -565,8 +607,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
             color: Style.whiteColor,
           ),
           child: CachedNetworkImage(
-            imageUrl:
-                "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
+            imageUrl: "https://image.tmdb.org/t/p/w500${data.productionCompanies?[index].logoPath.toString()}",
             fit: BoxFit.contain,
           ),
         ),
@@ -625,8 +666,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 child: Material(
                   elevation: Style.defaultElevation,
                   child: CachedNetworkImage(
-                    imageUrl:
-                        "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
+                    imageUrl: "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -651,8 +691,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
-  Widget circleItem(
-      BuildContext context, void Function()? onTap, IconData icon) {
+  Widget circleItem(BuildContext context, void Function()? onTap, IconData icon) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

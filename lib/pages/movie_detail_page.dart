@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
@@ -14,6 +15,7 @@ import 'package:movie_app/models/comment.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/images.dart';
+import 'package:movie_app/models/to_watch.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
@@ -21,6 +23,7 @@ import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/blurry_image.dart';
 import 'package:movie_app/widgets/detail_page/movie/button_for_detail_movie.dart';
 import 'package:movie_app/widgets/detail_page/movie/public_image.dart';
+import 'package:movie_app/widgets/detail_page/watch_card.dart';
 
 class MovieDetailPage extends StatefulWidget {
   const MovieDetailPage({super.key, required this.movieId});
@@ -79,13 +82,16 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       child: SingleChildScrollView(
                         physics: BouncingScrollPhysics(),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             appBar(context),
                             // film resmi
-                            PublicImage(
-                              path: data.posterPath,
-                              width: width,
-                              height: height,
+                            Center(
+                              child: PublicImage(
+                                path: data.posterPath,
+                                width: width,
+                                height: height,
+                              ),
                             ),
 
                             // acıklama ve detaylar
@@ -163,6 +169,35 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                     data.belongsToCollection?.id ?? 0,
                                   )
                                 : const SizedBox.shrink(),
+
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: Style.defaultPaddingSizeVertical,
+                                bottom: Style.defaultPaddingSizeVertical / 2,
+                              ),
+                              child: Row(
+                                children: [
+                                  titleHead(LocaleKeys.where_to_watch.tr()),
+                                ],
+                              ),
+                            ),
+
+                            // önerilen filmler
+                            getWatch(width),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: Style.defaultPaddingSizeVertical,
+                                bottom: Style.defaultPaddingSizeVertical / 2,
+                              ),
+                              child: Row(
+                                children: [
+                                  titleHead(LocaleKeys.where_to_watch_buy.tr()),
+                                ],
+                              ),
+                            ),
+
+                            // önerilen filmler
+                            getWatchBuy(width),
 
                             SizedBox(height: 500.h),
                           ],
@@ -280,6 +315,56 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     textAlign: TextAlign.left,
                   ),
           );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  FutureBuilder<WhereToWatch?> getWatch(double width) {
+    return FutureBuilder(
+      future: ApiClient().getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var watchResult = snapshot.data as WhereToWatch;
+          late List<Flatrate> result;
+          if (context.locale.languageCode == LanguageCodes.tr.name) {
+            result = watchResult.results?.tr?.flatrate ?? [];
+          } else {
+            result = watchResult.results?.us?.flatrate ?? [];
+          }
+          return (result.isNotEmpty)
+              ? WatchCard(result: result, width: width)
+              : Text(
+                  LocaleKeys.no_watch_to_description.tr(),
+                  style: TextStyle(color: Style.whiteColor),
+                );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  FutureBuilder<WhereToWatch?> getWatchBuy(double width) {
+    return FutureBuilder(
+      future: ApiClient().getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var watchResult = snapshot.data as WhereToWatch;
+          late List<Flatrate> result;
+          if (context.locale.languageCode == LanguageCodes.tr.name) {
+            result = watchResult.results?.tr?.buy ?? [];
+          } else {
+            result = watchResult.results?.us?.buy ?? [];
+          }
+          return (result.isNotEmpty)
+              ? WatchCard(result: result, width: width)
+              : Text(
+                  LocaleKeys.no_watch_to_description.tr(),
+                  style: TextStyle(color: Style.whiteColor),
+                );
         } else {
           return const SizedBox.shrink();
         }
