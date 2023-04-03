@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/pages/movie_page.dart';
 import 'package:movie_app/pages/settings_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/custom_bottom_navbar.dart';
+import 'package:movie_app/widgets/drawer_menu_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,13 +20,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var _selectedIndex = 0;
   late PageController _pageController;
-  final _drawerController = ZoomDrawerController();
+  late ZoomDrawerController _drawerController;
+  int _currentPage = 0;
 
   @override
   void initState() {
-    _pageController = PageController();
+    _pageController = PageController(keepPage: true);
+    _drawerController = ZoomDrawerController();
     super.initState();
   }
 
@@ -38,8 +41,7 @@ class _HomePageState extends State<HomePage> {
     const MoviePage(),
     const TVPage(),
     Container(color: Colors.purple.shade200),
-    SettingsPage(),
-    SettingsPage(),
+    const SettingsPage(),
   ];
 
   @override
@@ -56,6 +58,7 @@ class _HomePageState extends State<HomePage> {
 
       // bottomnavbar
       bottomNavigationBar: CustomBottomNavbar(
+        _currentPage,
         setIndex: (index) {
           _pageController.jumpToPage(index);
         },
@@ -101,72 +104,20 @@ class _HomePageState extends State<HomePage> {
       //mainScreenScale: 0.2,
       shadowLayer1Color: Colors.grey.shade200,
       shadowLayer2Color: Colors.grey.shade400,
-      // drawer ekrani
-      menuScreen: Padding(
-        padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
-        child: LayoutBuilder(
-          builder: (p0, p1) {
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: p1.maxHeight),
-                child: IntrinsicHeight(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Spacer(),
-                      drawerListItem(
-                        LocaleKeys.movies_in_cinemas.tr(),
-                        Icons.person_outline_outlined,
-                        () {
-                          Navigator.of(context).pushNamed(
-                            "/listPage",
-                            arguments: "Yayında Olan Filmler",
-                          );
-                        },
-                      ),
-                      drawerListItem(
-                        LocaleKeys.trend_movies.tr(),
-                        Icons.star_border_outlined,
-                        () {
-                          Navigator.of(context).pushNamed(
-                            "/listPage",
-                            arguments: "Trend Filmler",
-                          );
-                        },
-                      ),
-                      drawerListItem(
-                        LocaleKeys.upcoming_movies.tr(),
-                        Icons.hourglass_empty_outlined,
-                        () {
-                          Navigator.of(context).pushNamed(
-                            "/listPage",
-                            arguments: "Gelmekte Olan Filmler",
-                          );
-                        },
-                      ),
-                      drawerListItem(LocaleKeys.favorites.tr(),
-                          Icons.favorite_border_outlined, () {}),
-                      const Spacer(
-                        flex: 3,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+
+      menuScreen: DrawerMenuScreen(),
       mainScreen: PageView.builder(
+        onPageChanged: (value) {
+          setState(() {
+            _currentPage = value;
+          });
+        },
         controller: _pageController,
         itemCount: pageList.length,
         itemBuilder: (context, index) {
           return pageList[index];
         },
       ),
-      //pageList[_selectedIndex],
     );
   }
 
@@ -201,33 +152,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget drawerListItem(String text, IconData? icon, void Function()? onTap) {
-    return Padding(
-      padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
-      child: ListTile(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(Style.defaultRadiusSize / 2),
-            bottomRight: Radius.circular(Style.defaultRadiusSize / 2),
-          ),
-        ),
-        //tileColor: backgroundColor,
-        minLeadingWidth: 50.w,
-        leading: Icon(
-          icon,
-          color: Style.blackColor,
-        ),
-        onTap: onTap,
-        title: Text(
-          text,
-          style: const TextStyle(
-            color: Style.blackColor,
-          ),
-        ),
       ),
     );
   }

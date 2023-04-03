@@ -5,27 +5,27 @@ import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
 class CustomBottomNavbar extends StatefulWidget {
-  const CustomBottomNavbar({required this.setIndex, super.key});
+  CustomBottomNavbar(this._currentIndex, {required this.setIndex, super.key});
   final ValueSetter setIndex;
-
+  int _currentIndex;
   @override
   State<CustomBottomNavbar> createState() => _CustomBottomNavbarState();
 }
 
 class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
-  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return BubbleBottomBar(
+      borderRadius: Style.defaultRadius,
       opacity: .2,
       hasNotch: true,
       hasInk: true,
       fabLocation: BubbleBottomBarFabLocation.end,
-      currentIndex: _currentIndex,
+      currentIndex: widget._currentIndex,
       onTap: (value) {
         setState(() {
-          _currentIndex = value!;
-          widget.setIndex(_currentIndex);
+          widget._currentIndex = value!;
+          widget.setIndex(widget._currentIndex);
         });
       },
       elevation: 10,
