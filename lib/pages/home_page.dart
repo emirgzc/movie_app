@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/pages/movie_page.dart';
 import 'package:movie_app/pages/settings_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/widgets/custom_bottom_navbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,10 +34,11 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  List pageList = [
+  List<Widget> pageList = [
     const MoviePage(),
     const TVPage(),
     Container(color: Colors.purple.shade200),
+    SettingsPage(),
     SettingsPage(),
   ];
 
@@ -54,7 +55,36 @@ class _HomePageState extends State<HomePage> {
       body: drawer(context),
 
       // bottomnavbar
-      bottomNavigationBar: bottomNavBar(),
+      bottomNavigationBar: CustomBottomNavbar(
+        setIndex: (index) {
+          _pageController.jumpToPage(index);
+        },
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        elevation: 0,
+        backgroundColor: Style.fabColor,
+        child: Container(
+          height: 70,
+          width: 70,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(100),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Style.fabColor.withOpacity(0.3),
+                spreadRadius: 7,
+                blurRadius: 7,
+                offset: Offset(3, 5),
+              ),
+            ],
+          ),
+          child: Icon(Icons.location_pin),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
@@ -129,8 +159,14 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-
-      mainScreen: pageList[_selectedIndex],
+      mainScreen: PageView.builder(
+        controller: _pageController,
+        itemCount: pageList.length,
+        itemBuilder: (context, index) {
+          return pageList[index];
+        },
+      ),
+      //pageList[_selectedIndex],
     );
   }
 
@@ -165,79 +201,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  SafeArea bottomNavBar() {
-    return SafeArea(
-      child: Container(
-        margin: EdgeInsets.all(Style.defaultPaddingSize / 2),
-        decoration: BoxDecoration(
-          // dış kutu borderradius
-          borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-          color: Style.whiteColor,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Style.blackColor.withOpacity(.1),
-            )
-          ],
-        ),
-        child: Padding(
-          padding: Style.defaultSymetricPadding / 2,
-          child: GNav(
-            tabBorderRadius: Style.defaultRadiusSize / 2,
-            rippleColor: Colors.grey[300]!,
-            hoverColor: Colors.grey[100]!,
-            gap: 8,
-
-            iconSize: Style.defaultIconsSize * (3 / 2),
-            padding: EdgeInsets.symmetric(
-              horizontal: Style.defaultPaddingSizeHorizontal,
-              vertical: (Style.defaultPaddingSizeVertical / 4) * 3,
-            ),
-            duration: const Duration(milliseconds: 400),
-            color: Style.blackColor,
-            // curve: Curves.bounceIn,
-            tabs: [
-              GButton(
-                backgroundColor: Colors.red.withOpacity(0.2),
-                iconActiveColor: Colors.red,
-                textColor: Colors.red,
-                icon: Icons.movie_creation_outlined,
-                text: LocaleKeys.movie.tr(),
-              ),
-              GButton(
-                backgroundColor: Colors.blue.withOpacity(0.2),
-                iconActiveColor: Colors.blue,
-                textColor: Colors.blue,
-                icon: Icons.tv_outlined,
-                text: LocaleKeys.tv_series.tr(),
-              ),
-              GButton(
-                backgroundColor: Colors.purple.withOpacity(0.2),
-                iconActiveColor: Colors.purple,
-                textColor: Colors.purple,
-                icon: Icons.favorite_border_outlined,
-                text: LocaleKeys.favorites.tr(),
-              ),
-              GButton(
-                backgroundColor: Colors.cyan.withOpacity(0.2),
-                iconActiveColor: Colors.cyan,
-                textColor: Colors.cyan,
-                icon: Icons.settings_outlined,
-                text: LocaleKeys.settings.tr(),
-              ),
-            ],
-            selectedIndex: _selectedIndex,
-            onTabChange: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-        ),
       ),
     );
   }

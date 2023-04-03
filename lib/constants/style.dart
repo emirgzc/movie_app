@@ -28,6 +28,12 @@ class Style {
   static Color widgetBackgroundColor = Style.blackColor.withOpacity(0.6);
   static const Color transparentColor = Colors.transparent;
 
+  static const Color fabColor = Colors.red;
+  static const Color movieTabColor = Colors.red;
+  static const Color serieTabColor = Colors.blue;
+  static const Color favoriteTabColor = Colors.purple;
+  static const Color settingsTabColor = Colors.cyan;
+
   static double defaultIconsSize = 40.r;
   static double iconSizeTv = 72.r;
   static BoxShadow defaultShadow = BoxShadow(
