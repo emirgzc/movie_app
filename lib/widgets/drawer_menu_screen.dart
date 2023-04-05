@@ -33,6 +33,7 @@ class DrawerMenuScreen extends StatelessWidget {
                           arguments: ListType.movies_in_cinemas,
                         );
                       },
+                      context,
                     ),
                     drawerListItem(
                       LocaleKeys.trend_movies.tr(),
@@ -43,6 +44,7 @@ class DrawerMenuScreen extends StatelessWidget {
                           arguments: ListType.trend_movies,
                         );
                       },
+                      context,
                     ),
                     drawerListItem(
                       LocaleKeys.upcoming_movies.tr(),
@@ -53,9 +55,9 @@ class DrawerMenuScreen extends StatelessWidget {
                           arguments: ListType.upcoming_movies,
                         );
                       },
+                      context,
                     ),
-                    drawerListItem(LocaleKeys.favorites.tr(),
-                        Icons.favorite_border_outlined, () {}),
+                    drawerListItem(LocaleKeys.favorites.tr(), Icons.favorite_border_outlined, () {}, context),
                     const Spacer(
                       flex: 3,
                     ),
@@ -69,7 +71,7 @@ class DrawerMenuScreen extends StatelessWidget {
     );
   }
 
-  Widget drawerListItem(String text, IconData? icon, void Function()? onTap) {
+  Widget drawerListItem(String text, IconData? icon, void Function()? onTap, BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
       child: ListTile(
@@ -83,14 +85,11 @@ class DrawerMenuScreen extends StatelessWidget {
         minLeadingWidth: 50.w,
         leading: Icon(
           icon,
-          color: Style.blackColor,
+          color: Theme.of(context).iconTheme.color,
         ),
         onTap: onTap,
         title: Text(
           text,
-          style: const TextStyle(
-            color: Style.blackColor,
-          ),
         ),
       ),
     );

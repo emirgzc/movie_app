@@ -19,10 +19,9 @@ class CastPersonsMoviesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: _getAppBar(),
+      appBar: _getAppBar(context),
       body: Padding(
         padding: Style.pagePadding,
         child: body(width, context),
@@ -30,11 +29,15 @@ class CastPersonsMoviesPage extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _getAppBar() {
+  PreferredSizeWidget _getAppBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: true,
-      foregroundColor: Style.blackColor,
-      title: Text("${LocaleKeys.actor.tr()}: $personName"),
+      title: Text(
+        "${LocaleKeys.actor.tr()}: $personName",
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+      ),
       centerTitle: true,
     );
   }

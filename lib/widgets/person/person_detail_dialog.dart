@@ -36,7 +36,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
         ),
         padding: EdgeInsets.all(Style.defaultPaddingSize),
         decoration: BoxDecoration(
-          color: Style.whiteColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
         ),
         child: ListView(
@@ -51,7 +51,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
               padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2),
               child: Text(
                 widget.data?.name ?? "--",
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -60,7 +60,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
               child: Text(
                 LocaleKeys.featured_movies.tr(),
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -70,7 +70,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
               padding: EdgeInsets.only(top: Style.defaultPaddingSize / 2),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Style.primaryColor,
                 ),
                 onPressed: () {
                   Navigator.of(context).pushNamed(
@@ -92,70 +92,72 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
 
   Widget topRatedList() {
     return SizedBox(
-            height: 450.h,
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemCount: widget.data?.knownFor?.length ?? 0,
-              itemBuilder: (context, index) {
-                if (widget.data?.knownFor?[index].posterPath == null) {
-                  return const SizedBox.shrink();
-                }
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(
-                      (widget.data?.knownFor?[index].mediaType == MediaTypes.movie.name) ? "/movieDetailPage" : "/tvDetailPage",
-                      arguments: widget.data?.knownFor?[index].id,
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: Style.defaultPaddingSize / 2),
-                    child: Column(
+      height: 450.h,
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: widget.data?.knownFor?.length ?? 0,
+        itemBuilder: (context, index) {
+          if (widget.data?.knownFor?[index].posterPath == null) {
+            return const SizedBox.shrink();
+          }
+          return InkWell(
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                (widget.data?.knownFor?[index].mediaType == MediaTypes.movie.name) ? "/movieDetailPage" : "/tvDetailPage",
+                arguments: widget.data?.knownFor?[index].id,
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: Style.defaultPaddingSize / 2),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Material(
+                      elevation: Style.defaultElevation,
+                      child: CachedNetworkImage(
+                        imageUrl: 'https://image.tmdb.org/t/p/w500${widget.data?.knownFor?[index].posterPath}',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: Style.defaultPaddingSize / 4),
+                    child: Row(
                       children: [
-                        Expanded(
-                          child: Material(
-                            elevation: Style.defaultElevation,
-                            child: CachedNetworkImage(
-                              imageUrl: 'https://image.tmdb.org/t/p/w500${widget.data?.knownFor?[index].posterPath}',
-                              fit: BoxFit.contain,
-                            ),
+                        RatingBar.builder(
+                          ignoreGestures: true,
+                          itemSize: 32.r,
+                          glowColor: Style.starColor,
+                          unratedColor: Theme.of(context).shadowColor.withOpacity(0.4),
+                          initialRating: (widget.data?.knownFor?[index].voteAverage ?? 0.0) / 2,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemBuilder: (context, _) => const Icon(
+                            Icons.star,
+                            color: Style.starColor,
                           ),
+                          onRatingUpdate: (double value) {},
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: Style.defaultPaddingSize / 4),
-                          child: Row(
-                            children: [
-                              RatingBar.builder(
-                                ignoreGestures: true,
-                                itemSize: 32.r,
-                                glowColor: Style.starColor,
-                                unratedColor: Colors.black,
-                                initialRating: (widget.data?.knownFor?[index].voteAverage ?? 0.0) / 2,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemBuilder: (context, _) => const Icon(
-                                  Icons.star,
-                                  color: Style.starColor,
-                                ),
-                                onRatingUpdate: (double value) {},
+                        Text(
+                          '(${(widget.data?.knownFor?[index].voteAverage).toString().substring(0, 3).toString()})',
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                fontSize: 30.sp,
                               ),
-                              Text(
-                                '(${(widget.data?.knownFor?[index].voteAverage).toString().substring(0, 3).toString()})',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
                         ),
                       ],
                     ),
                   ),
-                );
-              },
+                ],
+              ),
             ),
           );
+        },
+      ),
+    );
   }
 }

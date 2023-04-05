@@ -15,7 +15,10 @@ class CustomBottomNavbar extends StatefulWidget {
 class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   @override
   Widget build(BuildContext context) {
+    ;
+
     return BubbleBottomBar(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       borderRadius: Style.defaultRadius,
       opacity: .2,
       hasNotch: true,
@@ -67,7 +70,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
       backgroundColor: color,
       icon: Icon(
         icon,
-        color: Colors.black,
+        color: Theme.of(context).iconTheme.color,
       ),
       activeIcon: Icon(
         icon,

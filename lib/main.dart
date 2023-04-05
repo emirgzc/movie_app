@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/route_generator.dart';
+import 'package:movie_app/theme/theme_dark.dart';
+import 'package:movie_app/theme/theme_data_provider.dart';
 import 'package:movie_app/translations/codegen_loader.g.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,13 +17,16 @@ void main() async {
   await EasyLocalization.ensureInitialized();
 
   runApp(
-    EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('tr')],
-      path: 'assets/translations',
-      useOnlyLangCode: true,
-      fallbackLocale: Locale('tr'),
-      assetLoader: CodegenLoader(),
-      child: MyApp(),
+    ChangeNotifierProvider(
+      create: (context) => ThemeDataProvider(),
+      child: EasyLocalization(
+        supportedLocales: [Locale('en'), Locale('tr')],
+        path: 'assets/translations',
+        useOnlyLangCode: true,
+        fallbackLocale: Locale('tr'),
+        assetLoader: CodegenLoader(),
+        child: MyApp(),
+      ),
     ),
   );
 }
@@ -43,13 +48,9 @@ class MyApp extends StatelessWidget {
           locale: context.locale,
           debugShowCheckedModeBanner: false,
           title: 'Movie Go',
-          theme: ThemeData(
-            appBarTheme: const AppBarTheme(
-              elevation: 0,
-              backgroundColor: Style.whiteColor,
-            ),
-            scaffoldBackgroundColor: Style.whiteColor,
-          ),
+          theme: Provider.of<ThemeDataProvider>(context).getThemeData,
+          darkTheme: DarkTheme().darkTheme,
+          themeMode: ThemeMode.system,
           onGenerateRoute: RouteGenerator.routeGenrator,
         );
       },

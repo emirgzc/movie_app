@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/pages/movie_page.dart';
 import 'package:movie_app/pages/settings_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
-import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/widgets/custom_bottom_navbar.dart';
 import 'package:movie_app/widgets/drawer_menu_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -48,7 +49,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     print(context.locale);
     return Scaffold(
-      backgroundColor: Style.whiteColor,
       extendBody: true,
       // appbar
       appBar: appBar(context),
@@ -75,14 +75,6 @@ class _HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.all(
               Radius.circular(100),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Style.fabColor.withOpacity(0.3),
-                spreadRadius: 7,
-                blurRadius: 7,
-                offset: Offset(3, 5),
-              ),
-            ],
           ),
           child: Icon(Icons.location_pin),
         ),
@@ -95,9 +87,10 @@ class _HomePageState extends State<HomePage> {
     return ZoomDrawer(
       style: DrawerStyle.defaultStyle,
       androidCloseOnBackTap: true,
+
       mainScreenTapClose: true,
       controller: _drawerController,
-      menuBackgroundColor: Style.whiteColor,
+      menuBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       //borderRadius: 24.0,
       //showShadow: true,
       //angle: -0.0,
@@ -122,8 +115,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   PreferredSizeWidget appBar(BuildContext context) {
+    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
+
     return AppBar(
-      foregroundColor: Style.blackColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -138,7 +132,7 @@ class _HomePageState extends State<HomePage> {
           ),
           // header
           Image.asset(
-            "assets/logo/light-lg1.jpg",
+            themeData != LightTheme().lightTheme ? "assets/logo/png-logo-1-dark.png" : "assets/logo/png-logo-1-day.png",
             width: 300.w,
             fit: BoxFit.contain,
           ),

@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
                   return const Center(
                     child: LinearProgressIndicator(
                       color: Colors.grey,
-                      backgroundColor: Colors.red,
+                      backgroundColor: Style.primaryColor,
                     ),
                   );
                 }
@@ -102,6 +102,7 @@ class _SearchPageState extends State<SearchPage> {
         height: 160.h,
         child: Center(
           child: TextFormField(
+            style: Theme.of(context).textTheme.bodyLarge,
             autofocus: true,
             controller: _textEditingController,
             onChanged: (value) => setState(() => searchValue = value),
@@ -110,7 +111,7 @@ class _SearchPageState extends State<SearchPage> {
               suffixIcon: IconButton(
                 icon: Icon(
                   Icons.delete_forever,
-                  color: Colors.red.shade700,
+                  color: Style.primaryColor,
                 ),
                 onPressed: () => setState(
                   () {
@@ -145,7 +146,7 @@ class _SearchPageState extends State<SearchPage> {
           Visibility(
             visible: _page > 1,
             child: Padding(
-              padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+              padding: EdgeInsets.all(Style.defaultPaddingSize / 4),
               child: ElevatedButton(
                 onPressed: () {
                   if (_page > 1) {
@@ -156,22 +157,20 @@ class _SearchPageState extends State<SearchPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Style.transparentColor,
                   padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
                   elevation: 0,
                   shadowColor: Style.whiteColor,
                 ),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.arrow_back_ios,
-                      color: Style.blackColor,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                     Text(
                       arrowLeft,
-                      style: const TextStyle(
-                        color: Style.blackColor,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -218,8 +217,9 @@ class _SearchPageState extends State<SearchPage> {
           Visibility(
             visible: totalPage > _page,
             child: Padding(
-              padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+              padding: EdgeInsets.all(Style.defaultPaddingSize / 4),
               child: ElevatedButton(
+                
                 onPressed: () {
                   if (_page < 101) {
                     setState(() {
@@ -229,7 +229,7 @@ class _SearchPageState extends State<SearchPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Style.transparentColor,
                   padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
                   elevation: 0,
                   shadowColor: Style.whiteColor,
@@ -238,9 +238,12 @@ class _SearchPageState extends State<SearchPage> {
                   children: [
                     Text(
                       arrowRight,
-                      style: const TextStyle(color: Style.blackColor),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    const Icon(Icons.arrow_forward_ios, color: Style.blackColor),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
                   ],
                 ),
               ),
@@ -275,6 +278,7 @@ class _SearchPageState extends State<SearchPage> {
           borderRadius: BorderRadius.circular(4),
         ),
         elevation: Style.defaultElevation,
+        shadowColor: Theme.of(context).shadowColor.withOpacity(0.8),
         child: Padding(
           padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
           child: Column(
@@ -293,7 +297,7 @@ class _SearchPageState extends State<SearchPage> {
               // isim, tarih, derecelendirme, kategoriler
               Text(
                 mediaType == MediaTypes.movie.name ? (data.results?[index].title ?? '-') : (data.results?[index].name ?? '-'),
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                 textAlign: TextAlign.center,
@@ -304,8 +308,9 @@ class _SearchPageState extends State<SearchPage> {
                       padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 4),
                       child: Text(
                         toRevolveDate(checkDateType(mediaType, data.results?[index]) ?? DateTime.now().toString()),
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: Colors.grey.shade600,
+                              fontSize: 30.sp,
                             ),
                       ),
                     ),
@@ -315,7 +320,7 @@ class _SearchPageState extends State<SearchPage> {
                       ignoreGestures: true,
                       itemSize: 36.r,
                       glowColor: Style.starColor,
-                      unratedColor: Colors.black,
+                      unratedColor: Theme.of(context).shadowColor.withOpacity(0.4),
                       initialRating: (data.results?[index].voteAverage ?? 0.0) / 2,
                       minRating: 1,
                       direction: Axis.horizontal,

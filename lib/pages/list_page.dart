@@ -8,10 +8,12 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
-import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class ListPage extends StatefulWidget {
@@ -21,7 +23,6 @@ class ListPage extends StatefulWidget {
   @override
   State<ListPage> createState() => _ListPageState();
 }
-
 
 class _ListPageState extends State<ListPage> {
   int _page = 1;
@@ -43,9 +44,15 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
+
     switch (widget.clickedListType) {
       case ListType.top_rated_movies:
-        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page,);
+        listDataFuture = ApiClient().getMovieData(
+          dataWay: MovieApiType.top_rated.name,
+          context.locale,
+          page: _page,
+        );
         break;
       case ListType.upcoming_movies:
         listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
@@ -60,14 +67,17 @@ class _ListPageState extends State<ListPage> {
         listDataFuture = ApiClient().trendData("movie", context.locale);
         break;
       case ListType.top_rated_series:
-        listDataFuture = ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
+        listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
         break;
       case ListType.popular_series:
-      listDataFuture = ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
+        listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
 
         break;
       case ListType.series_on_air:
-      listDataFuture = ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
+        listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
         break;
       case ListType.trending_series_of_the_week:
         listDataFuture = ApiClient().trendData("tv", context.locale);
@@ -83,9 +93,8 @@ class _ListPageState extends State<ListPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        foregroundColor: Style.blackColor,
         title: Image.asset(
-          "assets/logo/light-lg1.jpg",
+          themeData != LightTheme().lightTheme ? "assets/logo/png-logo-1-dark.png" : "assets/logo/png-logo-1-day.png",
           width: 300.w,
           fit: BoxFit.contain,
         ),
@@ -122,14 +131,14 @@ class _ListPageState extends State<ListPage> {
                           // film kartları
                           return ImageDetailCard(
                             title: data[index].title,
-                            id: data[index].id ,
-                            posterPath: data[index].posterPath ,
+                            id: data[index].id,
+                            posterPath: data[index].posterPath,
                             voteAverageNumber: data[index].voteAverage,
                             dateCard: data[index].releaseDate.toString() == "null"
                                 ? data[index].firstAirDate.toString()
                                 : data[index].releaseDate.toString(),
                             width: width,
-                            name: data[index].name ,
+                            name: data[index].name,
                           );
                         },
                       ),
@@ -161,38 +170,18 @@ class _ListPageState extends State<ListPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // onceki sayfa
-          Padding(
-            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_page > 1) {
-                  setState(() {
-                    _page--;
-                    _textEditingController.text = _page.toString();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
-                elevation: 0,
-                shadowColor: Colors.red,
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_back_ios,
-                    color: Style.blackColor,
-                  ),
-                  Text(
-                    arrowLeft,
-                    style: const TextStyle(
-                      color: Style.blackColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          indicatorArrow(
+            arrowLeft,
+            () {
+              if (_page > 1) {
+                setState(() {
+                  _page--;
+                  _textEditingController.text = _page.toString();
+                });
+              }
+            },
+            Icons.arrow_back_ios,
+            isVisible: _page > 1,
           ),
 
           // page number
@@ -230,37 +219,64 @@ class _ListPageState extends State<ListPage> {
             ),
           ),
           // sonraki sayfa
-          Padding(
-            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_page < 101) {
-                  setState(() {
-                    _page++;
-                    _textEditingController.text = _page.toString();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
-                elevation: 0,
-                shadowColor: Colors.red,
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    arrowRight,
-                    style: const TextStyle(color: Style.blackColor),
-                  ),
-                  const Icon(Icons.arrow_forward_ios, color: Style.blackColor),
-                ],
-              ),
-            ),
+          indicatorArrow(
+            arrowRight,
+            () {
+              if (_page < 101) {
+                setState(() {
+                  _page++;
+                  _textEditingController.text = _page.toString();
+                });
+              }
+            },
+            Icons.arrow_forward_ios,
+            isVisible: true,
           ),
         ],
       ),
     );
   }
 
+  Widget indicatorArrow(String title, void Function()? onPressed, IconData icon, {bool isVisible = true}) {
+    return Visibility(
+      visible: isVisible,
+      child: Padding(
+        padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+            elevation: 0,
+            shadowColor: Style.primaryColor,
+          ),
+          child: title == LocaleKeys.previous_page.tr()
+              ? Row(
+                  children: [
+                    Icon(
+                      icon,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    Icon(
+                      icon,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
 }

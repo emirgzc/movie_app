@@ -431,7 +431,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return Text(
       title,
       textScaleFactor: 1.2,
-      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+      style: Theme.of(context).textTheme.titleSmall!.copyWith(
             fontWeight: FontWeight.bold,
             color: Style.whiteColor,
           ),
@@ -599,7 +599,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     Text(
                       LocaleKeys.comments.tr(),
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Style.whiteColor,
                             letterSpacing: 1.25,
@@ -694,8 +694,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4, left: Style.defaultPaddingSizeHorizontal / 2.5),
                         child: Text(
                           "${creditsData.results?[index].content ?? "-"} (${creditsData.results?[index].authorDetails?.rating ?? 0})",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Style.whiteColor,
+                            fontSize: 34.sp,
                           ),
                         ),
                       ),
@@ -734,7 +735,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     Text(
                       LocaleKeys.cast_players.tr(),
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Style.whiteColor,
                             letterSpacing: 1.25,
@@ -807,9 +808,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   child: Text(
                     creditsData.cast[index].originalName,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Style.whiteColor,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
                   ),
                 ),
                 Padding(
@@ -819,9 +818,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   child: Text(
                     "(${creditsData.cast[index].character})",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Style.whiteColor,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
                   ),
                 ),
               ],
@@ -852,7 +849,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   ),
                   child: Text(
                     data.title.toString(),
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Style.whiteColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -862,7 +859,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   data.overview.toString().isEmpty ? LocaleKeys.no_description_text_entered_with_the_movie.tr() : data.overview.toString(),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 30,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         height: 1.4,
                         color: Style.whiteColor.withOpacity(0.8),
                       ),
@@ -911,7 +908,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 child: Text(
                                   "${data?.genres?[index].name.toString() ?? "---"},",
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                         color: Style.whiteColor,
                                       ),
                                 ),
@@ -975,17 +972,18 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Style.whiteColor,
                   fontWeight: FontWeight.bold,
                 ),
           ),
           Text(
             item,
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Style.whiteColor,
                   fontWeight: FontWeight.bold,
                 ),
+            overflow: TextOverflow.ellipsis,
           )
         ],
       ),
@@ -995,7 +993,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   Widget screenshotItem(String url, double width) {
     return Material(
       //elevation: 14,
-      color: Colors.transparent,
+      color: Style.transparentColor,
       child: ClipRRect(
         borderRadius: BorderRadius.all(
           Radius.circular(Style.defaultRadiusSize / 2),

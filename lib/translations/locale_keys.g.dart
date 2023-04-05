@@ -28,6 +28,8 @@ abstract class LocaleKeys {
   static const you_may_like = 'you_may_like';
   static const other_movies_in_the_series = 'other_movies_in_the_series';
   static const relase_date = 'relase_date';
+  static const light_mode = 'light_mode';
+  static const dark_mode = 'dark_mode';
   static const country = 'country';
   static const rating = 'rating';
   static const cast_players = 'cast_players';

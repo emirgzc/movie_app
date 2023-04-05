@@ -27,18 +27,14 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
       ),
       child: RichText(
         text: TextSpan(
-          style: const TextStyle(color: Style.blackColor),
+          style: TextStyle(color: Theme.of(context).iconTheme.color),
           children: [
             TextSpan(
               text: (widget.isOpenedText == true)
                   ? widget.data
                   : ((widget.data?.length ?? 0) > 210)
                       ? "${widget.data?.substring(0, 210)}..."
-                      : ((widget.data?.isEmpty ?? false)
-                          ? LocaleKeys
-                              .no_description_text_entered_with_the_serie
-                              .tr()
-                          : widget.data),
+                      : ((widget.data?.isEmpty ?? false) ? LocaleKeys.no_description_text_entered_with_the_serie.tr() : widget.data),
             ),
             TextSpan(
               recognizer: TapGestureRecognizer()
@@ -47,12 +43,9 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
                     widget.isOpenedText = !widget.isOpenedText;
                   });
                 },
-              text: (widget.isOpenedText == false &&
-                      (widget.data?.length ?? 0) > 210)
-                  ? LocaleKeys.read.tr()
-                  : "",
+              text: (widget.isOpenedText == false && (widget.data?.length ?? 0) > 210) ? LocaleKeys.read.tr() : "",
               style: const TextStyle(
-                color: Colors.red,
+                color: Style.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),

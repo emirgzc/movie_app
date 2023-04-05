@@ -34,7 +34,6 @@ class _MoviePageState extends State<MoviePage> {
             children: [
               // Top trend movies slider
               sliderList(),
-
               // categories
               genresList(height),
 
@@ -80,7 +79,7 @@ class _MoviePageState extends State<MoviePage> {
           var genresData = snapshot.data as Genres;
           return SizedBox(
             width: double.infinity,
-            height: height / 12,
+            height: height / 13,
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
               clipBehavior: Clip.none,
@@ -144,7 +143,7 @@ class _MoviePageState extends State<MoviePage> {
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
-          shadowColor: Colors.red,
+          shadowColor: Style.primaryColor,
           child: ClipRRect(
             borderRadius: BorderRadius.all(
               Radius.circular(
@@ -155,11 +154,10 @@ class _MoviePageState extends State<MoviePage> {
               color: const Color.fromARGB(255, 160, 13, 3).withOpacity(0.8),
               // image widht ve height ile ayni olmali
               width: categoryItemWidth,
-              height: categoryItemWidth / 2.8,
               child: Center(
                 child: Text(
                   categoryName,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Style.whiteColor,
                         fontWeight: FontWeight.bold,
                       ),
@@ -216,10 +214,9 @@ class _MoviePageState extends State<MoviePage> {
                     child: Text(
                       movieName ?? "---",
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: Style.whiteColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: Style.defaultPaddingSize * 1.2,
                           ),
                     ),
                   ),

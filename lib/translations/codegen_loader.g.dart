@@ -74,7 +74,10 @@ class CodegenLoader extends AssetLoader {
     "movie_actor": "Movie Actor",
     "seral_actor": "Serial Actor",
     "next_page": "Next Page",
-    "previous_page": "Previous Page"
+    "previous_page": "Previous Page",
+    'light_mode':'Light Mode',
+    'dark_mode':'Dark Mode',
+
   };
   static const Map<String, dynamic> tr = {
     "movie": "Film",
@@ -135,7 +138,9 @@ class CodegenLoader extends AssetLoader {
     "movie_actor": "Film Aktörü",
     "seral_actor": "Dizi Aktörü",
     "next_page": "Sonraki Sayfa",
-    "previous_page": "Önceki Sayfa"
+    "previous_page": "Önceki Sayfa",
+    'light_mode':'Açık Tema',
+    'dark_mode':'Karanlık Tema',
   };
   static const Map<String, Map<String, dynamic>> mapLocales = {"en": en, "tr": tr};
 }

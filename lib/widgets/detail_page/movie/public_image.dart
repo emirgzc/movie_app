@@ -28,7 +28,7 @@ class PublicImage extends StatelessWidget {
                 ),
                 child: Material(
                   //elevation: 14,
-                  color: Colors.transparent,
+                  color: Style.transparentColor,
                   child: CachedNetworkImage(
                     imageUrl: "https://image.tmdb.org/t/p/w500${path.toString()}",
                     fit: BoxFit.contain,

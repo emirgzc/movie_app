@@ -2,6 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/theme/theme_dark.dart';
+import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/theme/theme_light.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -13,6 +18,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    ThemeDataProvider _themeProvider = Provider.of<ThemeDataProvider>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -23,12 +30,33 @@ class _SettingsPageState extends State<SettingsPage> {
               Text(
                 'Ayarlar',
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 32,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: SwitchFowSettings(),
+                padding: const EdgeInsets.only(top: 16, bottom: 8),
+                child: SwitchFowSettings(
+                  text: context.locale.languageCode == LanguageCodes.tr.name ? 'Türkçe' : 'English',
+                  value: context.locale.languageCode == LanguageCodes.tr.name ? true : false,
+                  onChanged: (value) {
+                    context.locale == const Locale("tr")
+                        ? context.setLocale(
+                            const Locale("en"),
+                          )
+                        : context.setLocale(
+                            const Locale("tr"),
+                          );
+                  },
+                ),
+              ),
+              SwitchFowSettings(
+                text: _themeProvider.getThemeData != LightTheme().lightTheme ? LocaleKeys.dark_mode.tr() : LocaleKeys.light_mode.tr(),
+                value: _themeProvider.getThemeData == LightTheme().lightTheme ? true : false,
+                onChanged: (value) {
+                  _themeProvider.setThemeData(
+                    value ? LightTheme().lightTheme : DarkTheme().darkTheme,
+                  );
+                },
               ),
             ],
           ),
@@ -40,7 +68,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
 // ignore: must_be_immutable
 class SwitchFowSettings extends StatefulWidget {
-  SwitchFowSettings({super.key});
+  SwitchFowSettings({super.key, required this.value, required this.onChanged, required this.text});
+  final bool value;
+  final void Function(bool)? onChanged;
+  final String text;
 
   @override
   State<SwitchFowSettings> createState() => _SwitchFowSettingsState();
@@ -53,21 +84,13 @@ class _SwitchFowSettingsState extends State<SwitchFowSettings> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          context.locale.languageCode == LanguageCodes.tr.name ? 'Türkçe' : 'English',
-          style: Theme.of(context).textTheme.titleLarge,
+          widget.text,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         Switch.adaptive(
-          activeColor: Colors.red,
-          value: context.locale.languageCode == LanguageCodes.tr.name ? true : false,
-          onChanged: (value) {
-            context.locale == const Locale("tr")
-                ? context.setLocale(
-                    const Locale("en"),
-                  )
-                : context.setLocale(
-                    const Locale("tr"),
-                  );
-          },
+          activeColor: Style.primaryColor,
+          value: widget.value,
+          onChanged: widget.onChanged,
         ),
       ],
     );

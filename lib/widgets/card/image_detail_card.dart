@@ -44,6 +44,7 @@ class ImageDetailCard extends StatelessWidget {
           borderRadius: Style.defaultRadius,
         ),
         elevation: Style.defaultElevation,
+        shadowColor: Theme.of(context).shadowColor.withOpacity(0.8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -98,7 +99,7 @@ class ImageDetailCard extends StatelessWidget {
           ),
           Text(
             "${LocaleKeys.score.tr()} : ${voteAverage.toString().substring(0, 3)}",
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       ),
@@ -116,7 +117,7 @@ class ImageDetailCard extends StatelessWidget {
             child: Text(
               (titleCard == null) ? name.toString() : titleCard.toString(),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -126,8 +127,8 @@ class ImageDetailCard extends StatelessWidget {
             ? SizedBox.shrink()
             : Text(
                 (mediaType ?? "") == MediaTypes.movie.name ? LocaleKeys.movie_actor.tr() : LocaleKeys.seral_actor.tr(),
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w400,
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -137,9 +138,7 @@ class ImageDetailCard extends StatelessWidget {
           ),
           child: Text(
             (dateCard ?? DateTime.now()).toString().isNotEmpty ? toRevolveDate((dateCard ?? DateTime.now()).toString()) : "-",
-            style: const TextStyle(
-              color: Style.dateColor,
-            ),
+            style: TextStyle(color: Style.dateColor, fontSize: 30.sp),
             textAlign: TextAlign.center,
           ),
         ),

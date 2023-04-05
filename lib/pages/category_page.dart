@@ -9,8 +9,11 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/trend_movie.dart';
+import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:provider/provider.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key, required this.genreId});
@@ -52,62 +55,63 @@ class _CategoryPageState extends State<CategoryPage> {
 
   FutureBuilder<List<Result>?> bodyList(BuildContext context, int _crossAxisCount, double width) {
     return FutureBuilder(
-        future: ApiClient().getMovieData(
-          dataWay: MovieApiType.now_playing.name,
-          context.locale,
-          page: _page,
-          type: MediaTypes.movie.name,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
-            var data = snapshot.data as List<Result>;
-            return ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                MasonryGridView.count(
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: data.length,
-                  crossAxisCount: _crossAxisCount,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (data[index].genreIds?.contains(widget.genreId) ?? false) {
-                      return ImageDetailCard(
-                        title: data[index].title,
-                        id: data[index].id,
-                        posterPath: data[index].posterPath,
-                        voteAverageNumber: data[index].voteAverage,
-                        dateCard: data[index].releaseDate.toString() == "null"
-                            ? data[index].firstAirDate.toString()
-                            : data[index].releaseDate.toString(),
-                        width: width,
-                        name: data[index].name,
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
-                pageIndicator(),
-              ],
-            );
-          } else {
-            return buildLastProcessCardEffect(
-              const SizedBox(
-                child: CircularProgressIndicator(),
+      future: ApiClient().getMovieData(
+        dataWay: MovieApiType.now_playing.name,
+        context.locale,
+        page: _page,
+        type: MediaTypes.movie.name,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+          var data = snapshot.data as List<Result>;
+          return ListView(
+            physics: BouncingScrollPhysics(),
+            children: [
+              MasonryGridView.count(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: data.length,
+                crossAxisCount: _crossAxisCount,
+                itemBuilder: (BuildContext context, int index) {
+                  if (data[index].genreIds?.contains(widget.genreId) ?? false) {
+                    return ImageDetailCard(
+                      title: data[index].title,
+                      id: data[index].id,
+                      posterPath: data[index].posterPath,
+                      voteAverageNumber: data[index].voteAverage,
+                      dateCard: data[index].releaseDate.toString() == "null"
+                          ? data[index].firstAirDate.toString()
+                          : data[index].releaseDate.toString(),
+                      width: width,
+                      name: data[index].name,
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
               ),
-              context,
-            );
-          }
-        },
-      );
+              pageIndicator(),
+            ],
+          );
+        } else {
+          return buildLastProcessCardEffect(
+            const SizedBox(
+              child: CircularProgressIndicator(),
+            ),
+            context,
+          );
+        }
+      },
+    );
   }
 
   PreferredSizeWidget getAppBar() {
+    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
+
     return AppBar(
       automaticallyImplyLeading: true,
-      foregroundColor: Style.blackColor,
       title: Image.asset(
-        "assets/logo/light-lg1.jpg",
+        themeData != LightTheme().lightTheme ? "assets/logo/png-logo-1-dark.png" : "assets/logo/png-logo-1-day.png",
         width: 300.w,
         fit: BoxFit.contain,
       ),
@@ -128,38 +132,18 @@ class _CategoryPageState extends State<CategoryPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // onceki sayfa
-          Padding(
-            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_page > 1) {
-                  setState(() {
-                    _page--;
-                    _textEditingController.text = _page.toString();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
-                elevation: 0,
-                shadowColor: Colors.red,
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_back_ios,
-                    color: Style.blackColor,
-                  ),
-                  Text(
-                    arrowLeft,
-                    style: const TextStyle(
-                      color: Style.blackColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          indicatorArrow(
+            arrowLeft,
+            () {
+              if (_page > 1) {
+                setState(() {
+                  _page--;
+                  _textEditingController.text = _page.toString();
+                });
+              }
+            },
+            Icons.arrow_back_ios,
+            isVisible: _page > 1,
           ),
 
           // page number
@@ -185,40 +169,67 @@ class _CategoryPageState extends State<CategoryPage> {
               ),
               onTap: () {},
               onChanged: (value) {},
-              onSubmitted: (value) {
-              },
+              onSubmitted: (value) {},
             ),
           ),
           // sonraki sayfa
-          Padding(
-            padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_page < 101) {
-                  setState(() {
-                    _page++;
-                    _textEditingController.text = _page.toString();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
-                elevation: 0,
-                shadowColor: Colors.red,
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    arrowRight,
-                    style: const TextStyle(color: Style.blackColor),
-                  ),
-                  const Icon(Icons.arrow_forward_ios, color: Style.blackColor),
-                ],
-              ),
-            ),
+          indicatorArrow(
+            arrowRight,
+            () {
+              if (_page < 101) {
+                setState(() {
+                  _page++;
+                  _textEditingController.text = _page.toString();
+                });
+              }
+            },
+            Icons.arrow_forward_ios,
+            isVisible: true,
           ),
         ],
+      ),
+    );
+  }
+
+  Visibility indicatorArrow(String title, void Function()? onPressed, IconData icon, {bool isVisible = true}) {
+    return Visibility(
+      visible: isVisible,
+      child: Padding(
+        padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
+            elevation: 0,
+            shadowColor: Style.primaryColor,
+          ),
+          child: title == LocaleKeys.previous_page.tr()
+              ? Row(
+                  children: [
+                    Icon(
+                      icon,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    Icon(
+                      icon,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }

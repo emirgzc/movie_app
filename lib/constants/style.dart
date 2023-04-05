@@ -25,21 +25,18 @@ class Style {
   static const Color starColor = Colors.amber;
   static const Color whiteColor = Colors.white;
   static const Color blackColor = Colors.black;
+  static const Color lightTextColor = Color(0xffedf2f4);
+  static const Color darkTextColor = Color(0xff2b2d42);
   static Color widgetBackgroundColor = Style.blackColor.withOpacity(0.6);
   static const Color transparentColor = Colors.transparent;
 
-  static const Color fabColor = Colors.red;
-  static const Color movieTabColor = Colors.red;
+  static const Color primaryColor = Color(0xffe63946);
+  static const Color fabColor = primaryColor;
+  static const Color movieTabColor = primaryColor;
   static const Color serieTabColor = Colors.blue;
   static const Color favoriteTabColor = Colors.purple;
   static const Color settingsTabColor = Colors.cyan;
 
   static double defaultIconsSize = 40.r;
   static double iconSizeTv = 72.r;
-  static BoxShadow defaultShadow = BoxShadow(
-    offset: const Offset(5, 5),
-    blurRadius: 10,
-    spreadRadius: 6,
-    color: Style.blackColor.withOpacity(0.1),
-  );
 }

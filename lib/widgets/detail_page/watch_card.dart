@@ -39,18 +39,14 @@ class WatchCard extends StatelessWidget {
                         sigmaX: 30.0,
                         sigmaY: 30.0,
                       ),
-                      child: Material(
-                        //elevation: 14,
-                        color: Style.transparentColor,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Style.defaultPaddingSizeHorizontal * 3,
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: "https://image.tmdb.org/t/p/w500${result[index].logoPath}",
-                            fit: BoxFit.contain,
-                            width: width,
-                          ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Style.defaultPaddingSizeHorizontal * 3,
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: "https://image.tmdb.org/t/p/w500${result[index].logoPath}",
+                          fit: BoxFit.contain,
+                          width: width,
                         ),
                       ),
                     ),
@@ -67,7 +63,14 @@ class WatchCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(
                     Style.defaultRadiusSize / 4,
                   ),
-                  boxShadow: [Style.defaultShadow],
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(5, 5),
+                      blurRadius: 10,
+                      spreadRadius: 4,
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ],
                   color: Style.whiteColor,
                 ),
                 height: 200.h,
