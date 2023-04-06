@@ -38,5 +38,7 @@ class Style {
   static const Color settingsTabColor = Colors.cyan;
 
   static double defaultIconsSize = 40.r;
+  static double defaullIconHeight = 60.h;
+
   static double iconSizeTv = 72.r;
 }

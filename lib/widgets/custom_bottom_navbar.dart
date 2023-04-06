@@ -1,6 +1,9 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
@@ -39,22 +42,22 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
       items: [
         bubbleBottomBarItem(
           Style.movieTabColor,
-          Icons.movie_creation_outlined,
+          IconPath.film.iconPath(),
           LocaleKeys.movie.tr(),
         ),
         bubbleBottomBarItem(
           Style.serieTabColor,
-          Icons.tv_outlined,
+          IconPath.tv.iconPath(),
           LocaleKeys.tv_series.tr(),
         ),
         bubbleBottomBarItem(
           Style.favoriteTabColor,
-          Icons.favorite_border_outlined,
+          IconPath.favorite.iconPath(),
           LocaleKeys.favorites.tr(),
         ),
         bubbleBottomBarItem(
           Style.settingsTabColor,
-          Icons.settings_outlined,
+          IconPath.settings.iconPath(),
           LocaleKeys.settings.tr(),
         ),
       ],
@@ -63,17 +66,18 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
 
   BubbleBottomBarItem bubbleBottomBarItem(
     Color color,
-    IconData icon,
+    String icon,
     String text,
   ) {
     return BubbleBottomBarItem(
       backgroundColor: color,
-      icon: Icon(
+      icon: SvgPicture.asset(
         icon,
-        color: Theme.of(context).iconTheme.color,
+        height: Style.defaullIconHeight * 0.9,
       ),
-      activeIcon: Icon(
+      activeIcon: SvgPicture.asset(
         icon,
+        height: Style.defaullIconHeight * 0.9,
         color: color,
       ),
       title: Text(text),

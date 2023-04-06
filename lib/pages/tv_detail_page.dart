@@ -5,8 +5,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/credits.dart';
@@ -434,10 +436,10 @@ class _TVDetailPageState extends State<TVDetailPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                Icons.star,
+              SvgPicture.asset(
+                IconPath.star_fill.iconPath(),
+                height: Style.defaullIconHeight * 0.55,
                 color: Style.starColor,
-                size: Style.defaultIconsSize,
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -458,14 +460,14 @@ class _TVDetailPageState extends State<TVDetailPage> {
           padding: EdgeInsets.symmetric(
             horizontal: (Style.defaultPaddingSizeHorizontal / 4) * 3,
           ),
-          child: Icon(
-            Icons.add_box_outlined,
-            size: Style.iconSizeTv,
+          child: SvgPicture.asset(
+            IconPath.plus_square.iconPath(),
+            height: Style.defaullIconHeight * 0.8,
           ),
         ),
-        Icon(
-          Icons.share_outlined,
-          size: Style.iconSizeTv,
+        SvgPicture.asset(
+          IconPath.share.iconPath(),
+          height: Style.defaullIconHeight * 0.8,
         ),
       ],
     );
@@ -497,7 +499,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           child: circleItem(
             context,
             () => Navigator.pop(context),
-            Icons.arrow_back,
+            IconPath.arrow_left.iconPath(),
           ),
         ),
         FutureBuilder(
@@ -516,7 +518,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                       [data.results],
                     ]);
                   },
-                  Icons.play_arrow_rounded,
+                  IconPath.play.iconPath(),
                 ),
               );
             } else {
@@ -526,7 +528,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 child: circleItem(
                   context,
                   () {},
-                  Icons.play_disabled_rounded,
+                  IconPath.play.iconPath(),
                 ),
               );
             }
@@ -538,7 +540,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           child: circleItem(
             context,
             () {},
-            Icons.favorite_border_outlined,
+            IconPath.favorite.iconPath(),
           ),
         ),
       ],
@@ -721,7 +723,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
     );
   }
 
-  Widget circleItem(BuildContext context, void Function()? onTap, IconData icon) {
+  Widget circleItem(BuildContext context, void Function()? onTap, String icon) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -745,7 +747,12 @@ class _TVDetailPageState extends State<TVDetailPage> {
           horizontal: Style.defaultPaddingSizeHorizontal / 1.5,
           vertical: Style.defaultPaddingSizeVertical / 1.5,
         ),
-        child: Icon(icon),
+        child: Center(
+          child: SvgPicture.asset(
+            icon,
+            height: Style.defaullIconHeight * 0.8,
+          ),
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/util.dart';
 
 class ListPageShimmer extends StatefulWidget {
   const ListPageShimmer({

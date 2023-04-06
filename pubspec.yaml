@@ -55,6 +55,7 @@ dependencies:
   provider: ^6.0.5
   chewie: ^1.4.0
   video_player: ^2.6.1
+  flutter_svg: ^2.0.4
  
 
 dev_dependencies:
@@ -93,6 +94,7 @@ flutter:
     - assets/
     - assets/logo/
     - assets/translations/
+    - assets/icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
@@ -90,16 +92,19 @@ class ImageDetailCard extends StatelessWidget {
       padding: EdgeInsets.only(bottom: Style.defaultPaddingSize.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            Icons.star_outlined,
-            size: Style.defaultIconsSize,
+          SvgPicture.asset(
+            IconPath.star_fill.iconPath(),
+            height: Style.defaullIconHeight * 0.6,
             color: Style.starColor,
           ),
-          Text(
-            "${LocaleKeys.score.tr()} : ${voteAverage.toString().substring(0, 3)}",
-            style: Theme.of(context).textTheme.bodySmall,
+          Padding(
+            padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 6),
+            child: Text(
+              "${LocaleKeys.score.tr()} : ${voteAverage.toString().substring(0, 3)}",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
         ],
       ),

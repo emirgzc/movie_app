@@ -6,8 +6,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/collection.dart';
@@ -464,14 +466,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         [data.results],
                       ]);
                     },
-                    icondata: Icons.play_arrow,
+                    icondata: IconPath.play.iconPath(),
                     width: width,
                     height: height,
                   );
                 } else {
                   return ButtonForDetailMovie(
                     onPressed: () {},
-                    icondata: Icons.play_disabled,
+                    icondata: IconPath.play.iconPath(),
                     width: width,
                     height: height,
                   );
@@ -482,7 +484,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               onPressed: () {
                 _pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
-              icondata: Icons.description,
+              icondata: IconPath.file.iconPath(),
               width: width,
               height: height,
             ),
@@ -490,7 +492,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               onPressed: () {
                 _pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
-              icondata: Icons.info_outline,
+              icondata: IconPath.info.iconPath(),
               width: width,
               height: height,
             ),
@@ -498,7 +500,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               onPressed: () {
                 _pageController.animateToPage(2, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
-              icondata: Icons.family_restroom,
+              icondata: IconPath.users.iconPath(),
               width: width,
               height: height,
             ),
@@ -506,13 +508,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               onPressed: () {
                 _pageController.animateToPage(3, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
-              icondata: Icons.comment,
+              icondata: IconPath.comment.iconPath(),
               width: width,
               height: height,
             ),
             ButtonForDetailMovie(
               onPressed: () {},
-              icondata: Icons.add,
+              icondata: IconPath.plus_lg.iconPath(),
               width: width,
               height: height,
             ),
@@ -541,8 +543,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               ),
               alignment: Alignment.center,
               padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-              child: const Icon(
-                Icons.arrow_back,
+              child: SvgPicture.asset(
+                IconPath.arrow_left.iconPath(),
+                height: Style.defaullIconHeight,
                 color: Style.whiteColor,
               ),
             ),
@@ -564,9 +567,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               ),
               alignment: Alignment.center,
               padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-              child: Icon(
-                Icons.favorite,
-                color: Theme.of(context).colorScheme.error,
+              child: SvgPicture.asset(
+                IconPath.favorite_fill.iconPath(),
+                height: Style.defaullIconHeight,
+                color: Style.primaryColor,
               ),
             ),
           ),
@@ -679,8 +683,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 Row(
                   children: [
                     (creditsData.results?[index].authorDetails?.avatarPath == null)
-                        ? const Icon(
-                            Icons.nature_people_outlined,
+                        ? SvgPicture.asset(
+                            IconPath.comment_card.iconPath(),
+                            height: Style.defaullIconHeight * 0.7,
                             color: Style.whiteColor,
                           )
                         : CachedNetworkImage(

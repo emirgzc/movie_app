@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/style.dart';
 
 class ButtonForDetailMovie extends StatelessWidget {
@@ -11,7 +11,7 @@ class ButtonForDetailMovie extends StatelessWidget {
     required this.height,
   });
   final void Function()? onPressed;
-  final IconData icondata;
+  final String icondata;
   final double width;
   final double height;
 
@@ -24,16 +24,16 @@ class ButtonForDetailMovie extends StatelessWidget {
           Radius.circular(Style.defaultRadiusSize / 2),
         ),
         child: Container(
-          width: (width) / 7.4,
-          height: (width) / 7.4,
+          width: (width) / 7.5,
+          height: (width) / 7.5,
           color: Style.widgetBackgroundColor,
           child: MaterialButton(
             padding: EdgeInsets.zero,
             onPressed: onPressed,
-            child: Icon(
+            child: SvgPicture.asset(
               icondata,
-              color: Style.whiteColor.withOpacity(0.8),
-              size: 64.r,
+              height: Style.defaullIconHeight * 0.9,
+              color: Style.whiteColor,
             ),
           ),
         ),

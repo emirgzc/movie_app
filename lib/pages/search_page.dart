@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/search.dart';
@@ -96,6 +98,16 @@ class _SearchPageState extends State<SearchPage> {
 
   AppBar getAppBar() {
     return AppBar(
+      leading: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: SvgPicture.asset(
+          IconPath.arrow_left.iconPath(),
+          height: Style.defaullIconHeight,
+        ),
+      ),
       foregroundColor: Colors.grey.shade800,
       title: SizedBox(
         width: double.infinity,
@@ -109,8 +121,9 @@ class _SearchPageState extends State<SearchPage> {
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search),
               suffixIcon: IconButton(
-                icon: Icon(
-                  Icons.delete_forever,
+                icon: SvgPicture.asset(
+                  IconPath.trash.iconPath(),
+                  height: Style.defaullIconHeight,
                   color: Style.primaryColor,
                 ),
                 onPressed: () => setState(
@@ -164,13 +177,16 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.arrow_back_ios,
-                      color: Theme.of(context).iconTheme.color,
+                    SvgPicture.asset(
+                      IconPath.arrow_left.iconPath(),
+                      height: Style.defaullIconHeight * 0.9,
                     ),
-                    Text(
-                      arrowLeft,
-                      style: Theme.of(context).textTheme.bodySmall,
+                    Padding(
+                      padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
+                      child: Text(
+                        arrowLeft,
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 34.sp),
+                      ),
                     ),
                   ],
                 ),
@@ -219,7 +235,6 @@ class _SearchPageState extends State<SearchPage> {
             child: Padding(
               padding: EdgeInsets.all(Style.defaultPaddingSize / 4),
               child: ElevatedButton(
-                
                 onPressed: () {
                   if (_page < 101) {
                     setState(() {
@@ -236,13 +251,16 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 child: Row(
                   children: [
-                    Text(
-                      arrowRight,
-                      style: Theme.of(context).textTheme.bodySmall,
+                    Padding(
+                      padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
+                      child: Text(
+                        arrowRight,
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 34.sp),
+                      ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Theme.of(context).iconTheme.color,
+                    SvgPicture.asset(
+                      IconPath.arrow_right.iconPath(),
+                      height: Style.defaullIconHeight * 0.9,
                     ),
                   ],
                 ),

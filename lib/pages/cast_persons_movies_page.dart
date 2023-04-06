@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
@@ -31,7 +34,16 @@ class CastPersonsMoviesPage extends StatelessWidget {
 
   PreferredSizeWidget _getAppBar(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: true,
+      leading: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: SvgPicture.asset(
+          IconPath.arrow_left.iconPath(),
+          height: Style.defaullIconHeight,
+        ),
+      ),
       title: Text(
         "${LocaleKeys.actor.tr()}: $personName",
         style: Theme.of(context).textTheme.titleMedium!.copyWith(

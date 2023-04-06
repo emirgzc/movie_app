@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           title: 'Movie Go',
           theme: Provider.of<ThemeDataProvider>(context).getThemeData,
           darkTheme: DarkTheme().darkTheme,
-          themeMode: ThemeMode.system,
+          themeMode: ThemeMode.light,
           onGenerateRoute: RouteGenerator.routeGenrator,
         );
       },

@@ -16,16 +16,46 @@ enum ListType {
   trending_series_of_the_week,
 }
 
-enum LanguageCodes{
+enum LanguageCodes {
   en,
   tr,
 }
 
-enum MovieApiType{
+enum MovieApiType {
   popular,
   top_rated,
   upcoming,
   now_playing,
   trending,
   on_the_air,
+}
+
+enum IconPath {
+  arrow_left,
+  arrow_right_short,
+  arrow_right,
+  camera,
+  comment_card,
+  comment,
+  favorite_fill,
+  favorite,
+  file,
+  film,
+  location,
+  info,
+  menu_list,
+  play,
+  plus_lg,
+  plus_square,
+  plus,
+  search,
+  settings,
+  share,
+  star,
+  star_fill,
+
+  times,
+  trash,
+  tv,
+  users,
 }

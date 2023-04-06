@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/pages/movie_page.dart';
 import 'package:movie_app/pages/settings_page.dart';
@@ -69,14 +72,13 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: Style.fabColor,
         child: Container(
-          height: 70,
-          width: 70,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(100),
-            ),
+          padding: EdgeInsets.all(Style.defaultPaddingSize * 0.9),
+          decoration: BoxDecoration(shape: BoxShape.circle),
+          child: SvgPicture.asset(
+            IconPath.location.iconPath(),
+            height: Style.defaullIconHeight,
+            color: Style.whiteColor,
           ),
-          child: Icon(Icons.location_pin),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -126,8 +128,9 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               _drawerController.toggle?.call();
             },
-            icon: const Icon(
-              Icons.menu,
+            icon: SvgPicture.asset(
+              IconPath.menu_list.iconPath(),
+              height: Style.defaullIconHeight,
             ),
           ),
           // header
@@ -141,8 +144,9 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.of(context).pushNamed("/searchPage");
             },
-            icon: const Icon(
-              Icons.search,
+            icon: SvgPicture.asset(
+              IconPath.search.iconPath(),
+              height: Style.defaullIconHeight,
             ),
           ),
         ],

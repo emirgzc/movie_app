@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
@@ -109,7 +111,16 @@ class _CategoryPageState extends State<CategoryPage> {
     ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
 
     return AppBar(
-      automaticallyImplyLeading: true,
+      leading: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: SvgPicture.asset(
+          IconPath.arrow_left.iconPath(),
+          height: Style.defaullIconHeight,
+        ),
+      ),
       title: Image.asset(
         themeData != LightTheme().lightTheme ? "assets/logo/png-logo-1-dark.png" : "assets/logo/png-logo-1-day.png",
         width: 300.w,
