@@ -43,6 +43,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
         icon: SvgPicture.asset(
           IconPath.arrow_left.iconPath(),
           height: Style.defaullIconHeight,
+          color: context.iconThemeContext().color,
         ),
       ),
       title: BigText(title: "${LocaleKeys.actor.tr()}: $personName"),

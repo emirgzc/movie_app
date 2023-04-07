@@ -159,6 +159,7 @@ class _HomePageState extends State<HomePage> {
       icon: SvgPicture.asset(
         iconPath,
         height: Style.defaullIconHeight,
+        color: context.iconThemeContext().color,
       ),
     );
   }

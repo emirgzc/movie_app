@@ -444,11 +444,13 @@ class _TVDetailPageState extends State<TVDetailPage> {
           child: SvgPicture.asset(
             IconPath.plus_square.iconPath(),
             height: Style.defaullIconHeight * 0.8,
+            color: context.iconThemeContext().color,
           ),
         ),
         SvgPicture.asset(
           IconPath.share.iconPath(),
           height: Style.defaullIconHeight * 0.8,
+          color: context.iconThemeContext().color,
         ),
       ],
     );
@@ -732,6 +734,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           child: SvgPicture.asset(
             icon,
             height: Style.defaullIconHeight * 0.8,
+            color: context.iconThemeContext().color,
           ),
         ),
       ),

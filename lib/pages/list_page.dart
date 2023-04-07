@@ -63,6 +63,7 @@ class _ListPageState extends State<ListPage> {
           icon: SvgPicture.asset(
             IconPath.arrow_left.iconPath(),
             height: Style.defaullIconHeight,
+            color: context.iconThemeContext().color,
           ),
         ),
         title: Image.asset(
@@ -104,7 +105,7 @@ class _ListPageState extends State<ListPage> {
       case ListType.popular_series:
         _listDataFuture =
             ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
-    
+
         break;
       case ListType.series_on_air:
         _listDataFuture =
@@ -113,7 +114,7 @@ class _ListPageState extends State<ListPage> {
       case ListType.trending_series_of_the_week:
         _listDataFuture = ApiClient().trendData("tv", context.locale);
         break;
-    
+
       default:
         _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
     }
@@ -224,36 +225,36 @@ class _ListPageState extends State<ListPage> {
 
   Widget indicatorField() {
     return TextField(
-            controller: _textEditingController,
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              LengthLimitingTextInputFormatter(
-                2,
-              ),
-            ],
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              fillColor: Style.blackColor.withOpacity(0.1),
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: EdgeInsets.zero,
-            ),
-            onTap: () {},
-            onChanged: (value) {},
-            onSubmitted: (value) {
-              /*
+      controller: _textEditingController,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        LengthLimitingTextInputFormatter(
+          2,
+        ),
+      ],
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+        fillColor: Style.blackColor.withOpacity(0.1),
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: EdgeInsets.zero,
+      ),
+      onTap: () {},
+      onChanged: (value) {},
+      onSubmitted: (value) {
+        /*
                                 if (100 > int.parse(value) &&
                                     0 < int.parse(value)) {
                                   setState(() {
                                     page = int.parse(value);
                                   });
                                   */
-            },
-          );
+      },
+    );
   }
 
   Widget indicatorArrow(String title, void Function()? onPressed, IconData icon, {bool isVisible = true}) {

@@ -152,6 +152,7 @@ class _SearchPageState extends State<SearchPage> {
       icon: SvgPicture.asset(
         IconPath.arrow_left.iconPath(),
         height: Style.defaullIconHeight,
+        color: context.iconThemeContext().color,
       ),
     );
   }
@@ -193,6 +194,7 @@ class _SearchPageState extends State<SearchPage> {
                     SvgPicture.asset(
                       IconPath.arrow_left.iconPath(),
                       height: Style.defaullIconHeight * 0.9,
+                      color: context.iconThemeContext().color,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
@@ -274,6 +276,7 @@ class _SearchPageState extends State<SearchPage> {
                     SvgPicture.asset(
                       IconPath.arrow_right.iconPath(),
                       height: Style.defaullIconHeight * 0.9,
+                      color: context.iconThemeContext().color,
                     ),
                   ],
                 ),

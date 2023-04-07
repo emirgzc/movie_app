@@ -75,10 +75,12 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
       icon: SvgPicture.asset(
         icon,
         height: Style.defaullIconHeight * 0.9,
+        color: context.iconThemeContext().color,
       ),
       activeIcon: SvgPicture.asset(
         icon,
         height: Style.defaullIconHeight * 0.9,
+
         // ignore: deprecated_member_use
         color: color,
       ),

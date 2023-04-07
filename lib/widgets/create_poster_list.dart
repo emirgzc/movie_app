@@ -81,6 +81,7 @@ class CreatePosterList extends StatelessWidget {
           icon: SvgPicture.asset(
             IconPath.arrow_right.iconPath(),
             height: Style.defaullIconHeight,
+            color: context.iconThemeContext().color,
           ),
         )
       ],

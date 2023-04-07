@@ -123,6 +123,7 @@ class _CategoryPageState extends State<CategoryPage> {
         icon: SvgPicture.asset(
           IconPath.arrow_left.iconPath(),
           height: Style.defaullIconHeight,
+          color: context.iconThemeContext().color,
         ),
       ),
       title: Image.asset(
