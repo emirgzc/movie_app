@@ -9,6 +9,7 @@ import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:movie_app/widgets/text/big_text.dart';
 
 // ignore: must_be_immutable
 class CastPersonsMoviesPage extends StatelessWidget {
@@ -44,12 +45,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
           height: Style.defaullIconHeight,
         ),
       ),
-      title: Text(
-        "${LocaleKeys.actor.tr()}: $personName",
-        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-      ),
+      title: BigText(title: "${LocaleKeys.actor.tr()}: $personName"),
       centerTitle: true,
     );
   }

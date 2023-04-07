@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/util.dart';
 
 class ListPageShimmer extends StatefulWidget {
@@ -14,7 +13,6 @@ class ListPageShimmer extends StatefulWidget {
 class _ListPageShimmerState extends State<ListPageShimmer> {
   @override
   Widget build(BuildContext context) {
-    double widht = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: Column(

@@ -30,6 +30,15 @@ enum MovieApiType {
   on_the_air,
 }
 
+enum LogoPath {
+  png_logo_2_day,
+  png_logo_2_dark,
+  png_logo_1_day,
+  png_logo_1_dark,
+  logo_png,
+  light_lg1_removebg,
+}
+
 enum IconPath {
   arrow_left,
   arrow_right_short,
@@ -53,7 +62,6 @@ enum IconPath {
   share,
   star,
   star_fill,
-
   times,
   trash,
   tv,

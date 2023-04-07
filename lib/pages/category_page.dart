@@ -57,12 +57,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   FutureBuilder<List<Result>?> bodyList(BuildContext context, int _crossAxisCount, double width) {
     return FutureBuilder(
-      future: ApiClient().getMovieData(
-        dataWay: MovieApiType.now_playing.name,
-        context.locale,
-        page: _page,
-        type: MediaTypes.movie.name,
-      ),
+      future: getCategory(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as List<Result>;
@@ -107,6 +102,15 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
+  Future<List<Result>?> getCategory() async {
+    return await ApiClient().getMovieData(
+      dataWay: MovieApiType.now_playing.name,
+      context.locale,
+      page: _page,
+      type: MediaTypes.movie.name,
+    );
+  }
+
   PreferredSizeWidget getAppBar() {
     ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
 
@@ -122,7 +126,7 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
       ),
       title: Image.asset(
-        themeData != LightTheme().lightTheme ? "assets/logo/png-logo-1-dark.png" : "assets/logo/png-logo-1-day.png",
+        themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
         width: 300.w,
         fit: BoxFit.contain,
       ),
@@ -159,29 +163,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
           // page number
           Expanded(
-            child: TextField(
-              controller: _textEditingController,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                LengthLimitingTextInputFormatter(
-                  2,
-                ),
-              ],
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                fillColor: Style.blackColor.withOpacity(0.1),
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
-              onTap: () {},
-              onChanged: (value) {},
-              onSubmitted: (value) {},
-            ),
+            child: indicatorField(),
           ),
           // sonraki sayfa
           indicatorArrow(
@@ -199,6 +181,32 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget indicatorField() {
+    return TextField(
+      controller: _textEditingController,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        LengthLimitingTextInputFormatter(
+          2,
+        ),
+      ],
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+        fillColor: Style.blackColor.withOpacity(0.1),
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: EdgeInsets.zero,
+      ),
+      onTap: () {},
+      onChanged: (value) {},
+      onSubmitted: (value) {},
     );
   }
 
@@ -220,11 +228,11 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: [
                     Icon(
                       icon,
-                      color: Theme.of(context).iconTheme.color,
+                      color: context.iconThemeContext().color,
                     ),
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: context.textThemeContext().bodySmall,
                     ),
                   ],
                 )
@@ -232,11 +240,11 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: [
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: context.textThemeContext().bodySmall,
                     ),
                     Icon(
                       icon,
-                      color: Theme.of(context).iconTheme.color,
+                      color: context.iconThemeContext().color,
                     ),
                   ],
                 ),

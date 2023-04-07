@@ -46,7 +46,7 @@ class ImageDetailCard extends StatelessWidget {
           borderRadius: Style.defaultRadius,
         ),
         elevation: Style.defaultElevation,
-        shadowColor: Theme.of(context).shadowColor.withOpacity(0.8),
+        shadowColor: context.publicThemeContext().shadowColor.withOpacity(0.8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -97,13 +97,14 @@ class ImageDetailCard extends StatelessWidget {
           SvgPicture.asset(
             IconPath.star_fill.iconPath(),
             height: Style.defaullIconHeight * 0.6,
+            // ignore: deprecated_member_use
             color: Style.starColor,
           ),
           Padding(
             padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 6),
             child: Text(
               "${LocaleKeys.score.tr()} : ${voteAverage.toString().substring(0, 3)}",
-              style: Theme.of(context).textTheme.bodySmall,
+              style: context.textThemeContext().bodySmall,
             ),
           ),
         ],
@@ -122,7 +123,7 @@ class ImageDetailCard extends StatelessWidget {
             child: Text(
               (titleCard == null) ? name.toString() : titleCard.toString(),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              style: context.textThemeContext().titleSmall!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -132,7 +133,7 @@ class ImageDetailCard extends StatelessWidget {
             ? SizedBox.shrink()
             : Text(
                 (mediaType ?? "") == MediaTypes.movie.name ? LocaleKeys.movie_actor.tr() : LocaleKeys.seral_actor.tr(),
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                style: context.textThemeContext().bodySmall!.copyWith(
                       fontWeight: FontWeight.w400,
                     ),
                 textAlign: TextAlign.center,

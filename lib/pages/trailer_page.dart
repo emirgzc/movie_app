@@ -1,9 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/models/trailer.dart';
+import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TrailerPage extends StatefulWidget {
@@ -28,9 +33,7 @@ class _TrailerPageState extends State<TrailerPage> {
       if (widget.videoURL?[0]?[i].type == "Trailer") {
         _controllers.add(
           YoutubePlayerController(
-            initialVideoId: YoutubePlayer.convertUrlToId(
-                    "https://www.youtube.com/watch?v=${widget.videoURL?[0]?[i].key ?? ""}") ??
-                '',
+            initialVideoId: YoutubePlayer.convertUrlToId("https://www.youtube.com/watch?v=${widget.videoURL?[0]?[i].key ?? ""}") ?? '',
             flags: const YoutubePlayerFlags(
               autoPlay: false,
               forceHD: true,
@@ -52,12 +55,14 @@ class _TrailerPageState extends State<TrailerPage> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
         foregroundColor: Style.blackColor,
         title: Image.asset(
-          "assets/header_logo.png",
+          themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
           width: 290.w,
           fit: BoxFit.contain,
         ),
@@ -68,9 +73,7 @@ class _TrailerPageState extends State<TrailerPage> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              for (int i = 0;
-                  i < (_controllers.length > 2 ? 2 : _controllers.length);
-                  i++)
+              for (int i = 0; i < (_controllers.length > 2 ? 2 : _controllers.length); i++)
                 Column(
                   children: [
                     ClipRRect(

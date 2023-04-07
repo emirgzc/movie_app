@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/genres.dart';
@@ -157,7 +158,7 @@ class _MoviePageState extends State<MoviePage> {
               child: Center(
                 child: Text(
                   categoryName,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  style: context.textThemeContext().titleMedium!.copyWith(
                         color: Style.whiteColor,
                         fontWeight: FontWeight.bold,
                       ),
@@ -214,7 +215,7 @@ class _MoviePageState extends State<MoviePage> {
                     child: Text(
                       movieName ?? "---",
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      style: context.textThemeContext().titleMedium!.copyWith(
                             color: Style.whiteColor,
                             fontWeight: FontWeight.bold,
                           ),

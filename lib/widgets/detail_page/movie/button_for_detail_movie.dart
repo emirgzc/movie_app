@@ -33,6 +33,7 @@ class ButtonForDetailMovie extends StatelessWidget {
             child: SvgPicture.asset(
               icondata,
               height: Style.defaullIconHeight * 0.9,
+              // ignore: deprecated_member_use
               color: Style.whiteColor,
             ),
           ),

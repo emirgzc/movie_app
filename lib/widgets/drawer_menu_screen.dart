@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
@@ -26,7 +28,7 @@ class DrawerMenuScreen extends StatelessWidget {
                     const Spacer(),
                     drawerListItem(
                       LocaleKeys.movies_in_cinemas.tr(),
-                      Icons.person_outline_outlined,
+                      IconPath.camera.iconPath(),
                       () {
                         Navigator.of(context).pushNamed(
                           "/listPage",
@@ -37,7 +39,7 @@ class DrawerMenuScreen extends StatelessWidget {
                     ),
                     drawerListItem(
                       LocaleKeys.trend_movies.tr(),
-                      Icons.star_border_outlined,
+                      IconPath.star.iconPath(),
                       () {
                         Navigator.of(context).pushNamed(
                           "/listPage",
@@ -48,7 +50,7 @@ class DrawerMenuScreen extends StatelessWidget {
                     ),
                     drawerListItem(
                       LocaleKeys.upcoming_movies.tr(),
-                      Icons.hourglass_empty_outlined,
+                      IconPath.times.iconPath(),
                       () {
                         Navigator.of(context).pushNamed(
                           "/listPage",
@@ -57,7 +59,12 @@ class DrawerMenuScreen extends StatelessWidget {
                       },
                       context,
                     ),
-                    drawerListItem(LocaleKeys.favorites.tr(), Icons.favorite_border_outlined, () {}, context),
+                    drawerListItem(
+                      LocaleKeys.favorites.tr(),
+                      IconPath.favorite.iconPath(),
+                      () {},
+                      context,
+                    ),
                     const Spacer(
                       flex: 3,
                     ),
@@ -71,7 +78,7 @@ class DrawerMenuScreen extends StatelessWidget {
     );
   }
 
-  Widget drawerListItem(String text, IconData? icon, void Function()? onTap, BuildContext context) {
+  Widget drawerListItem(String text, String? icon, void Function()? onTap, BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
       child: ListTile(
@@ -83,9 +90,11 @@ class DrawerMenuScreen extends StatelessWidget {
         ),
         //tileColor: backgroundColor,
         minLeadingWidth: 50.w,
-        leading: Icon(
-          icon,
-          color: Theme.of(context).iconTheme.color,
+        leading: SvgPicture.asset(
+          icon ?? '',
+          height: Style.defaullIconHeight * 0.8,
+          // ignore: deprecated_member_use
+          color: context.iconThemeContext().color,
         ),
         onTap: onTap,
         title: Text(

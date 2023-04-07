@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:movie_app/widgets/shimmer/shimmer.dart';
 
 class ShimmerLoading extends StatefulWidget {

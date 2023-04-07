@@ -26,6 +26,8 @@ import 'package:movie_app/widgets/detail_page/blurry_image.dart';
 import 'package:movie_app/widgets/detail_page/movie/button_for_detail_movie.dart';
 import 'package:movie_app/widgets/detail_page/movie/public_image.dart';
 import 'package:movie_app/widgets/detail_page/watch_card.dart';
+import 'package:movie_app/widgets/text/big_text.dart';
+import 'package:movie_app/widgets/text/desc_text.dart';
 
 class MovieDetailPage extends StatefulWidget {
   const MovieDetailPage({super.key, required this.movieId});
@@ -129,7 +131,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               ),
                               child: Row(
                                 children: [
-                                  titleHead(LocaleKeys.screenshots.tr()),
+                                  BigText(
+                                    title: LocaleKeys.screenshots.tr(),
+                                    color: Style.whiteColor,
+                                  ),
                                 ],
                               ),
                             ),
@@ -145,7 +150,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               ),
                               child: Row(
                                 children: [
-                                  titleHead(LocaleKeys.you_may_like.tr()),
+                                  BigText(
+                                    title: LocaleKeys.you_may_like.tr(),
+                                    color: Style.whiteColor,
+                                  ),
                                 ],
                               ),
                             ),
@@ -160,7 +168,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               ),
                               child: Row(
                                 children: [
-                                  titleHead(LocaleKeys.other_movies_in_the_series.tr()),
+                                  BigText(
+                                    title: LocaleKeys.other_movies_in_the_series.tr(),
+                                    color: Style.whiteColor,
+                                  ),
                                 ],
                               ),
                             ),
@@ -179,7 +190,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               ),
                               child: Row(
                                 children: [
-                                  titleHead(LocaleKeys.where_to_watch.tr()),
+                                  BigText(
+                                    title: LocaleKeys.where_to_watch.tr(),
+                                    color: Style.whiteColor,
+                                  ),
                                 ],
                               ),
                             ),
@@ -193,7 +207,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               ),
                               child: Row(
                                 children: [
-                                  titleHead(LocaleKeys.where_to_watch_buy.tr()),
+                                  BigText(
+                                    title: LocaleKeys.where_to_watch_buy.tr(),
+                                    color: Style.whiteColor,
+                                  ),
                                 ],
                               ),
                             ),
@@ -433,7 +450,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return Text(
       title,
       textScaleFactor: 1.2,
-      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+      style: context.textThemeContext().titleSmall!.copyWith(
             fontWeight: FontWeight.bold,
             color: Style.whiteColor,
           ),
@@ -534,47 +551,37 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // geri
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-                color: Style.widgetBackgroundColor,
-              ),
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-              child: SvgPicture.asset(
-                IconPath.arrow_left.iconPath(),
-                height: Style.defaullIconHeight,
-                color: Style.whiteColor,
-              ),
-            ),
-          ),
+          appBarButton(context, () => Navigator.pop(context), IconPath.arrow_left.iconPath(), Style.whiteColor),
           Image.asset(
-            "assets/logo/light-lg1-removebg.png",
+            LogoPath.light_lg1_removebg.iconPath(),
             width: 290.w,
             fit: BoxFit.contain,
           ),
           // film ismi
 
           // kalp butonu
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-                color: Style.widgetBackgroundColor,
-              ),
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-              child: SvgPicture.asset(
-                IconPath.favorite_fill.iconPath(),
-                height: Style.defaullIconHeight,
-                color: Style.primaryColor,
-              ),
-            ),
-          ),
+          appBarButton(context, () {}, IconPath.favorite_fill.iconPath(), Style.primaryColor),
         ],
+      ),
+    );
+  }
+
+  Widget appBarButton(BuildContext context, void Function()? onTap, String icon, Color color) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+          color: Style.widgetBackgroundColor,
+        ),
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
+        child: SvgPicture.asset(
+          icon,
+          height: Style.defaullIconHeight,
+          // ignore: deprecated_member_use
+          color: color,
+        ),
       ),
     );
   }
@@ -600,14 +607,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      LocaleKeys.comments.tr(),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Style.whiteColor,
-                            letterSpacing: 1.25,
-                          ),
+                    BigText(
+                      title: LocaleKeys.comments.tr(),
+                      color: Style.whiteColor,
                     ),
                     FutureBuilder(
                       future: ApiClient().getComment(movieId, context.locale),
@@ -672,7 +674,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         toRevolveDate(
                           creditsData.results?[index].createdAt.toString() ?? DateTime.now().toString(),
                         ),
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        style: context.textThemeContext().labelSmall!.copyWith(
                               color: Style.whiteColor,
                               letterSpacing: 0.75,
                             ),
@@ -686,6 +688,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ? SvgPicture.asset(
                             IconPath.comment_card.iconPath(),
                             height: Style.defaullIconHeight * 0.7,
+                            // ignore: deprecated_member_use
                             color: Style.whiteColor,
                           )
                         : CachedNetworkImage(
@@ -737,14 +740,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      LocaleKeys.cast_players.tr(),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Style.whiteColor,
-                            letterSpacing: 1.25,
-                          ),
+                    BigText(
+                      title: LocaleKeys.cast_players.tr(),
+                      color: Style.whiteColor,
                     ),
                     FutureBuilder(
                       future: ApiClient().getCredits(movieId, context.locale),
@@ -813,7 +811,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   child: Text(
                     creditsData.cast[index].originalName,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
+                    style: context.textThemeContext().bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
                   ),
                 ),
                 Padding(
@@ -823,7 +821,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   child: Text(
                     "(${creditsData.cast[index].character})",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
+                    style: context.textThemeContext().bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
                   ),
                 ),
               ],
@@ -852,22 +850,16 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   padding: EdgeInsets.only(
                     bottom: Style.defaultPaddingSizeVertical / 2,
                   ),
-                  child: Text(
-                    data.title.toString(),
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: Style.whiteColor,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: BigText(
+                    title: data.title ?? '--',
+                    color: Style.whiteColor,
                   ),
                 ),
-                Text(
-                  data.overview.toString().isEmpty ? LocaleKeys.no_description_text_entered_with_the_movie.tr() : data.overview.toString(),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 30,
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        height: 1.4,
-                        color: Style.whiteColor.withOpacity(0.8),
-                      ),
+                DescText(
+                  description: data.overview.toString().isEmpty
+                      ? LocaleKeys.no_description_text_entered_with_the_movie.tr()
+                      : data.overview.toString(),
+                  color: Style.whiteColor.withOpacity(0.8),
                 ),
               ],
             ),
@@ -913,7 +905,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 child: Text(
                                   "${data?.genres?[index].name.toString() ?? "---"},",
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                  style: context.textThemeContext().bodySmall!.copyWith(
                                         color: Style.whiteColor,
                                       ),
                                 ),
@@ -977,14 +969,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            style: context.textThemeContext().bodyLarge!.copyWith(
                   color: Style.whiteColor,
                   fontWeight: FontWeight.bold,
                 ),
           ),
           Text(
             item,
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            style: context.textThemeContext().bodyLarge!.copyWith(
                   color: Style.whiteColor,
                   fontWeight: FontWeight.bold,
                 ),

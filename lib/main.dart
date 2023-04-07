@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
+          supportedLocales: context.supportedLocales, 
           locale: context.locale,
           debugShowCheckedModeBanner: false,
           title: 'Movie Go',

@@ -5,6 +5,7 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/widgets/card/brochure_item.dart';
+import 'package:movie_app/widgets/text/big_text.dart';
 
 class CreatePosterList extends StatelessWidget {
   const CreatePosterList({super.key, required this.listType, required this.listName, required this.width, required this.futureGetDataFunc});
@@ -72,11 +73,7 @@ class CreatePosterList extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          listName,
-          textScaleFactor: 1.2,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        BigText(title: listName),
         IconButton(
           onPressed: () {
             Navigator.of(context).pushNamed("/listPage", arguments: listType);

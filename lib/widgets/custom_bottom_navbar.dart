@@ -7,6 +7,7 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
+// ignore: must_be_immutable
 class CustomBottomNavbar extends StatefulWidget {
   CustomBottomNavbar(this._currentIndex, {required this.setIndex, super.key});
   final ValueSetter setIndex;
@@ -21,7 +22,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
     ;
 
     return BubbleBottomBar(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: context.publicThemeContext().scaffoldBackgroundColor,
       borderRadius: Style.defaultRadius,
       opacity: .2,
       hasNotch: true,
@@ -78,6 +79,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
       activeIcon: SvgPicture.asset(
         icon,
         height: Style.defaullIconHeight * 0.9,
+        // ignore: deprecated_member_use
         color: color,
       ),
       title: Text(text),

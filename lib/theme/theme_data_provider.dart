@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/theme/theme_dark.dart';
 import 'package:movie_app/theme/theme_light.dart';
 
 class ThemeDataProvider extends ChangeNotifier {

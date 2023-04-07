@@ -67,21 +67,26 @@ class _HomePageState extends State<HomePage> {
         },
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        elevation: 0,
-        backgroundColor: Style.fabColor,
-        child: Container(
-          padding: EdgeInsets.all(Style.defaultPaddingSize * 0.9),
-          decoration: BoxDecoration(shape: BoxShape.circle),
-          child: SvgPicture.asset(
-            IconPath.location.iconPath(),
-            height: Style.defaullIconHeight,
-            color: Style.whiteColor,
-          ),
+      floatingActionButton: floatingButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+    );
+  }
+
+  Widget floatingButton() {
+    return FloatingActionButton(
+      onPressed: () {},
+      elevation: 0,
+      backgroundColor: Style.fabColor,
+      child: Container(
+        padding: EdgeInsets.all(Style.defaultPaddingSize * 0.9),
+        decoration: BoxDecoration(shape: BoxShape.circle),
+        child: SvgPicture.asset(
+          IconPath.location.iconPath(),
+          height: Style.defaullIconHeight,
+          // ignore: deprecated_member_use
+          color: Style.whiteColor,
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
@@ -92,7 +97,7 @@ class _HomePageState extends State<HomePage> {
 
       mainScreenTapClose: true,
       controller: _drawerController,
-      menuBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      menuBackgroundColor: context.publicThemeContext().scaffoldBackgroundColor,
       //borderRadius: 24.0,
       //showShadow: true,
       //angle: -0.0,
@@ -124,32 +129,36 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // menu icon
-          IconButton(
-            onPressed: () {
+          appBarButton(
+            () {
               _drawerController.toggle?.call();
             },
-            icon: SvgPicture.asset(
-              IconPath.menu_list.iconPath(),
-              height: Style.defaullIconHeight,
-            ),
+            IconPath.menu_list.iconPath(),
           ),
           // header
           Image.asset(
-            themeData != LightTheme().lightTheme ? "assets/logo/png-logo-1-dark.png" : "assets/logo/png-logo-1-day.png",
+            themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
             width: 300.w,
             fit: BoxFit.contain,
           ),
           // search icon
-          IconButton(
-            onPressed: () {
+          appBarButton(
+            () {
               Navigator.of(context).pushNamed("/searchPage");
             },
-            icon: SvgPicture.asset(
-              IconPath.search.iconPath(),
-              height: Style.defaullIconHeight,
-            ),
+            IconPath.search.iconPath(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget appBarButton(void Function()? onPressed, String iconPath) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: SvgPicture.asset(
+        iconPath,
+        height: Style.defaullIconHeight,
       ),
     );
   }

@@ -21,6 +21,7 @@ import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/tv/opened_text_for_overview.dart';
 import 'package:movie_app/widgets/detail_page/watch_card.dart';
+import 'package:movie_app/widgets/text/big_text.dart';
 
 class TVDetailPage extends StatefulWidget {
   const TVDetailPage({super.key, required this.movieId});
@@ -80,18 +81,15 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             top: (Style.defaultPaddingSizeVertical / 2) * 3,
                             bottom: Style.defaultPaddingSizeVertical / 2,
                           ),
-                          child: Text(
-                            data.name ?? "--",
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          child: BigText(
+                            title: data.name ?? "--",
                           ),
                         ),
                         (data.tagline?.isEmpty ?? false)
                             ? SizedBox.shrink()
                             : Text(
                                 data.tagline ?? "-",
-                                style: Theme.of(context).textTheme.titleSmall,
+                                style: context.textThemeContext().titleSmall,
                               ),
                         OpenedTextForOverview(
                           isOpenedText: _isOpenedText,
@@ -106,23 +104,20 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             (data.productionCountries?.isEmpty ?? false)
                                 ? "${LocaleKeys.country.tr()} : ${LocaleKeys.unspecified.tr()}"
                                 : "${LocaleKeys.country.tr()} : ${data.productionCountries?[0].name ?? "-"}",
-                            style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                            style: context.textThemeContext().bodySmall!.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),
                         Text(
                           "${LocaleKeys.relase_date.tr()} : ${toRevolveDate((data.firstAirDate.toString().split(" ")[0]))}",
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                          style: context.textThemeContext().bodySmall!.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
                             top: (Style.defaultPaddingSizeVertical / 2) * 3,
                             bottom: Style.defaultPaddingSizeVertical,
                           ),
-                          child: Text(
-                            LocaleKeys.cast_players.tr(),
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          child: BigText(
+                            title: LocaleKeys.cast_players.tr(),
                           ),
                         ),
                         peopleList(context),
@@ -131,11 +126,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
                             bottom: Style.defaultPaddingSizeVertical / 2,
                           ),
-                          child: Text(
-                            LocaleKeys.screenshots.tr(),
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          child: BigText(
+                            title: LocaleKeys.screenshots.tr(),
                           ),
                         ),
                         imageList(width),
@@ -144,11 +136,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
                             bottom: Style.defaultPaddingSizeVertical / 3,
                           ),
-                          child: Text(
-                            LocaleKeys.you_may_like.tr(),
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          child: BigText(
+                            title: LocaleKeys.you_may_like.tr(),
                           ),
                         ),
                         similarList(data, context, width),
@@ -157,11 +146,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
                             bottom: Style.defaultPaddingSizeVertical / 3,
                           ),
-                          child: Text(
-                            LocaleKeys.production_companies.tr(),
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          child: BigText(
+                            title: LocaleKeys.production_companies.tr(),
                           ),
                         ),
                         (data.productionCompanies?.isEmpty ?? false)
@@ -174,11 +160,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
                             bottom: Style.defaultPaddingSizeVertical / 3,
                           ),
-                          child: Text(
-                            LocaleKeys.where_to_watch.tr(),
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          child: BigText(
+                            title: LocaleKeys.where_to_watch.tr(),
                           ),
                         ),
                         whereToWatchList(data, context, width),
@@ -187,11 +170,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                             top: (Style.defaultPaddingSizeVertical / 2) * 2,
                             bottom: Style.defaultPaddingSizeVertical / 3,
                           ),
-                          child: Text(
-                            LocaleKeys.where_to_watch_buy.tr(),
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          child: BigText(
+                            title: LocaleKeys.where_to_watch_buy.tr(),
                           ),
                         ),
                         whereToBuyForWacthList(data, context, width),
@@ -416,7 +396,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           data,
           Text(
             "${data.numberOfSeasons} ${LocaleKeys.seasons.tr()}",
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            style: context.textThemeContext().bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -425,7 +405,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
           data,
           Text(
             "${data.numberOfEpisodes} ${LocaleKeys.episodes.tr()}",
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            style: context.textThemeContext().bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -439,6 +419,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
               SvgPicture.asset(
                 IconPath.star_fill.iconPath(),
                 height: Style.defaullIconHeight * 0.55,
+                // ignore: deprecated_member_use
                 color: Style.starColor,
               ),
               Padding(
@@ -447,7 +428,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 ),
                 child: Text(
                   (data.voteAverage.toString().isEmpty) ? LocaleKeys.unspecified.tr() : ((data.voteAverage)).toString().substring(0, 3),
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  style: context.textThemeContext().bodySmall!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -559,22 +540,22 @@ class _TVDetailPageState extends State<TVDetailPage> {
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
-          color: Theme.of(context).iconTheme.color!.withOpacity(0.15),
+          color: context.iconThemeContext().color!.withOpacity(0.15),
         ),
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: context.publicThemeContext().scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
             offset: const Offset(5, 5),
             blurRadius: 10,
             spreadRadius: 4,
-            color: Theme.of(context).shadowColor,
+            color: context.publicThemeContext().shadowColor,
           ),
         ],
       ),
       child: Center(
         child: Text(
           data.genres?[index].name.toString() ?? "---",
-          style: Theme.of(context).textTheme.bodySmall,
+          style: context.textThemeContext().bodySmall,
         ),
       ),
     );
@@ -635,7 +616,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 offset: const Offset(5, 5),
                 blurRadius: 10,
                 spreadRadius: 6,
-                color: Theme.of(context).shadowColor,
+                color: context.publicThemeContext().shadowColor,
               ),
             ],
             color: Style.whiteColor,
@@ -714,7 +695,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 creditsData.cast[index].originalName,
                 maxLines: 3,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 30.sp),
+                style: context.textThemeContext().bodySmall!.copyWith(fontSize: 30.sp),
               ),
             ),
           ],
@@ -733,14 +714,14 @@ class _TVDetailPageState extends State<TVDetailPage> {
             BoxShadow(
               offset: const Offset(5, 5),
               blurRadius: 10,
-              color: Theme.of(context).shadowColor,
+              color: context.publicThemeContext().shadowColor,
             ),
           ],
           shape: BoxShape.circle,
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: context.publicThemeContext().scaffoldBackgroundColor,
           border: Border.all(
             width: 1,
-            color: Theme.of(context).iconTheme.color!.withOpacity(0.15),
+            color: context.iconThemeContext().color!.withOpacity(0.15),
           ),
         ),
         margin: EdgeInsets.symmetric(
@@ -767,9 +748,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
         //boxShadow: [Style.defaultShadowDark],
         border: Border.all(
           width: 1,
-          color: Theme.of(context).iconTheme.color!.withOpacity(0.15),
+          color: context.iconThemeContext().color!.withOpacity(0.15),
         ),
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: context.publicThemeContext().scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(
           Style.defaultRadiusSize / 4,
         ),

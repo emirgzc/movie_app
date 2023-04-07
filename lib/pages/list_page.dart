@@ -29,7 +29,7 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   int _page = 1;
   late TextEditingController _textEditingController;
-  late Future<List<Result>?> listDataFuture;
+  late Future<List<Result>?> _listDataFuture;
 
   @override
   void initState() {
@@ -48,46 +48,7 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
 
-    switch (widget.clickedListType) {
-      case ListType.top_rated_movies:
-        listDataFuture = ApiClient().getMovieData(
-          dataWay: MovieApiType.top_rated.name,
-          context.locale,
-          page: _page,
-        );
-        break;
-      case ListType.upcoming_movies:
-        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
-        break;
-      case ListType.popular_movies:
-        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale, page: _page);
-        break;
-      case ListType.movies_in_cinemas:
-        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.now_playing.name, context.locale, page: _page);
-        break;
-      case ListType.trend_movies:
-        listDataFuture = ApiClient().trendData("movie", context.locale);
-        break;
-      case ListType.top_rated_series:
-        listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
-        break;
-      case ListType.popular_series:
-        listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
-
-        break;
-      case ListType.series_on_air:
-        listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
-        break;
-      case ListType.trending_series_of_the_week:
-        listDataFuture = ApiClient().trendData("tv", context.locale);
-        break;
-
-      default:
-        listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
-    }
+    _selectApiClientDatas(context);
 
     double width = MediaQuery.of(context).size.width;
     int _crossAxisCount = 2;
@@ -105,7 +66,7 @@ class _ListPageState extends State<ListPage> {
           ),
         ),
         title: Image.asset(
-          themeData != LightTheme().lightTheme ? "assets/logo/png-logo-1-dark.png" : "assets/logo/png-logo-1-day.png",
+          themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
           width: 300.w,
           fit: BoxFit.contain,
         ),
@@ -115,10 +76,53 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
+  _selectApiClientDatas(BuildContext context) {
+    switch (widget.clickedListType) {
+      case ListType.top_rated_movies:
+        _listDataFuture = ApiClient().getMovieData(
+          dataWay: MovieApiType.top_rated.name,
+          context.locale,
+          page: _page,
+        );
+        break;
+      case ListType.upcoming_movies:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
+        break;
+      case ListType.popular_movies:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale, page: _page);
+        break;
+      case ListType.movies_in_cinemas:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.now_playing.name, context.locale, page: _page);
+        break;
+      case ListType.trend_movies:
+        _listDataFuture = ApiClient().trendData("movie", context.locale);
+        break;
+      case ListType.top_rated_series:
+        _listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
+        break;
+      case ListType.popular_series:
+        _listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
+    
+        break;
+      case ListType.series_on_air:
+        _listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
+        break;
+      case ListType.trending_series_of_the_week:
+        _listDataFuture = ApiClient().trendData("tv", context.locale);
+        break;
+    
+      default:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
+    }
+  }
+
   FutureBuilder<List<List<Result>?>> bodyList(int _crossAxisCount, double width) {
     return FutureBuilder(
       // 2 tane future bekliyor, future icinde future de yapilabilir
-      future: Future.wait([listDataFuture]),
+      future: Future.wait([_listDataFuture]),
       builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data![0] as List<Result>;
@@ -197,37 +201,7 @@ class _ListPageState extends State<ListPage> {
 
           // page number
           Expanded(
-            child: TextField(
-              controller: _textEditingController,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                LengthLimitingTextInputFormatter(
-                  2,
-                ),
-              ],
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                fillColor: Style.blackColor.withOpacity(0.1),
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
-              onTap: () {},
-              onChanged: (value) {},
-              onSubmitted: (value) {
-                /*
-                                  if (100 > int.parse(value) &&
-                                      0 < int.parse(value)) {
-                                    setState(() {
-                                      page = int.parse(value);
-                                    });
-                                    */
-              },
-            ),
+            child: indicatorField(),
           ),
           // sonraki sayfa
           indicatorArrow(
@@ -248,6 +222,40 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
+  Widget indicatorField() {
+    return TextField(
+            controller: _textEditingController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              LengthLimitingTextInputFormatter(
+                2,
+              ),
+            ],
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              fillColor: Style.blackColor.withOpacity(0.1),
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: EdgeInsets.zero,
+            ),
+            onTap: () {},
+            onChanged: (value) {},
+            onSubmitted: (value) {
+              /*
+                                if (100 > int.parse(value) &&
+                                    0 < int.parse(value)) {
+                                  setState(() {
+                                    page = int.parse(value);
+                                  });
+                                  */
+            },
+          );
+  }
+
   Widget indicatorArrow(String title, void Function()? onPressed, IconData icon, {bool isVisible = true}) {
     return Visibility(
       visible: isVisible,
@@ -266,11 +274,11 @@ class _ListPageState extends State<ListPage> {
                   children: [
                     Icon(
                       icon,
-                      color: Theme.of(context).iconTheme.color,
+                      color: context.iconThemeContext().color,
                     ),
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: context.textThemeContext().bodySmall,
                     ),
                   ],
                 )
@@ -278,11 +286,11 @@ class _ListPageState extends State<ListPage> {
                   children: [
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: context.textThemeContext().bodySmall,
                     ),
                     Icon(
                       icon,
-                      color: Theme.of(context).iconTheme.color,
+                      color: context.iconThemeContext().color,
                     ),
                   ],
                 ),

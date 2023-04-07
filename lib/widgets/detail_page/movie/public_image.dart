@@ -14,31 +14,7 @@ class PublicImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: 20.0,
-                  sigmaY: 20.0,
-                ),
-                child: Material(
-                  //elevation: 14,
-                  color: Style.transparentColor,
-                  child: CachedNetworkImage(
-                    imageUrl: "https://image.tmdb.org/t/p/w500${path.toString()}",
-                    fit: BoxFit.contain,
-                    width: width,
-                  ),
-                ),
-              ),
-            );
-          },
-        );
+        dialogForBigImage(context);
       },
       child: Hero(
         tag: "https://image.tmdb.org/t/p/w500${path.toString()}",
@@ -55,6 +31,34 @@ class PublicImage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  dialogForBigImage(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 20.0,
+              sigmaY: 20.0,
+            ),
+            child: Material(
+              //elevation: 14,
+              color: Style.transparentColor,
+              child: CachedNetworkImage(
+                imageUrl: "https://image.tmdb.org/t/p/w500${path.toString()}",
+                fit: BoxFit.contain,
+                width: width,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

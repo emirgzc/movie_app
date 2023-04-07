@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/theme/theme_dark.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
@@ -85,7 +86,7 @@ class _SwitchFowSettingsState extends State<SwitchFowSettings> {
       children: [
         Text(
           widget.text,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: context.textThemeContext().titleMedium,
         ),
         Switch.adaptive(
           activeColor: Style.primaryColor,

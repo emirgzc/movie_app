@@ -98,47 +98,60 @@ class _SearchPageState extends State<SearchPage> {
 
   AppBar getAppBar() {
     return AppBar(
-      leading: IconButton(
-        padding: EdgeInsets.zero,
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: SvgPicture.asset(
-          IconPath.arrow_left.iconPath(),
-          height: Style.defaullIconHeight,
-        ),
-      ),
+      leading: appBarBackButton(),
       foregroundColor: Colors.grey.shade800,
-      title: SizedBox(
-        width: double.infinity,
-        height: 160.h,
-        child: Center(
-          child: TextFormField(
-            style: Theme.of(context).textTheme.bodyLarge,
-            autofocus: true,
-            controller: _textEditingController,
-            onChanged: (value) => setState(() => searchValue = value),
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: IconButton(
-                icon: SvgPicture.asset(
-                  IconPath.trash.iconPath(),
-                  height: Style.defaullIconHeight,
-                  color: Style.primaryColor,
-                ),
-                onPressed: () => setState(
-                  () {
-                    _textEditingController.clear();
-                    _textEditingControllerForPage.text = '1';
-                    _page = 1;
-                  },
-                ),
+      title: textFieldForSearch(),
+    );
+  }
+
+  Widget textFieldForSearch() {
+    return SizedBox(
+      width: double.infinity,
+      height: 160.h,
+      child: Center(
+        child: TextFormField(
+          style: context.textThemeContext().bodyLarge,
+          autofocus: true,
+          controller: _textEditingController,
+          onChanged: (value) => setState(() => searchValue = value),
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: IconButton(
+              icon: SvgPicture.asset(
+                IconPath.trash.iconPath(),
+                height: Style.defaullIconHeight,
+                // ignore: deprecated_member_use
+                color: Style.primaryColor,
               ),
-              hintText: LocaleKeys.search.tr(),
-              border: InputBorder.none,
+              onPressed: () => _fieldState(),
             ),
+            hintText: LocaleKeys.search.tr(),
+            border: InputBorder.none,
           ),
         ),
+      ),
+    );
+  }
+
+  _fieldState() {
+    return setState(
+      () {
+        _textEditingController.clear();
+        _textEditingControllerForPage.text = '1';
+        _page = 1;
+      },
+    );
+  }
+
+  Widget appBarBackButton() {
+    return IconButton(
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      icon: SvgPicture.asset(
+        IconPath.arrow_left.iconPath(),
+        height: Style.defaullIconHeight,
       ),
     );
   }
@@ -185,7 +198,7 @@ class _SearchPageState extends State<SearchPage> {
                       padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
                       child: Text(
                         arrowLeft,
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 34.sp),
+                        style: context.textThemeContext().bodySmall!.copyWith(fontSize: 34.sp),
                       ),
                     ),
                   ],
@@ -255,7 +268,7 @@ class _SearchPageState extends State<SearchPage> {
                       padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
                       child: Text(
                         arrowRight,
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 34.sp),
+                        style: context.textThemeContext().bodySmall!.copyWith(fontSize: 34.sp),
                       ),
                     ),
                     SvgPicture.asset(
@@ -296,7 +309,7 @@ class _SearchPageState extends State<SearchPage> {
           borderRadius: BorderRadius.circular(4),
         ),
         elevation: Style.defaultElevation,
-        shadowColor: Theme.of(context).shadowColor.withOpacity(0.8),
+        shadowColor: context.publicThemeContext().shadowColor.withOpacity(0.8),
         child: Padding(
           padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
           child: Column(
@@ -315,7 +328,7 @@ class _SearchPageState extends State<SearchPage> {
               // isim, tarih, derecelendirme, kategoriler
               Text(
                 mediaType == MediaTypes.movie.name ? (data.results?[index].title ?? '-') : (data.results?[index].name ?? '-'),
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                style: context.textThemeContext().bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                 textAlign: TextAlign.center,
@@ -326,7 +339,7 @@ class _SearchPageState extends State<SearchPage> {
                       padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 4),
                       child: Text(
                         toRevolveDate(checkDateType(mediaType, data.results?[index]) ?? DateTime.now().toString()),
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        style: context.textThemeContext().bodySmall!.copyWith(
                               color: Colors.grey.shade600,
                               fontSize: 30.sp,
                             ),
@@ -338,7 +351,7 @@ class _SearchPageState extends State<SearchPage> {
                       ignoreGestures: true,
                       itemSize: 36.r,
                       glowColor: Style.starColor,
-                      unratedColor: Theme.of(context).shadowColor.withOpacity(0.4),
+                      unratedColor: context.publicThemeContext().shadowColor.withOpacity(0.4),
                       initialRating: (data.results?[index].voteAverage ?? 0.0) / 2,
                       minRating: 1,
                       direction: Axis.horizontal,

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
@@ -27,7 +28,7 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
       ),
       child: RichText(
         text: TextSpan(
-          style: TextStyle(color: Theme.of(context).iconTheme.color),
+          style: TextStyle(color: context.iconThemeContext().color),
           children: [
             TextSpan(
               text: (widget.isOpenedText == true)
@@ -37,12 +38,7 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
                       : ((widget.data?.isEmpty ?? false) ? LocaleKeys.no_description_text_entered_with_the_serie.tr() : widget.data),
             ),
             TextSpan(
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  setState(() {
-                    widget.isOpenedText = !widget.isOpenedText;
-                  });
-                },
+              recognizer: TapGestureRecognizer()..onTap = openText,
               text: (widget.isOpenedText == false && (widget.data?.length ?? 0) > 210) ? LocaleKeys.read.tr() : "",
               style: const TextStyle(
                 color: Style.primaryColor,
@@ -53,5 +49,11 @@ class _OpenedTextForOverviewState extends State<OpenedTextForOverview> {
         ),
       ),
     );
+  }
+
+  openText() {
+    setState(() {
+      widget.isOpenedText = !widget.isOpenedText;
+    });
   }
 }

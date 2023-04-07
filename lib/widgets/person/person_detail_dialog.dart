@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/models/search.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
@@ -36,7 +37,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
         ),
         padding: EdgeInsets.all(Style.defaultPaddingSize),
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: context.publicThemeContext().scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
         ),
         child: ListView(
@@ -51,7 +52,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
               padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2),
               child: Text(
                 widget.data?.name ?? "--",
-                style: Theme.of(context).textTheme.titleLarge,
+                style: context.textThemeContext().titleLarge,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -60,7 +61,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
               child: Text(
                 LocaleKeys.featured_movies.tr(),
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                style: context.textThemeContext().bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -131,7 +132,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
                           ignoreGestures: true,
                           itemSize: 32.r,
                           glowColor: Style.starColor,
-                          unratedColor: Theme.of(context).shadowColor.withOpacity(0.4),
+                          unratedColor: context.publicThemeContext().shadowColor.withOpacity(0.4),
                           initialRating: (widget.data?.knownFor?[index].voteAverage ?? 0.0) / 2,
                           minRating: 1,
                           direction: Axis.horizontal,
@@ -145,7 +146,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
                         ),
                         Text(
                           '(${(widget.data?.knownFor?[index].voteAverage).toString().substring(0, 3).toString()})',
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          style: context.textThemeContext().bodySmall!.copyWith(
                                 fontSize: 30.sp,
                               ),
                         ),
