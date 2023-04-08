@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/exceptions.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/models/collection.dart';
 import 'package:movie_app/models/comment.dart';
@@ -41,9 +42,8 @@ class ApiClient {
         throw Exception('trendData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata trendData $e");
+      throw ApiExceptions('Trend Data').toString();
     }
-    return null;
   }
 
   Future<List<Result>?> getMovieData(Locale locale, {int page = 1, String dataWay = 'popular', String type = 'movie'}) async {
@@ -67,9 +67,8 @@ class ApiClient {
         throw Exception('(get movie data) ($dataWay)($type) apide hata var');
       }
     } catch (e) {
-      debugPrint("Exception for (get movie data) ($dataWay)($type) $e");
+      throw ApiExceptions('Get Movie Data').toString();
     }
-    return null;
   }
 
   Future<List<Result>?> similarMoviesData(
@@ -101,9 +100,8 @@ class ApiClient {
         throw Exception('similarMoviesData ($type) apide hata var');
       }
     } catch (e) {
-      debugPrint("hata similarMoviesData ($type) $e");
+      throw ApiExceptions('Similar Movies Data').toString();
     }
-    return null;
   }
 
   Future<DetailMovie?> detailMovieData(int movieId, Locale locale) async {
@@ -126,9 +124,8 @@ class ApiClient {
         throw Exception('detailMovieData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata detailMovieData $e");
+      throw ApiExceptions('Detail Movie Data').toString();
     }
-    return null;
   }
 
   Future<Images?> getImages(
@@ -153,9 +150,8 @@ class ApiClient {
         throw Exception('getImages apide ($type) hata var');
       }
     } catch (e) {
-      debugPrint("hata getImages ($type) getImages $e");
+      throw ApiExceptions('Get Images Data').toString();
     }
-    return null;
   }
 
   Future<Trailer?> getTrailer(
@@ -182,10 +178,9 @@ class ApiClient {
       } else {
         throw Exception('getTrailer ($type) apide hata var');
       }
-    } catch (e) {
-      debugPrint("hata ($type) getTrailer $e");
+    }  catch (e) {
+      throw ApiExceptions('Get Trailer Data').toString();
     }
-    return null;
   }
 
   Future<Comment?> getComment(int movieId, Locale locale, {String type = 'movie'}) async {
@@ -208,10 +203,9 @@ class ApiClient {
       } else {
         throw Exception('getComment ($type) apide hata var');
       }
-    } catch (e) {
-      debugPrint("hata ($type) getComment $e");
+    }  catch (e) {
+      throw ApiExceptions('Get Comment Data').toString();
     }
-    return null;
   }
 
   Future<Genres?> genres(Locale locale) async {
@@ -235,9 +229,8 @@ class ApiClient {
         throw Exception('genres apide hata var');
       }
     } catch (e) {
-      debugPrint("hata genres $e");
+      throw ApiExceptions('Genres Data').toString();
     }
-    return null;
   }
 
   Future<Collection?> collectionData(int collectionId, Locale locale) async {
@@ -261,9 +254,8 @@ class ApiClient {
         throw Exception('collection apide hata var');
       }
     } catch (e) {
-      debugPrint("hata collectionData $e");
+      throw ApiExceptions('Collection Data').toString();
     }
-    return null;
   }
 
   Future<Credits?> getCredits(
@@ -297,9 +289,8 @@ class ApiClient {
         throw Exception('credits ($type) apide hata var');
       }
     } catch (e) {
-      debugPrint("hata ($type) credits $e");
+      throw ApiExceptions('Get Credits Data').toString();
     }
-    return null;
   }
 
   // oyuncunun oynadigi filmler
@@ -330,10 +321,9 @@ class ApiClient {
       } else {
         throw Exception('CastPersonsMovies ($personType) apide hata var');
       }
-    } catch (e) {
-      debugPrint("hata ($personType) castPersonsCombined $e");
+    }  catch (e) {
+      throw ApiExceptions('Cast Person Combined Data').toString();
     }
-    return null;
   }
 
   Future<Search?> search(Locale locale, {String query = "a", int page = 1}) async {
@@ -357,9 +347,8 @@ class ApiClient {
         throw Exception('search apide hata var');
       }
     } catch (e) {
-      debugPrint("search search $e");
+      throw ApiExceptions('Search Data').toString();
     }
-    return null;
   }
 
   Future<TvDetail?> detailTvData(int movieId, Locale locale) async {
@@ -382,9 +371,8 @@ class ApiClient {
         throw Exception('detailMovieData apide hata var');
       }
     } catch (e) {
-      debugPrint("hata detailMovieData $e");
+      throw ApiExceptions('Detail Tv Data').toString();
     }
-    return null;
   }
 
   Future<WhereToWatch?> getToWatch(int movieId, {String type = 'movie'}) async {
@@ -404,8 +392,7 @@ class ApiClient {
         throw Exception('getToWatch ($type) apide hata var');
       }
     } catch (e) {
-      debugPrint("hata getToWatch ($type) $e");
+      throw ApiExceptions('Get To Watch Data').toString();
     }
-    return null;
   }
 }
