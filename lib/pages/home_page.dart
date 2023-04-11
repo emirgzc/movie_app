@@ -123,7 +123,6 @@ class _HomePageState extends State<HomePage> {
 
   PreferredSizeWidget appBar(BuildContext context) {
     ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
-
     return AppBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

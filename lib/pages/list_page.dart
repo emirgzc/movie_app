@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
@@ -15,6 +14,7 @@ import 'package:movie_app/theme/theme_data_provider.dart';
 import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -47,11 +47,7 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
-
     _selectApiClientDatas(context);
-
-    double width = MediaQuery.of(context).size.width;
-    int _crossAxisCount = 2;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,54 +69,11 @@ class _ListPageState extends State<ListPage> {
         ),
         centerTitle: true,
       ),
-      body: bodyList(_crossAxisCount, width),
+      body: bodyList(context.getSize().width),
     );
   }
 
-  _selectApiClientDatas(BuildContext context) {
-    switch (widget.clickedListType) {
-      case ListType.top_rated_movies:
-        _listDataFuture = ApiClient().getMovieData(
-          dataWay: MovieApiType.top_rated.name,
-          context.locale,
-          page: _page,
-        );
-        break;
-      case ListType.upcoming_movies:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
-        break;
-      case ListType.popular_movies:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale, page: _page);
-        break;
-      case ListType.movies_in_cinemas:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.now_playing.name, context.locale, page: _page);
-        break;
-      case ListType.trend_movies:
-        _listDataFuture = ApiClient().trendData("movie", context.locale);
-        break;
-      case ListType.top_rated_series:
-        _listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
-        break;
-      case ListType.popular_series:
-        _listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
-
-        break;
-      case ListType.series_on_air:
-        _listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
-        break;
-      case ListType.trending_series_of_the_week:
-        _listDataFuture = ApiClient().trendData("tv", context.locale);
-        break;
-
-      default:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
-    }
-  }
-
-  FutureBuilder<List<List<Result>?>> bodyList(int _crossAxisCount, double width) {
+  FutureBuilder<List<List<Result>?>> bodyList(double width) {
     return FutureBuilder(
       // 2 tane future bekliyor, future icinde future de yapilabilir
       future: Future.wait([_listDataFuture]),
@@ -138,11 +91,8 @@ class _ListPageState extends State<ListPage> {
                     physics: BouncingScrollPhysics(),
                     children: [
                       // filmler
-                      MasonryGridView.count(
-                        physics: const BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: data.length,
-                        crossAxisCount: _crossAxisCount,
+                      MasonryGrid(
+                        length: data.length,
                         itemBuilder: (BuildContext context, int index) {
                           // film kartları
                           return ImageDetailCard(
@@ -298,5 +248,48 @@ class _ListPageState extends State<ListPage> {
         ),
       ),
     );
+  }
+
+  _selectApiClientDatas(BuildContext context) {
+    switch (widget.clickedListType) {
+      case ListType.top_rated_movies:
+        _listDataFuture = ApiClient().getMovieData(
+          dataWay: MovieApiType.top_rated.name,
+          context.locale,
+          page: _page,
+        );
+        break;
+      case ListType.upcoming_movies:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
+        break;
+      case ListType.popular_movies:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale, page: _page);
+        break;
+      case ListType.movies_in_cinemas:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.now_playing.name, context.locale, page: _page);
+        break;
+      case ListType.trend_movies:
+        _listDataFuture = ApiClient().trendData("movie", context.locale);
+        break;
+      case ListType.top_rated_series:
+        _listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
+        break;
+      case ListType.popular_series:
+        _listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
+
+        break;
+      case ListType.series_on_air:
+        _listDataFuture =
+            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
+        break;
+      case ListType.trending_series_of_the_week:
+        _listDataFuture = ApiClient().trendData("tv", context.locale);
+        break;
+
+      default:
+        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
+    }
   }
 }

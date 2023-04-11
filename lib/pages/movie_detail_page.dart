@@ -5,7 +5,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
@@ -26,6 +25,7 @@ import 'package:movie_app/widgets/detail_page/blurry_image.dart';
 import 'package:movie_app/widgets/detail_page/movie/button_for_detail_movie.dart';
 import 'package:movie_app/widgets/detail_page/movie/public_image.dart';
 import 'package:movie_app/widgets/detail_page/watch_card.dart';
+import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
 import 'package:movie_app/widgets/text/desc_text.dart';
 
@@ -43,7 +43,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   @override
   void initState() {
     _pageController = PageController();
-
     super.initState();
   }
 
@@ -55,10 +54,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: bodyList(context, width, height),
+      body: bodyList(context, context.getSize().width, context.getSize().height),
     );
   }
 
@@ -749,12 +746,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                           var creditsData = snapshot.data as Credits;
-                          return MasonryGridView.count(
+                          return MasonryGrid(
                             padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 2),
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: creditsData.cast.length,
                             crossAxisCount: 3,
+                            length: creditsData.cast.length,
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () {

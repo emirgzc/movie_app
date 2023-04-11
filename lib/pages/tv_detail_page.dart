@@ -38,7 +38,6 @@ class _TVDetailPageState extends State<TVDetailPage> {
   @override
   void initState() {
     _pageController = PageController();
-
     super.initState();
   }
 
@@ -50,9 +49,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return newBody(height, width);
+    return newBody(context.getSize().height, context.getSize().width);
   }
 
   Scaffold newBody(double height, double width) {
@@ -151,8 +148,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           ),
                         ),
                         (data.productionCompanies?.isEmpty ?? false)
-                            ? const Text(
-                                LocaleKeys.no_producer_company_information_about_this_series_has_been_entered,
+                            ? Text(
+                                LocaleKeys.no_producer_company_information_about_this_series_has_been_entered.tr(),
                               )
                             : companyList(data, width),
                         Padding(

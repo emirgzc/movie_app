@@ -9,6 +9,7 @@ import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
 
 // ignore: must_be_immutable
@@ -23,16 +24,16 @@ class CastPersonsMoviesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: _getAppBar(context),
       body: Padding(
         padding: Style.pagePadding,
-        child: body(width, context),
+        child: body(context.getSize().width, context),
       ),
     );
   }
 
+  //appbar
   PreferredSizeWidget _getAppBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
@@ -50,14 +51,13 @@ class CastPersonsMoviesPage extends StatelessWidget {
       centerTitle: true,
     );
   }
-
+  //future builder body kısmı
   FutureBuilder<CastPersonsMovies?> body(double width, BuildContext context) {
     return FutureBuilder(
       future: getCastPerson(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as CastPersonsMovies;
-
           return listForMovie(data, width);
         } else {
           return const SizedBox.shrink();
@@ -65,18 +65,14 @@ class CastPersonsMoviesPage extends StatelessWidget {
       },
     );
   }
-
+  //apiden istek atılması
   Future<CastPersonsMovies?> getCastPerson(BuildContext context) async {
     return await ApiClient().castPersonsCombined(personId, context.locale);
   }
-
+  //filmleri listeleme
   Widget listForMovie(CastPersonsMovies data, double width) {
-    int _crossCount = 2;
-    return MasonryGridView.count(
-      physics: const BouncingScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: data.cast?.length ?? 0,
-      crossAxisCount: _crossCount,
+    return MasonryGrid(
+      length: data.cast?.length,
       itemBuilder: (BuildContext context, int index) {
         // film kartları
         return ImageDetailCard(

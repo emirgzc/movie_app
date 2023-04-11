@@ -22,8 +22,6 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -36,12 +34,12 @@ class _MoviePageState extends State<MoviePage> {
               // Top trend movies slider
               sliderList(),
               // categories
-              genresList(height),
+              genresList(context.getSize().height),
 
               CreatePosterList(
                 listName: LocaleKeys.popular_movies.tr(),
                 listType: ListType.popular_movies,
-                width: width,
+                width: context.getSize().width,
                 futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale),
               ),
 
@@ -50,7 +48,7 @@ class _MoviePageState extends State<MoviePage> {
                 child: CreatePosterList(
                   listName: LocaleKeys.top_rated_movies.tr(),
                   listType: ListType.top_rated_movies,
-                  width: width,
+                  width: context.getSize().width,
                   futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale),
                 ),
               ),
@@ -58,7 +56,7 @@ class _MoviePageState extends State<MoviePage> {
               CreatePosterList(
                 listName: LocaleKeys.upcoming_movies.tr(),
                 listType: ListType.upcoming_movies,
-                width: width,
+                width: context.getSize().width,
                 futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale),
               ),
               /* createPosterList("En Çok Oy Alan Diziler", width,

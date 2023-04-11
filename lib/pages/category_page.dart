@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 
@@ -15,6 +14,7 @@ import 'package:movie_app/theme/theme_data_provider.dart';
 import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -44,18 +44,16 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    int _crossAxisCount = 2;
     return Scaffold(
       appBar: getAppBar(),
       body: Padding(
         padding: Style.pagePadding,
-        child: bodyList(context, _crossAxisCount, width),
+        child: bodyList(context, context.getSize().width),
       ),
     );
   }
 
-  FutureBuilder<List<Result>?> bodyList(BuildContext context, int _crossAxisCount, double width) {
+  FutureBuilder<List<Result>?> bodyList(BuildContext context, double width) {
     return FutureBuilder(
       future: getCategory(),
       builder: (context, snapshot) {
@@ -64,11 +62,8 @@ class _CategoryPageState extends State<CategoryPage> {
           return ListView(
             physics: BouncingScrollPhysics(),
             children: [
-              MasonryGridView.count(
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: data.length,
-                crossAxisCount: _crossAxisCount,
+              MasonryGrid(
+                length: data.length,
                 itemBuilder: (BuildContext context, int index) {
                   if (data[index].genreIds?.contains(widget.genreId) ?? false) {
                     return ImageDetailCard(

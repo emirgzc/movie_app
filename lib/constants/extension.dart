@@ -18,9 +18,13 @@ extension ThemeContext on BuildContext {
     return Theme.of(this);
   }
   TextTheme textThemeContext() {
-    return Theme.of(this).textTheme;
+    return Theme.of(this).textTheme; 
   }
   IconThemeData iconThemeContext() {
     return Theme.of(this).iconTheme;
   }
+  Size getSize(){
+    return MediaQuery.of(this).size;
+  }
 }
+

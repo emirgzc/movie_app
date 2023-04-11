@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
@@ -13,6 +12,7 @@ import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/search.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/person/person_detail_dialog.dart';
 
 class SearchPage extends StatefulWidget {
@@ -65,15 +65,9 @@ class _SearchPageState extends State<SearchPage> {
                   var data = snapshot.data as Search;
                   totalPage = data.totalPages ?? 1;
                   return Expanded(
-                    child: MasonryGridView.builder(
-                      scrollDirection: Axis.vertical,
-                      controller: _scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: data.results?.length,
-                      gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: _crossAxisCount,
-                      ),
+                    child: MasonryGrid(
+                      crossAxisCount: 2,
+                      length: data.results?.length,
                       itemBuilder: (context, index) {
                         return searcItemCard(context, data, index, data.results?[index].mediaType);
                       },
