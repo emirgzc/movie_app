@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
@@ -39,10 +40,19 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   late PageController _pageController;
+  final IApiClient _apiClient = ApiClient();
+  Future<DetailMovie?>? _detailFuture;
+  Future<Images?>? _imagesFuture;
+  Future<WhereToWatch?>? _watchBuyFuture;
+  Future<WhereToWatch?>? _watchFuture;
+  Future<List<Result>?>? _onerilerFuture;
 
   @override
   void initState() {
     _pageController = PageController();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _getFutures();
+    });
     super.initState();
   }
 
@@ -50,6 +60,15 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  _getFutures() {
+    _detailFuture = _apiClient.detailMovieData(widget.movieId ?? 0, context.locale);
+    _imagesFuture = _apiClient.getImages(widget.movieId ?? 0);
+    _watchBuyFuture = _apiClient.getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name);
+    _watchFuture = _apiClient.getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name);
+    _onerilerFuture = _apiClient.similarMoviesData(widget.movieId ?? 0, context.locale);
+    setState(() {});
   }
 
   @override
@@ -61,7 +80,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   FutureBuilder<DetailMovie?> bodyList(BuildContext context, double width, double height) {
     return FutureBuilder(
-      future: ApiClient().detailMovieData(widget.movieId ?? 0, context.locale),
+      future: _detailFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as DetailMovie;
@@ -236,7 +255,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     double width,
     int collectionId,
   ) {
-    return FutureBuilder(
+    return FutureBuilder<Collection?>(
       future: ApiClient().collectionData(collectionId, context.locale),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
@@ -294,7 +313,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   FutureBuilder<List<Result>?> oneriler(DetailMovie data, double width) {
     return FutureBuilder(
-      future: ApiClient().similarMoviesData(data.id ?? 0, context.locale),
+      future: _onerilerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var similarMoviesData = snapshot.data as List<Result?>;
@@ -340,7 +359,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   FutureBuilder<WhereToWatch?> getWatch(double width) {
     return FutureBuilder(
-      future: ApiClient().getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name),
+      future: _watchFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var watchResult = snapshot.data as WhereToWatch;
@@ -365,7 +384,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   FutureBuilder<WhereToWatch?> getWatchBuy(double width) {
     return FutureBuilder(
-      future: ApiClient().getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name),
+      future: _watchBuyFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var watchResult = snapshot.data as WhereToWatch;
@@ -390,7 +409,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   FutureBuilder<Images?> images(double width) {
     return FutureBuilder(
-      future: ApiClient().getImages(widget.movieId ?? 0),
+      future: _imagesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as Images;
@@ -527,7 +546,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               height: height,
             ),
             ButtonForDetailMovie(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {});
+              },
               icondata: IconPath.plus_lg.iconPath(),
               width: width,
               height: height,
@@ -557,7 +578,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           // film ismi
 
           // kalp butonu
-          appBarButton(context, () {}, IconPath.favorite_fill.iconPath(), Style.primaryColor),
+          appBarButton(context, () {
+            setState(() {});
+          }, IconPath.favorite_fill.iconPath(), Style.primaryColor),
         ],
       ),
     );

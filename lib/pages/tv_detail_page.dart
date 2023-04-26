@@ -34,10 +34,20 @@ class TVDetailPage extends StatefulWidget {
 class _TVDetailPageState extends State<TVDetailPage> {
   late PageController _pageController;
   final bool _isOpenedText = false;
+  final IApiClient _apiClient = ApiClient();
+  Future<TvDetail?>? _tvDetailFuture;
+  Future<Credits?>? _peopleFuture;
+  Future<Images?>? _imageFuture;
+  Future<List<Result>?>? _similarFuture;
+  Future<WhereToWatch?>? _whereToWatchFuture;
+  Future<WhereToWatch?>? _whereToBuyForWatchFuture;
 
   @override
   void initState() {
     _pageController = PageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getFutures();
+    });
     super.initState();
   }
 
@@ -55,10 +65,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
   Scaffold newBody(double height, double width) {
     return Scaffold(
       body: FutureBuilder(
-        future: ApiClient().detailTvData(
-          widget.movieId ?? 0,
-          context.locale,
-        ),
+        future: _tvDetailFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
             var data = snapshot.data as TvDetail;
@@ -236,7 +243,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   FutureBuilder<List<Result>?> similarList(TvDetail data, BuildContext context, double width) {
     return FutureBuilder(
-      future: ApiClient().similarMoviesData(data.id ?? 0, context.locale, type: MediaTypes.tv.name),
+      future: _similarFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var similarMoviesData = snapshot.data as List<Result?>;
@@ -277,7 +284,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   FutureBuilder<WhereToWatch?> whereToWatchList(TvDetail data, BuildContext context, double width) {
     return FutureBuilder(
-      future: ApiClient().getToWatch(data.id ?? 0, type: MediaTypes.tv.name),
+      future: _whereToWatchFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var watchResult = snapshot.data as WhereToWatch;
@@ -301,7 +308,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   FutureBuilder<WhereToWatch?> whereToBuyForWacthList(TvDetail data, BuildContext context, double width) {
     return FutureBuilder(
-      future: ApiClient().getToWatch(data.id ?? 0, type: MediaTypes.tv.name),
+      future: _whereToBuyForWatchFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var watchResult = snapshot.data as WhereToWatch;
@@ -325,7 +332,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   FutureBuilder<Images?> imageList(double width) {
     return FutureBuilder(
-      future: ApiClient().getImages(widget.movieId ?? 0, type: MediaTypes.tv.name),
+      future: _imageFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as Images;
@@ -361,7 +368,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   FutureBuilder<Credits?> peopleList(BuildContext context) {
     return FutureBuilder(
-      future: ApiClient().getCredits(widget.movieId ?? 0, context.locale, type: MediaTypes.tv.name),
+      future: _peopleFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var creditsData = snapshot.data as Credits;
@@ -519,7 +526,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
           bottom: 0,
           child: circleItem(
             context,
-            () {},
+            () {
+              setState(() {});
+            },
             IconPath.favorite.iconPath(),
           ),
         ),
@@ -816,5 +825,15 @@ class _TVDetailPageState extends State<TVDetailPage> {
         );
       },
     );
+  }
+
+  _getFutures() {
+    _tvDetailFuture = _apiClient.detailTvData(widget.movieId ?? 0, context.locale);
+    _peopleFuture = _apiClient.getCredits(widget.movieId ?? 0, context.locale, type: MediaTypes.tv.name);
+    _imageFuture = _apiClient.getImages(widget.movieId ?? 0, type: MediaTypes.tv.name);
+    _similarFuture = _apiClient.similarMoviesData(widget.movieId ?? 0, context.locale, type: MediaTypes.tv.name);
+    _whereToWatchFuture = _apiClient.getToWatch(widget.movieId ?? 0, type: MediaTypes.tv.name);
+    _whereToBuyForWatchFuture = _apiClient.getToWatch(widget.movieId ?? 0, type: MediaTypes.tv.name);
+    setState(() {});
   }
 }

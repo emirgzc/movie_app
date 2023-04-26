@@ -12,9 +12,13 @@ import 'package:movie_app/pages/settings_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
 import 'package:movie_app/theme/theme_light.dart';
+import 'package:movie_app/widgets/custom_appbar.dart';
 import 'package:movie_app/widgets/custom_bottom_navbar.dart';
 import 'package:movie_app/widgets/drawer_menu_screen.dart';
 import 'package:provider/provider.dart';
+
+part '../widgets/part_of_apbar_home_page.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -54,7 +58,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBody: true,
       // appbar
-      appBar: appBar(context),
+      appBar: PartOfHomePageAppBar(drawerController: _drawerController),
 
       // body
       body: drawer(context),
@@ -117,48 +121,6 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           return pageList[index];
         },
-      ),
-    );
-  }
-
-  PreferredSizeWidget appBar(BuildContext context) {
-    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
-    return AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // menu icon
-          appBarButton(
-            () {
-              _drawerController.toggle?.call();
-            },
-            IconPath.menu_list.iconPath(),
-          ),
-          // header
-          Image.asset(
-            themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
-            width: 300.w,
-            fit: BoxFit.contain,
-          ),
-          // search icon
-          appBarButton(
-            () {
-              Navigator.of(context).pushNamed("/searchPage");
-            },
-            IconPath.search.iconPath(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget appBarButton(void Function()? onPressed, String iconPath) {
-    return IconButton(
-      onPressed: onPressed,
-      icon: SvgPicture.asset(
-        iconPath,
-        height: Style.defaullIconHeight,
-        color: context.iconThemeContext().color,
       ),
     );
   }

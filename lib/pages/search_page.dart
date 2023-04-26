@@ -28,8 +28,8 @@ class _SearchPageState extends State<SearchPage> {
 
   int _page = 1;
   late final ScrollController _scrollController;
-  String searchValue = '';
-  int totalPage = 1;
+  String _searchValue = '';
+  int _totalPage = 1;
   int _crossAxisCount = 2;
 
   @override
@@ -59,11 +59,11 @@ class _SearchPageState extends State<SearchPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FutureBuilder(
-              future: ApiClient().search(context.locale, query: searchValue.isNotEmpty ? searchValue : "", page: _page),
+              future: ApiClient().search(context.locale, query: _searchValue.isNotEmpty ? _searchValue : "", page: _page),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   var data = snapshot.data as Search;
-                  totalPage = data.totalPages ?? 1;
+                  _totalPage = data.totalPages ?? 1;
                   return Expanded(
                     child: MasonryGrid(
                       crossAxisCount: 2,
@@ -107,7 +107,7 @@ class _SearchPageState extends State<SearchPage> {
           style: context.textThemeContext().bodyLarge,
           autofocus: true,
           controller: _textEditingController,
-          onChanged: (value) => setState(() => searchValue = value),
+          onChanged: (value) => setState(() => _searchValue = value),
           decoration: InputDecoration(
             prefixIcon: const Icon(Icons.search),
             suffixIcon: IconButton(
@@ -133,6 +133,7 @@ class _SearchPageState extends State<SearchPage> {
         _textEditingController.clear();
         _textEditingControllerForPage.text = '1';
         _page = 1;
+        _searchValue = 'a';
       },
     );
   }
@@ -240,7 +241,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           // sonraki sayfa
           Visibility(
-            visible: totalPage > _page,
+            visible: _totalPage > _page,
             child: Padding(
               padding: EdgeInsets.all(Style.defaultPaddingSize / 4),
               child: ElevatedButton(

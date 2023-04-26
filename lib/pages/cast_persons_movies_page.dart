@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
@@ -9,6 +8,7 @@ import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:movie_app/widgets/custom_appbar.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
 
@@ -35,7 +35,8 @@ class CastPersonsMoviesPage extends StatelessWidget {
 
   //appbar
   PreferredSizeWidget _getAppBar(BuildContext context) {
-    return AppBar(
+    return CustomAppBar(
+      title: BigText(title: "${LocaleKeys.actor.tr()}: $personName"),
       leading: IconButton(
         padding: EdgeInsets.zero,
         onPressed: () {
@@ -47,10 +48,10 @@ class CastPersonsMoviesPage extends StatelessWidget {
           color: context.iconThemeContext().color,
         ),
       ),
-      title: BigText(title: "${LocaleKeys.actor.tr()}: $personName"),
-      centerTitle: true,
+      trailing: null,
     );
   }
+
   //future builder body kısmı
   FutureBuilder<CastPersonsMovies?> body(double width, BuildContext context) {
     return FutureBuilder(
@@ -65,10 +66,12 @@ class CastPersonsMoviesPage extends StatelessWidget {
       },
     );
   }
+
   //apiden istek atılması
   Future<CastPersonsMovies?> getCastPerson(BuildContext context) async {
     return await ApiClient().castPersonsCombined(personId, context.locale);
   }
+
   //filmleri listeleme
   Widget listForMovie(CastPersonsMovies data, double width) {
     return MasonryGrid(

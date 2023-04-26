@@ -14,6 +14,7 @@ import 'package:movie_app/theme/theme_data_provider.dart';
 import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
+import 'package:movie_app/widgets/custom_appbar.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:provider/provider.dart';
 
@@ -108,8 +109,8 @@ class _CategoryPageState extends State<CategoryPage> {
 
   PreferredSizeWidget getAppBar() {
     ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
-
-    return AppBar(
+    return CustomAppBar(
+      title: widget,
       leading: IconButton(
         padding: EdgeInsets.zero,
         onPressed: () {
@@ -121,12 +122,13 @@ class _CategoryPageState extends State<CategoryPage> {
           color: context.iconThemeContext().color,
         ),
       ),
-      title: Image.asset(
-        themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
-        width: 300.w,
-        fit: BoxFit.contain,
-      ),
-      centerTitle: true,
+      trailing: [
+        Image.asset(
+          themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+          width: 300.w,
+          fit: BoxFit.contain,
+        ),
+      ],
     );
   }
 

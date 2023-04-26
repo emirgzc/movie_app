@@ -50,26 +50,30 @@ class _ListPageState extends State<ListPage> {
     _selectApiClientDatas(context);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: SvgPicture.asset(
-            IconPath.arrow_left.iconPath(),
-            height: Style.defaullIconHeight,
-            color: context.iconThemeContext().color,
-          ),
-        ),
-        title: Image.asset(
-          themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
-          width: 300.w,
-          fit: BoxFit.contain,
-        ),
-        centerTitle: true,
-      ),
+      appBar: appBar(context, themeData),
       body: bodyList(context.getSize().width),
+    );
+  }
+
+  PreferredSizeWidget appBar(BuildContext context, ThemeData themeData) {
+    return AppBar(
+      leading: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: SvgPicture.asset(
+          IconPath.arrow_left.iconPath(),
+          height: Style.defaullIconHeight,
+          color: context.iconThemeContext().color,
+        ),
+      ),
+      title: Image.asset(
+        themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+        width: 300.w,
+        fit: BoxFit.contain,
+      ),
+      centerTitle: true,
     );
   }
 
