@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
@@ -46,16 +47,15 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
     _selectApiClientDatas(context);
 
     return Scaffold(
-      appBar: appBar(context, themeData),
+      appBar: appBar(context),
       body: bodyList(context.getSize().width),
     );
   }
 
-  PreferredSizeWidget appBar(BuildContext context, ThemeData themeData) {
+  PreferredSizeWidget appBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         padding: EdgeInsets.zero,
@@ -69,7 +69,7 @@ class _ListPageState extends State<ListPage> {
         ),
       ),
       title: Image.asset(
-        themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+        Util.isDarkMode(context) ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
         width: 300.w,
         fit: BoxFit.contain,
       ),

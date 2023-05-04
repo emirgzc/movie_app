@@ -11,7 +11,6 @@ class PartOfHomePageAppBar extends StatelessWidget with PreferredSizeWidget {
   final ZoomDrawerController drawerController;
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
 
     return CustomAppBar(
       leading: appBarButton(
@@ -31,7 +30,7 @@ class PartOfHomePageAppBar extends StatelessWidget with PreferredSizeWidget {
         ),
       ],
       title: Image.asset(
-        themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+        Util.isDarkMode(context) ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
         width: 300.w,
         fit: BoxFit.contain,
       ),

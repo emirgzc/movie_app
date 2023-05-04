@@ -108,7 +108,6 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   PreferredSizeWidget getAppBar() {
-    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
     return CustomAppBar(
       title: widget,
       leading: IconButton(
@@ -124,7 +123,7 @@ class _CategoryPageState extends State<CategoryPage> {
       ),
       trailing: [
         Image.asset(
-          themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+          Util.isDarkMode(context) ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
           width: 300.w,
           fit: BoxFit.contain,
         ),

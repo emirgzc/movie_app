@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/route_generator.dart';
 import 'package:movie_app/theme/theme_dark.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/codegen_loader.g.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeDataProvider _provider = Provider.of<ThemeDataProvider>(context);
     FlutterNativeSplash.remove();
     return ScreenUtilInit(
       designSize: const Size(1080, 2280),
@@ -44,13 +46,17 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales, 
+          supportedLocales: context.supportedLocales,
           locale: context.locale,
           debugShowCheckedModeBanner: false,
           title: 'Movie Go',
-          theme: Provider.of<ThemeDataProvider>(context).getThemeData,
+          theme: LightTheme().lightTheme,
           darkTheme: DarkTheme().darkTheme,
-          themeMode: ThemeMode.light,
+          themeMode: _provider.brightness == null
+              ? ThemeMode.system
+              : _provider.brightness == Brightness.light
+                  ? ThemeMode.light
+                  : ThemeMode.dark,
           onGenerateRoute: RouteGenerator.routeGenrator,
         );
       },

@@ -57,6 +57,7 @@ dependencies:
   video_player: ^2.6.1
   flutter_svg: ^2.0.4
   shared_preferences: ^2.1.0
+  lottie: ^2.3.2
  
 
 dev_dependencies:
@@ -96,6 +97,7 @@ flutter:
     - assets/logo/
     - assets/translations/
     - assets/icons/
+    - assets/lottie/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

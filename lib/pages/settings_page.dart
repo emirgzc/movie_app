@@ -1,11 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/theme/theme_dark.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
-import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +15,16 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMixin {
+  late final AnimationController _animationController;
+  bool _isChange = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this, duration: Duration(seconds: 1));
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeDataProvider _themeProvider = Provider.of<ThemeDataProvider>(context);
@@ -50,14 +58,31 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
               ),
-              SwitchFowSettings(
-                text: _themeProvider.getThemeData != LightTheme().lightTheme ? LocaleKeys.dark_mode.tr() : LocaleKeys.light_mode.tr(),
-                value: _themeProvider.getThemeData == LightTheme().lightTheme ? true : false,
-                onChanged: (value) {
-                  _themeProvider.setThemeData(
-                    value ? LightTheme().lightTheme : DarkTheme().darkTheme,
-                  );
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                   Text(
+                    _themeProvider.brightness != Brightness.light ? LocaleKeys.dark_mode.tr() : LocaleKeys.light_mode.tr(),
+                    style: context.textThemeContext().titleMedium,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _isChange = !_isChange;
+                      _themeProvider.setThemeData(
+                        _isChange ? true : false,
+                      );
+                      _animationController.animateTo(_isChange ? 0.5 : 0.0);
+                    },
+                    child: Lottie.asset(
+                      
+                      'assets/lottie/theme_change.json',
+                      repeat: false,
+                      width: 60,
+                      reverse: true,
+                      controller: _animationController,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum SharedKeys { movieName, isFavorite }
+enum SharedKeys { movieName, isFavorite, themeMode }
 
 class SharedManager {
   SharedPreferences? _preferences;

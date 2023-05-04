@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
 import 'package:movie_app/theme/theme_light.dart';
@@ -55,14 +56,13 @@ class _TrailerPageState extends State<TrailerPage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Provider.of<ThemeDataProvider>(context).getThemeData;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
         foregroundColor: Style.blackColor,
         title: Image.asset(
-          themeData != LightTheme().lightTheme ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+          Util.isDarkMode(context) ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
           width: 290.w,
           fit: BoxFit.contain,
         ),
