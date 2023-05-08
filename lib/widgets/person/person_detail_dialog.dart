@@ -107,7 +107,7 @@ class _PersonDetailDialogState extends State<PersonDetailDialog> {
           return InkWell(
             onTap: () {
               Navigator.of(context).pushNamed(
-                (widget.data?.knownFor?[index].mediaType == MediaTypes.movie.name) ? "/movieDetailPage" : "/tvDetailPage",
+                (widget.data?.knownFor?[index].mediaType == MediaTypes.movie.name) ?NavigatorType.movieDetailPage.nameGet : NavigatorType.tvDetailPage.nameGet,
                 arguments: widget.data?.knownFor?[index].id,
               );
             },

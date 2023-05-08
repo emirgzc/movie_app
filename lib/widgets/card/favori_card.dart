@@ -4,22 +4,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/models/detail_movie.dart';
 
 class FavoriCard extends StatelessWidget {
-  const FavoriCard({super.key, required this.title, required this.date, required this.vote, required this.id, this.path});
+  const FavoriCard({
+    super.key,
+    required this.title,
+    required this.date,
+    required this.vote,
+    required this.id,
+    this.path,
+    required this.way,
+  });
   final int? id;
   final String? title;
   final String? date;
   final String? vote;
   final String? path;
+  final String way;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(
-          "/movieDetailPage",
+          way,
           arguments: id,
         );
       },
@@ -48,7 +56,7 @@ class FavoriCard extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2),
                         child: Text(
                           toRevolveDate(
-                            (date?.split(" ")[0]??''),
+                            (date?.split(" ")[0] ?? ''),
                           ),
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                 fontSize: 26.sp,

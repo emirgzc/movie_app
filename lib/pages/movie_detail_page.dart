@@ -286,7 +286,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         } else {
                           return GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
-                              "/movieDetailPage",
+                              NavigatorType.movieDetailPage.nameGet,
                               arguments: (collectionData.parts?[index].id),
                             ),
                             child: (collectionData.parts?[index].posterPath == null)
@@ -339,7 +339,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () => Navigator.of(context).pushNamed(
-                            "/movieDetailPage",
+                         NavigatorType.movieDetailPage.nameGet,
                             arguments: (similarMoviesData[index]?.id ?? 0),
                           ),
                           child: BrochureItem(

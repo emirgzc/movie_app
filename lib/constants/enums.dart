@@ -4,6 +4,24 @@ enum MediaTypes {
   person,
 }
 
+enum NavigatorType {
+  movieDetailPage,
+  tvDetailPage,
+}
+
+extension NavigatorTypeExtension on NavigatorType {
+  String _name() {
+    switch (this) {
+      case NavigatorType.movieDetailPage:
+        return '/movieDetailPage';
+      case NavigatorType.tvDetailPage:
+        return '/tvDetailPage';
+    }
+  }
+
+  String get nameGet => _name();
+}
+
 enum ListType {
   popular_movies,
   top_rated_movies,

@@ -46,7 +46,7 @@ class CreatePosterList extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () => Navigator.of(context).pushNamed(
-                    (data[index].name == null) ? "/movieDetailPage" : "/tvDetailPage",
+                    (data[index].name == null) ? NavigatorType.movieDetailPage.nameGet : NavigatorType.tvDetailPage.nameGet,
                     arguments: (data[index]?.id ?? 0),
                   ),
                   child: BrochureItem(

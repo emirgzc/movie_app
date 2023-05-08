@@ -297,7 +297,7 @@ class _SearchPageState extends State<SearchPage> {
         } else if (data.results?[index].posterPath == null) {
         } else {
           Navigator.of(context).pushNamed(
-            mediaType == MediaTypes.movie.name ? "/movieDetailPage" : "/tvDetailPage",
+            mediaType == MediaTypes.movie.name ? NavigatorType.movieDetailPage.nameGet: NavigatorType.tvDetailPage.nameGet,
             arguments: data.results?[index].id,
           );
         }

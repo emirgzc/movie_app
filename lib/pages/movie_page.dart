@@ -172,7 +172,7 @@ class _MoviePageState extends State<MoviePage> {
   createTopSliderItem(String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        (data[index]?.title != null) ? "/movieDetailPage" : "/tvDetailPage",
+        (data[index]?.title != null) ? NavigatorType.movieDetailPage.nameGet :NavigatorType.tvDetailPage.nameGet,
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(

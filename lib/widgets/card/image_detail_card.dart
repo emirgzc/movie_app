@@ -34,7 +34,7 @@ class ImageDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        (title != null) ? "/movieDetailPage" : "/tvDetailPage",
+        (title != null) ? NavigatorType.movieDetailPage.nameGet: NavigatorType.tvDetailPage.nameGet,
         arguments: (id ?? 0),
       ),
       child: Card(

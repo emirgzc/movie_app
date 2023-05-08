@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/cache/hive/hive_abstract.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/detail_movie.dart';
@@ -60,7 +61,7 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
         ),
         body: Padding(
           padding: Style.pagePadding,
-          child:  _tabBarView(),
+          child: _tabBarView(),
         ),
       ),
     );
@@ -90,36 +91,39 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
         SingleChildScrollView(
           child: Column(
             children: [
-           _allMovie.length==0 ? Text('veri yok') :   MasonryGrid(
-                crossAxisCount: _crossAxisCount,
-                length: _allMovie.length,
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      FavoriCard(
-                        title: _allMovie[index].title,
-                        date: _allMovie[index].releaseDate.toString(),
-                        vote: _allMovie[index].voteAverage.toString(),
-                        id: _allMovie[index].id,
-                        path: _allMovie[index].posterPath,
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: _deleteButton(
-                          index,
-                          () async {
-                            await _hiveMovie.delete(detail: _allMovie[index]);
-                            debugPrint('silindi -> ${_allMovie[index].title.toString()}');
-                            _allMovie.removeAt(index);
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+              _allMovie.length == 0
+                  ? Text('veri yok')
+                  : MasonryGrid(
+                      crossAxisCount: _crossAxisCount,
+                      length: _allMovie.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            FavoriCard(
+                              title: _allMovie[index].title,
+                              date: _allMovie[index].releaseDate.toString(),
+                              vote: _allMovie[index].voteAverage.toString(),
+                              id: _allMovie[index].id,
+                              path: _allMovie[index].posterPath,
+                              way: NavigatorType.movieDetailPage.nameGet,
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: _deleteButton(
+                                index,
+                                () async {
+                                  await _hiveMovie.delete(detail: _allMovie[index]);
+                                  debugPrint('silindi -> ${_allMovie[index].title.toString()}');
+                                  _allMovie.removeAt(index);
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
               SizedBox(height: Style.defaultPaddingSize * 13),
             ],
           ),
@@ -127,37 +131,40 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
         SingleChildScrollView(
           child: Column(
             children: [
-             _allTv.length==0 ? Text('veri yok') :   MasonryGrid(
-                crossAxisCount: _crossAxisCount,
-                length: _allTv.length,
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      FavoriCard(
-                        title: _allTv[index].name,
-                        date: _allTv[index].firstAirDate.toString(),
-                        vote: _allTv[index].voteAverage.toString(),
-                        id: _allTv[index].id,
-                        path: _allTv[index].posterPath,
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: _deleteButton(
-                          index,
-                          () async {
-                            await _hiveTv.delete(detail: _allTv[index]);
-                            debugPrint('silindi -> ${_allTv[index].name.toString()}');
-                            _allTv.removeAt(index);
+              _allTv.length == 0
+                  ? Text('veri yok')
+                  : MasonryGrid(
+                      crossAxisCount: _crossAxisCount,
+                      length: _allTv.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            FavoriCard(
+                              title: _allTv[index].name,
+                              date: _allTv[index].firstAirDate.toString(),
+                              vote: _allTv[index].voteAverage.toString(),
+                              id: _allTv[index].id,
+                              path: _allTv[index].posterPath,
+                              way: NavigatorType.tvDetailPage.nameGet,
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: _deleteButton(
+                                index,
+                                () async {
+                                  await _hiveTv.delete(detail: _allTv[index]);
+                                  debugPrint('silindi -> ${_allTv[index].name.toString()}');
+                                  _allTv.removeAt(index);
 
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
               SizedBox(height: Style.defaultPaddingSize * 13),
             ],
           ),
