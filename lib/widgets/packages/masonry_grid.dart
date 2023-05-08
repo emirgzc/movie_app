@@ -17,8 +17,7 @@ class MasonryGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MasonryGridView.count(
-      
+    return MasonryGridView.count(      
       padding: padding,
       physics: const BouncingScrollPhysics(),
       shrinkWrap: true,

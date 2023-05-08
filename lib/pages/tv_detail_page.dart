@@ -6,11 +6,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:movie_app/cache/hive/hive_abstract.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/models/images.dart';
@@ -33,6 +35,7 @@ class TVDetailPage extends StatefulWidget {
 
 class _TVDetailPageState extends State<TVDetailPage> {
   late PageController _pageController;
+  late HiveAbstract _hiveAbstract;
   final bool _isOpenedText = false;
   final IApiClient _apiClient = ApiClient();
   Future<TvDetail?>? _tvDetailFuture;
@@ -42,12 +45,16 @@ class _TVDetailPageState extends State<TVDetailPage> {
   Future<WhereToWatch?>? _whereToWatchFuture;
   Future<WhereToWatch?>? _whereToBuyForWatchFuture;
 
+  late bool _isFavori;
+
   @override
   void initState() {
     _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getFutures();
     });
+    _hiveAbstract = locator<HiveAbstract<TvDetail>>();
+    _isFavori = _hiveAbstract.get(id: widget.movieId ?? 0) != null;
     super.initState();
   }
 
@@ -59,6 +66,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(_isFavori.toString());
     return newBody(context.getSize().height, context.getSize().width);
   }
 
@@ -521,17 +529,35 @@ class _TVDetailPageState extends State<TVDetailPage> {
             }
           },
         ),
-        Positioned(
-          left: 360.w,
-          bottom: 0,
-          child: circleItem(
-            context,
-            () {
-              setState(() {});
-            },
-            IconPath.favorite.iconPath(),
-          ),
-        ),
+        _isFavori
+            ? SizedBox.shrink()
+            : Positioned(
+                left: 360.w,
+                bottom: 0,
+                child: circleItem(
+                  context,
+                  () async {
+                    await _hiveAbstract
+                        .add(
+                          detail: TvDetail(
+                            id: data.id,
+                            name: data.name,
+                            firstAirDate: data.firstAirDate,
+                            posterPath: data.posterPath,
+                            backdropPath: data.backdropPath,
+                            voteAverage: data.voteAverage,
+                          ),
+                        )
+                        .then(
+                          (value) => debugPrint('eklendi -> ${data.name}'),
+                        );
+                    setState(() {
+                      _isFavori = !_isFavori;
+                    });
+                  },
+                  IconPath.favorite.iconPath(),
+                ),
+              ),
       ],
     );
   }

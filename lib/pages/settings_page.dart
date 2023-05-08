@@ -28,6 +28,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     ThemeDataProvider _themeProvider = Provider.of<ThemeDataProvider>(context);
+                      debugPrint( '** ' + _isChange.toString());
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -61,12 +62,13 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Text(
-                    _themeProvider.brightness != Brightness.light ? LocaleKeys.dark_mode.tr() : LocaleKeys.light_mode.tr(),
+                  Text(
+                    (_themeProvider.brightness == Brightness.light || _themeProvider.brightness==null) ? LocaleKeys.light_mode.tr() : LocaleKeys.dark_mode.tr(),
                     style: context.textThemeContext().titleMedium,
                   ),
                   InkWell(
                     onTap: () {
+                      debugPrint( '-- ' + _isChange.toString());
                       _isChange = !_isChange;
                       _themeProvider.setThemeData(
                         _isChange ? true : false,
@@ -74,7 +76,6 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                       _animationController.animateTo(_isChange ? 0.5 : 0.0);
                     },
                     child: Lottie.asset(
-                      
                       'assets/lottie/theme_change.json',
                       repeat: false,
                       width: 60,

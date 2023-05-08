@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:movie_app/cache/hive/hive_abstract.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/collection.dart';
 import 'package:movie_app/models/comment.dart';
 import 'package:movie_app/models/credits.dart';
@@ -40,12 +42,14 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   late PageController _pageController;
+  late HiveAbstract<DetailMovie> _hiveAbstract;
   final IApiClient _apiClient = ApiClient();
   Future<DetailMovie?>? _detailFuture;
   Future<Images?>? _imagesFuture;
   Future<WhereToWatch?>? _watchBuyFuture;
   Future<WhereToWatch?>? _watchFuture;
   Future<List<Result>?>? _onerilerFuture;
+  late bool isFavori;
 
   @override
   void initState() {
@@ -53,6 +57,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _getFutures();
     });
+    _hiveAbstract = locator<HiveAbstract<DetailMovie>>();
+    isFavori = _hiveAbstract.get(id: widget.movieId ?? 0) != null;
     super.initState();
   }
 
@@ -104,7 +110,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            appBar(context),
+                            appBar(context, data),
                             // film resmi
                             Center(
                               child: PublicImage(
@@ -559,7 +565,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 
-  Widget appBar(BuildContext context) {
+  Widget appBar(BuildContext context, DetailMovie data) {
     return Padding(
       padding: EdgeInsets.only(
         top: Style.defaultPaddingSizeVertical * 2.5,
@@ -578,9 +584,37 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           // film ismi
 
           // kalp butonu
-          appBarButton(context, () {
-            setState(() {});
-          }, IconPath.favorite_fill.iconPath(), Style.primaryColor),
+          AnimatedCrossFade(
+            firstChild: SizedBox.shrink(),
+            secondChild: appBarButton(
+              context,
+              () async {
+                await _hiveAbstract
+                    .add(
+                      detail: DetailMovie(
+                        id: data.id,
+                        title: data.title,
+                        overview: data.overview,
+                        posterPath: data.posterPath,
+                        backdropPath: data.backdropPath,
+                        voteAverage: data.voteAverage,
+                        releaseDate: data.releaseDate,
+                      ),
+                    )
+                    .then(
+                      (value) => debugPrint('eklendi -> ${data.title}'),
+                    );
+
+                setState(() {
+                  isFavori = !isFavori;
+                });
+              },
+              IconPath.favorite.iconPath(),
+              Style.primaryColor,
+            ),
+            crossFadeState: isFavori ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            duration: Duration(seconds: 1),
+          ),
         ],
       ),
     );

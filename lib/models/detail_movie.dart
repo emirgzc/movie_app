@@ -4,11 +4,16 @@
 
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
+
+part 'detail_movie.g.dart';
+
 DetailMovie trendFromMap(String str) => DetailMovie.fromMap(json.decode(str));
 
 String trendToMap(DetailMovie data) => json.encode(data.toMap());
 
-class DetailMovie {
+@HiveType(typeId: 1)
+class DetailMovie extends HiveObject{
   DetailMovie({
     this.adult,
     this.backdropPath,
@@ -38,30 +43,41 @@ class DetailMovie {
   });
 
   bool? adult;
+  @HiveField(0)
   String? backdropPath;
   
   BelongsToCollection? belongsToCollection;
   int? budget;
   List<Genre>? genres;
   String? homepage;
+  @HiveField(1)
   int? id;
   String? imdbId;
   String? originalLanguage;
+  @HiveField(2)
   String? originalTitle;
+  @HiveField(3)
   String? overview;
+  @HiveField(4)
   double? popularity;
+  @HiveField(5)
   String? posterPath;
   List<ProductionCompany>? productionCompanies;
   List<ProductionCountry>? productionCountries;
+  @HiveField(6)
   DateTime? releaseDate;
   int? revenue;
   int? runtime;
   List<SpokenLanguage>? spokenLanguages;
   String? status;
+  @HiveField(7)
   String? tagline;
+  @HiveField(8)
   String? title;
   bool? video;
+  @HiveField(9)
   double? voteAverage;
+  @HiveField(10)
   int? voteCount;
 
   factory DetailMovie.fromMap(Map<String, dynamic> json) => DetailMovie(

@@ -4,11 +4,16 @@
 
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
+
+part 'detail_tv.g.dart';
+
 TvDetail tvDetailFromJson(String str) => TvDetail.fromJson(json.decode(str));
 
 String tvDetailToJson(TvDetail data) => json.encode(data.toJson());
 
-class TvDetail {
+@HiveType(typeId: 2)
+class TvDetail extends HiveObject{
   TvDetail({
     this.adult,
     this.backdropPath,
@@ -45,17 +50,21 @@ class TvDetail {
   });
 
   bool? adult;
+  @HiveField(0)
   String? backdropPath;
   List<CreatedBy>? createdBy;
   List<int>? episodeRunTime;
+  @HiveField(1)
   DateTime? firstAirDate;
   List<Genre>? genres;
   String? homepage;
+  @HiveField(2)
   int? id;
   bool? inProduction;
   List<String>? languages;
   DateTime? lastAirDate;
   LastEpisodeToAir? lastEpisodeToAir;
+  @HiveField(3)
   String? name;
   dynamic nextEpisodeToAir;
   List<Network>? networks;
@@ -63,9 +72,11 @@ class TvDetail {
   int? numberOfSeasons;
   List<String>? originCountry;
   String? originalLanguage;
+  @HiveField(4)
   String? originalName;
   String? overview;
   double? popularity;
+  @HiveField(5)
   String? posterPath;
   List<Network>? productionCompanies;
   List<ProductionCountry>? productionCountries;
@@ -74,7 +85,9 @@ class TvDetail {
   String? status;
   String? tagline;
   String? type;
+  @HiveField(6)
   double? voteAverage;
+  @HiveField(7)
   int? voteCount;
 
   factory TvDetail.fromJson(Map<String, dynamic> json) => TvDetail(

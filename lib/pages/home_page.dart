@@ -8,6 +8,7 @@ import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/constants/util.dart';
+import 'package:movie_app/pages/favorite_page.dart';
 import 'package:movie_app/pages/movie_page.dart';
 import 'package:movie_app/pages/settings_page.dart';
 import 'package:movie_app/pages/tv_page.dart';
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> pageList = [
     const MoviePage(),
     const TVPage(),
-    Container(color: Colors.purple.shade200),
+    FavoritePage(),
     const SettingsPage(),
   ];
 

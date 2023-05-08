@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:movie_app/locator.dart';
+import 'package:movie_app/models/detail_movie.dart';
+import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/route_generator.dart';
 import 'package:movie_app/theme/theme_dark.dart';
 import 'package:movie_app/theme/theme_data_provider.dart';
@@ -10,13 +14,23 @@ import 'package:movie_app/theme/theme_light.dart';
 import 'package:movie_app/translations/codegen_loader.g.dart';
 import 'package:provider/provider.dart';
 
+Future<void> setupHive() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(DetailMovieAdapter());
+  await Hive.openBox<DetailMovie>('movies');
+  Hive.registerAdapter(TvDetailAdapter());
+  await Hive.openBox<TvDetail>('tv');
+
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await EasyLocalization.ensureInitialized();
-
+  await setupHive();
+  setupLocator();
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeDataProvider(),
