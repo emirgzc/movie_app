@@ -13,6 +13,7 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/collection.dart';
 import 'package:movie_app/models/comment.dart';
@@ -339,7 +340,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () => Navigator.of(context).pushNamed(
-                         NavigatorType.movieDetailPage.nameGet,
+                            NavigatorType.movieDetailPage.nameGet,
                             arguments: (similarMoviesData[index]?.id ?? 0),
                           ),
                           child: BrochureItem(
@@ -602,7 +603,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       ),
                     )
                     .then(
-                      (value) => debugPrint('eklendi -> ${data.title}'),
+                      (value) => Uihelper.showSnackBarDialogForInfo(
+                        context: context,
+                        type: UiType.positive,
+                        title: 'Favorilere Eklendi',
+                        message: 'Film başarılı bir şekilde favorilere eklendi',
+                      ),
                     );
 
                 setState(() {

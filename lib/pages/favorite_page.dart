@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/cache/hive/hive_abstract.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/detail_tv.dart';
@@ -113,7 +114,14 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
                               child: _deleteButton(
                                 index,
                                 () async {
-                                  await _hiveMovie.delete(detail: _allMovie[index]);
+                                  await _hiveMovie.delete(detail: _allMovie[index]).then((value) {
+                                    return Uihelper.showSnackBarDialogForInfo(
+                                      context: context,
+                                      type: UiType.info,
+                                      title: 'Favorilerden Silindi',
+                                      message: 'Film başarılı bir şekilde favorilerden kaldırıldı.',
+                                    );
+                                  });
                                   debugPrint('silindi -> ${_allMovie[index].title.toString()}');
                                   _allMovie.removeAt(index);
                                   setState(() {});
@@ -153,7 +161,14 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
                               child: _deleteButton(
                                 index,
                                 () async {
-                                  await _hiveTv.delete(detail: _allTv[index]);
+                                  await _hiveTv.delete(detail: _allTv[index]).then((value) {
+                                    return Uihelper.showSnackBarDialogForInfo(
+                                      context: context,
+                                      type: UiType.info,
+                                      title: 'Favorilerden Silindi',
+                                      message: 'Dizi başarılı bir şekilde favorilerden kaldırıldı.',
+                                    );
+                                  });
                                   debugPrint('silindi -> ${_allTv[index].name.toString()}');
                                   _allTv.removeAt(index);
 

@@ -28,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     ThemeDataProvider _themeProvider = Provider.of<ThemeDataProvider>(context);
-                      debugPrint( '** ' + _isChange.toString());
+    debugPrint('** ' + _isChange.toString());
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -63,12 +63,14 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (_themeProvider.brightness == Brightness.light || _themeProvider.brightness==null) ? LocaleKeys.light_mode.tr() : LocaleKeys.dark_mode.tr(),
+                    (_themeProvider.brightness == Brightness.light || _themeProvider.brightness == null)
+                        ? LocaleKeys.light_mode.tr()
+                        : LocaleKeys.dark_mode.tr(),
                     style: context.textThemeContext().titleMedium,
                   ),
                   InkWell(
                     onTap: () {
-                      debugPrint( '-- ' + _isChange.toString());
+                      debugPrint('-- ' + _isChange.toString());
                       _isChange = !_isChange;
                       _themeProvider.setThemeData(
                         _isChange ? true : false,

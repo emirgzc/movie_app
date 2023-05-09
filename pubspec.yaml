@@ -103,6 +103,7 @@ flutter:
     - assets/translations/
     - assets/icons/
     - assets/lottie/
+    - assets/info/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

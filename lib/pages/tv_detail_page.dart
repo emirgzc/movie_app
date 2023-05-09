@@ -12,6 +12,7 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/credits.dart';
 import 'package:movie_app/models/detail_tv.dart';
@@ -549,8 +550,13 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           ),
                         )
                         .then(
-                          (value) => debugPrint('eklendi -> ${data.name}'),
-                        );
+                      (value) => Uihelper.showSnackBarDialogForInfo(
+                        context: context,
+                        type: UiType.positive,
+                        title: 'Favorilere Eklendi',
+                        message: 'Dizi başarılı bir şekilde favorilere eklendi',
+                      ),
+                    );
                     setState(() {
                       _isFavori = !_isFavori;
                     });
