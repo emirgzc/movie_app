@@ -550,13 +550,13 @@ class _TVDetailPageState extends State<TVDetailPage> {
                           ),
                         )
                         .then(
-                      (value) => Uihelper.showSnackBarDialogForInfo(
-                        context: context,
-                        type: UiType.positive,
-                        title: 'Favorilere Eklendi',
-                        message: 'Dizi başarılı bir şekilde favorilere eklendi',
-                      ),
-                    );
+                          (value) => Uihelper.showSnackBarDialogForInfo(
+                            context: context,
+                            type: UiType.positive,
+                            title: '${data.name}',
+                            message: 'Dizi başarılı bir şekilde favorilere eklendi',
+                          ),
+                        );
                     setState(() {
                       _isFavori = !_isFavori;
                     });

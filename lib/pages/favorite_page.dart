@@ -118,7 +118,7 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
                                     return Uihelper.showSnackBarDialogForInfo(
                                       context: context,
                                       type: UiType.info,
-                                      title: 'Favorilerden Silindi',
+                                      title: '${_allMovie[index].title.toString()}',
                                       message: 'Film başarılı bir şekilde favorilerden kaldırıldı.',
                                     );
                                   });
@@ -165,7 +165,7 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
                                     return Uihelper.showSnackBarDialogForInfo(
                                       context: context,
                                       type: UiType.info,
-                                      title: 'Favorilerden Silindi',
+                                      title: '${_allTv[index].name.toString()}',
                                       message: 'Dizi başarılı bir şekilde favorilerden kaldırıldı.',
                                     );
                                   });

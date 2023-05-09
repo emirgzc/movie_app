@@ -606,7 +606,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       (value) => Uihelper.showSnackBarDialogForInfo(
                         context: context,
                         type: UiType.positive,
-                        title: 'Favorilere Eklendi',
+                        title: '${data.title}',
                         message: 'Film başarılı bir şekilde favorilere eklendi',
                       ),
                     );
