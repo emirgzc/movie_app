@@ -1,13 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/place_details.dart';
-import 'package:movie_app/widgets/shimmer/shimmer.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
 import 'package:movie_app/widgets/text/desc_text.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,7 +34,7 @@ class CustomModalBottomSheet extends StatelessWidget {
     return Container(
       margin: EdgeInsets.fromLTRB(100.w, 0, 24, 100.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(Style.defaultRadiusSize),
       ),
       child: Padding(
@@ -65,7 +62,7 @@ class CustomModalBottomSheet extends StatelessWidget {
             // infos
             BigText(
               title: placeName,
-              color: Colors.black,
+              color: Theme.of(context).iconTheme.color,
             ),
 
             Flexible(
@@ -119,13 +116,10 @@ class CustomModalBottomSheet extends StatelessWidget {
             FutureBuilder(
               future: ApiClient().getPlaceDetails(placeId),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData &&
-                    snapshot.data != null) {
+                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   PlaceDetails placeDetails = snapshot.data as PlaceDetails;
                   List<String> placePhotoUrls = [];
-                  if (placeDetails.result != null &&
-                      placeDetails.result!.photos != null) {
+                  if (placeDetails.result != null && placeDetails.result!.photos != null) {
                     for (var element in placeDetails.result!.photos!) {
                       placePhotoUrls.add(
                           "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=800&photo_reference=${element.photoReference}&key=${ApiClient().googleApiKey}");
@@ -196,8 +190,7 @@ class CustomModalBottomSheet extends StatelessWidget {
                       _launchMapsUrl(lat, lng);
                     },
                   ),
-                  _modalBottomSheetButton(
-                      Icons.ads_click_outlined, "Adresi Kopyala", () {})
+                  _modalBottomSheetButton(Icons.ads_click_outlined, "Adresi Kopyala", () {})
                 ],
               ),
             ),
