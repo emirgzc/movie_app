@@ -5,6 +5,7 @@ import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
@@ -48,7 +49,24 @@ class CastPersonsMoviesPage extends StatelessWidget {
           color: context.iconThemeContext().color,
         ),
       ),
-      trailing: null,
+      trailing: [
+        TextButton(
+          onPressed: () {
+            Uihelper.showSnackBarDialogForInfo(
+              context: context,
+              type: UiType.info,
+              title: 'Bilgi',
+              message: 'Sıralama çıkış tarihine göre yapılmıştır.',
+            );
+          },
+          child: SvgPicture.asset(
+            IconPath.info.iconPath(),
+          ),
+        ),
+        SizedBox(
+          width: Style.defaultPaddingSize,
+        ),
+      ],
     );
   }
 
@@ -75,6 +93,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
   //filmleri listeleme
   Widget listForMovie(CastPersonsMovies data, double width) {
     return MasonryGrid(
+      padding: EdgeInsets.only(bottom: Style.defaultPaddingSize * 4),
       length: data.cast?.length,
       itemBuilder: (BuildContext context, int index) {
         // film kartları

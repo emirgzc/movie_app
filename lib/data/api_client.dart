@@ -37,7 +37,7 @@ abstract class IApiClient {
 class ApiClient implements IApiClient {
   final String _apiKey = "2444ef19302975166c670f0e507218ec";
   final String _baseuRL = "https://api.themoviedb.org/3";
-  
+
   Future<List<Result>?> trendData(String mediaType, Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
     String baseUrl = '$_baseuRL/trending/$mediaType/week?api_key=$_apiKey&language=$_languageKey';
@@ -53,6 +53,9 @@ class ApiClient implements IApiClient {
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results?.sort((a, b) {
+          return b.releaseDate?.compareTo(a.releaseDate ?? DateTime.now()) ?? 0;
+        });
 
         return mapApiModel.results;
       } else {
@@ -78,6 +81,9 @@ class ApiClient implements IApiClient {
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results?.sort((a, b) {
+          return b.releaseDate?.compareTo(a.releaseDate ?? DateTime.now()) ?? 0;
+        });
 
         return mapApiModel.results;
       } else {
@@ -108,6 +114,9 @@ class ApiClient implements IApiClient {
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         Trend mapApiModel = Trend.fromMap(responseJson);
+        mapApiModel.results?.sort((a, b) {
+            return b.releaseDate?.compareTo(a.releaseDate??DateTime.now()) ?? 0;
+          });
 
         // resmi olmayan filmeleri kaldır
         mapApiModel.results?.removeWhere((element) => element.posterPath == null);
@@ -332,6 +341,9 @@ class ApiClient implements IApiClient {
         CastPersonsMovies mapApiModel = CastPersonsMovies.fromJson(responseJson);
         if (mapApiModel.cast != null) {
           mapApiModel.cast?.removeWhere((element) => element.posterPath == null);
+          mapApiModel.cast?.sort((a, b) {
+            return b.releaseDate?.compareTo(a.releaseDate ?? '05.05.2022') ?? 0;
+          });
         }
 
         return mapApiModel;
