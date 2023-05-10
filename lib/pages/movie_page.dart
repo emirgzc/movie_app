@@ -22,7 +22,6 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -40,16 +39,19 @@ class _MoviePageState extends State<MoviePage> {
                 listName: LocaleKeys.popular_movies.tr(),
                 listType: ListType.popular_movies,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale),
+                futureGetDataFunc: ApiClient().getMovieData(
+                    dataWay: MovieApiType.popular.name, context.locale),
               ),
 
               Padding(
-                padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical),
+                padding: EdgeInsets.symmetric(
+                    vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
                   listName: LocaleKeys.top_rated_movies.tr(),
                   listType: ListType.top_rated_movies,
                   width: context.getSize().width,
-                  futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale),
+                  futureGetDataFunc: ApiClient().getMovieData(
+                      dataWay: MovieApiType.top_rated.name, context.locale),
                 ),
               ),
 
@@ -57,10 +59,9 @@ class _MoviePageState extends State<MoviePage> {
                 listName: LocaleKeys.upcoming_movies.tr(),
                 listType: ListType.upcoming_movies,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale),
+                futureGetDataFunc: ApiClient().getMovieData(
+                    dataWay: MovieApiType.upcoming.name, context.locale),
               ),
-              /* createPosterList("En Çok Oy Alan Diziler", width,
-                  TvApiClient().topRatedTvData()), */
 
               SizedBox(height: 600.h),
             ],
@@ -74,7 +75,9 @@ class _MoviePageState extends State<MoviePage> {
     return FutureBuilder(
       future: ApiClient().genres(context.locale),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var genresData = snapshot.data as Genres;
           return SizedBox(
             width: double.infinity,
@@ -106,7 +109,9 @@ class _MoviePageState extends State<MoviePage> {
     return FutureBuilder(
       future: ApiClient().trendData(MediaTypes.movie.name, context.locale),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var data = snapshot.data as List<Result?>;
           return CarouselSlider.builder(
             itemCount: data.length,
@@ -131,7 +136,8 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createCategoriesItem(double categoryItemWidth, String categoryName, int? genreId) {
+  createCategoriesItem(
+      double categoryItemWidth, String categoryName, int? genreId) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
         "/categoryPage",
@@ -169,15 +175,19 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createTopSliderItem(String? movieName, String? pathImage, List<Result?> data, int index) {
+  createTopSliderItem(
+      String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        (data[index]?.title != null) ? NavigatorType.movieDetailPage.nameGet :NavigatorType.tvDetailPage.nameGet,
+        (data[index]?.title != null)
+            ? NavigatorType.movieDetailPage.nameGet
+            : NavigatorType.tvDetailPage.nameGet,
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(
         margin: EdgeInsets.all(Style.defaultPaddingSize / 4),
-        padding: EdgeInsets.fromLTRB(0, Style.defaultPaddingSizeVertical / 2, 0, Style.defaultPaddingSizeVertical),
+        padding: EdgeInsets.fromLTRB(0, Style.defaultPaddingSizeVertical / 2, 0,
+            Style.defaultPaddingSizeVertical),
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
@@ -201,7 +211,10 @@ class _MoviePageState extends State<MoviePage> {
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Color.fromARGB(200, 0, 0, 0), Color.fromARGB(0, 0, 0, 0)],
+                        colors: [
+                          Color.fromARGB(200, 0, 0, 0),
+                          Color.fromARGB(0, 0, 0, 0)
+                        ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),

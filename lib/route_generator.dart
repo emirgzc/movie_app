@@ -7,6 +7,7 @@ import 'package:movie_app/pages/cast_persons_movies_page.dart';
 import 'package:movie_app/pages/category_page.dart';
 import 'package:movie_app/pages/home_page.dart';
 import 'package:movie_app/pages/list_page.dart';
+import 'package:movie_app/pages/maps_page.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
 import 'package:movie_app/pages/search_page.dart';
 import 'package:movie_app/pages/trailer_page.dart';

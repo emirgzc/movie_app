@@ -48,6 +48,12 @@ enum MovieApiType {
   on_the_air,
 }
 
+enum LocationErrors {
+  locationServicesAreDisabled,
+  locationPermissionsAreDenied,
+  locationPermissionsArepermanentlyDenied,
+}
+
 enum LogoPath {
   png_logo_2_day,
   png_logo_2_dark,

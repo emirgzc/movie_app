@@ -52,7 +52,8 @@ class WatchCard extends StatelessWidget {
                 height: 200.h,
                 width: 200.w,
                 child: CachedNetworkImage(
-                  imageUrl: "https://image.tmdb.org/t/p/w500${result[index].logoPath ?? ""}",
+                  imageUrl:
+                      "https://image.tmdb.org/t/p/w500${result[index].logoPath ?? ""}",
                   fit: BoxFit.cover,
                 ),
               ),
@@ -81,7 +82,8 @@ class WatchCard extends StatelessWidget {
                 horizontal: Style.defaultPaddingSizeHorizontal * 3,
               ),
               child: CachedNetworkImage(
-                imageUrl: "https://image.tmdb.org/t/p/w500${result[index].logoPath}",
+                imageUrl:
+                    "https://image.tmdb.org/t/p/w500${result[index].logoPath}",
                 fit: BoxFit.contain,
                 width: width,
               ),
