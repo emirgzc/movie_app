@@ -136,6 +136,11 @@ class Result {
             ? null
             : List<dynamic>.from(originCountry!.map((x) => x)),
       };
+
+      @override
+  String toString() {
+    return '${this.title}';
+  }
 }
 
 enum MediaType { MOVIE, TV }
@@ -161,4 +166,6 @@ class EnumValues<T> {
     reverseMap ??= map!.map((k, v) => MapEntry(v, k));
     return reverseMap;
   }
+
+  
 }
