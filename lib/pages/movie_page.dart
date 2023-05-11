@@ -267,7 +267,7 @@ class _MoviePageState extends State<MoviePage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Card(
-                        shadowColor:Theme.of(context).iconTheme.color,
+                        shadowColor: Theme.of(context).iconTheme.color,
                         elevation: Style.defaultElevation,
                         child: IconButton(
                           onPressed: () => Navigator.pop(context),
@@ -280,11 +280,11 @@ class _MoviePageState extends State<MoviePage> {
                   _allData?.posterPath == null
                       ? Text('resim yok')
                       : CachedNetworkImage(
-                          imageUrl: "https://image.tmdb.org/t/p/w500${_allData?.posterPath.toString()}",
-                          fit: BoxFit.contain,
-                          height: 700.h,
-                        ),
-                  SizedBox(height: Style.defaultPaddingSize *0.75),
+                        imageUrl: "https://image.tmdb.org/t/p/w500${_allData?.posterPath.toString()}",
+                        fit: BoxFit.contain,
+                        height: 700.h,
+                      ),
+                  SizedBox(height: Style.defaultPaddingSize * 0.75),
                   Text(
                     _allData?.title ?? '---',
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -293,7 +293,7 @@ class _MoviePageState extends State<MoviePage> {
                     textAlign: TextAlign.center,
                   ),
                   Padding(
-                    padding: EdgeInsets.all(Style.defaultPaddingSize *0.75),
+                    padding: EdgeInsets.all(Style.defaultPaddingSize * 0.75),
                     child: Text(
                       'Yayın Tarihi : ${toRevolveDate(_allData?.releaseDate.toString() ?? DateTime.now().toString())}',
                     ),
@@ -304,7 +304,7 @@ class _MoviePageState extends State<MoviePage> {
                     style: TextStyle(fontSize: 36.sp),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: Style.defaultPaddingSize / 4),
+                    padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -333,6 +333,25 @@ class _MoviePageState extends State<MoviePage> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Style.blackColor,
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      side: BorderSide(
+                        width: 1,
+                        color: Style.primaryColor,
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2)
+                    ),
+                    onPressed: () {},
+                    child: Center(
+                      child: Text(
+                        'Filmi Gör',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(),
+                      ),
                     ),
                   ),
                 ],
