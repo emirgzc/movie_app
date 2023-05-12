@@ -280,10 +280,10 @@ class _MoviePageState extends State<MoviePage> {
                   _allData?.posterPath == null
                       ? Text('resim yok')
                       : CachedNetworkImage(
-                        imageUrl: "https://image.tmdb.org/t/p/w500${_allData?.posterPath.toString()}",
-                        fit: BoxFit.contain,
-                        height: 700.h,
-                      ),
+                          imageUrl: "https://image.tmdb.org/t/p/w500${_allData?.posterPath.toString()}",
+                          fit: BoxFit.contain,
+                          height: 700.h,
+                        ),
                   SizedBox(height: Style.defaultPaddingSize * 0.75),
                   Text(
                     _allData?.title ?? '---',
@@ -336,17 +336,20 @@ class _MoviePageState extends State<MoviePage> {
                     ),
                   ),
                   ElevatedButton(
-                    
                     style: ElevatedButton.styleFrom(
-                      shadowColor: Style.blackColor,
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                      side: BorderSide(
-                        width: 1,
-                        color: Style.primaryColor,
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2)
-                    ),
-                    onPressed: () {},
+                        shadowColor: Style.blackColor,
+                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                        side: BorderSide(
+                          width: 1,
+                          color: Style.primaryColor,
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2)),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        NavigatorType.movieDetailPage.nameGet,
+                        arguments: _allData?.id,
+                      );
+                    },
                     child: Center(
                       child: Text(
                         'Filmi Gör',
