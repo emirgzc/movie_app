@@ -24,7 +24,7 @@ class MapsPage extends StatefulWidget {
 
 class _MapsPageState extends State<MapsPage> {
   final double _radius = 30000;
-  final double _zoom = 12.5;
+  final double _zoom = 10.5;
   Set<Marker> _markers = <Marker>{};
   LatLng _currentLocation = const LatLng(0.0, 0.0);
   LocationPermission _permission = LocationPermission.denied;
