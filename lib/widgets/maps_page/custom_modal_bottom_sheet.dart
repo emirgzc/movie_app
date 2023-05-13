@@ -116,10 +116,13 @@ class CustomModalBottomSheet extends StatelessWidget {
             FutureBuilder(
               future: ApiClient().getPlaceDetails(placeId),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData &&
+                    snapshot.data != null) {
                   PlaceDetails placeDetails = snapshot.data as PlaceDetails;
                   List<String> placePhotoUrls = [];
-                  if (placeDetails.result != null && placeDetails.result!.photos != null) {
+                  if (placeDetails.result != null &&
+                      placeDetails.result!.photos != null) {
                     for (var element in placeDetails.result!.photos!) {
                       placePhotoUrls.add(
                           "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=800&photo_reference=${element.photoReference}&key=${ApiClient().googleApiKey}");
@@ -190,7 +193,8 @@ class CustomModalBottomSheet extends StatelessWidget {
                       _launchMapsUrl(lat, lng);
                     },
                   ),
-                  _modalBottomSheetButton(Icons.ads_click_outlined, "Adresi Kopyala", () {})
+                  _modalBottomSheetButton(
+                      Icons.ads_click_outlined, "Adresi Kopyala", () {})
                 ],
               ),
             ),
@@ -218,9 +222,13 @@ class CustomModalBottomSheet extends StatelessWidget {
         children: [
           Icon(
             icon,
+            color: Style.whiteColor,
           ),
           Text(
             text,
+            style: TextStyle(
+              color: Style.whiteColor,
+            ),
           ),
         ],
       ),

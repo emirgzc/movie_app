@@ -64,8 +64,22 @@
     "seral_actor": "Serial Actor",
 
     "next_page": "Next Page",
-    "previous_page": "Previous Page"
+    "previous_page": "Previous Page",
 
+    "no_watch_to_description": "There is no watch option for this series.",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "where_to_watch_buy": "Where Can I Buy?",
+    "where_to_watch": "Where Can I Watch?",
+
+    "movie_of_the_day": "Movie of the Day",
+    "see_the_movie": "See the Movie",
+
+    "enable_location_access_to_see_nearby_cinemas": "Enable location access to see nearby cinemas",
+    "enable_location_access": "Enable Location Access",
+    "please_grant_location_permissions": "Please grant location permissions",
+    "allow_location": "Allow Location",
+    "searching_for_locations": "Searching for locations..."
 
     
 

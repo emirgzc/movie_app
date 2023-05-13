@@ -1,12 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/config.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:movie_app/constants/enums.dart';
+import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/nearby_places.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/maps_page/custom_modal_bottom_sheet.dart';
 import 'package:movie_app/widgets/text/desc_text.dart';
 
@@ -32,7 +34,7 @@ class _MapsPageState extends State<MapsPage> {
   }
 
   getCurrentLocation() async {
-    await _determinePosition().then((value) {
+    await _determinePosition().then((value) async {
       _currentLocation = LatLng(
         value.latitude,
         value.longitude,
@@ -41,6 +43,13 @@ class _MapsPageState extends State<MapsPage> {
     }).onError((error, stackTrace) {
       setState(() {});
     });
+
+    /*
+      await Geolocator.checkPermission().then((value) {
+        _permission = value;
+        setState(() {});
+      });
+    */
   }
 
   @override
@@ -50,8 +59,9 @@ class _MapsPageState extends State<MapsPage> {
         stream: Geolocator.getServiceStatusStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            ServiceStatus serviceStatus = snapshot.data as ServiceStatus;
-            if (serviceStatus == ServiceStatus.enabled) {
+            ServiceStatus _serviceStatus = snapshot.data as ServiceStatus;
+
+            if (_serviceStatus == ServiceStatus.enabled) {
               return locationServicesOn();
             } else {
               return locationServicesOff();
@@ -161,33 +171,11 @@ class _MapsPageState extends State<MapsPage> {
           }
         } else {
           return Center(
-            child: DescText(description: "Konumlar Aranıyor..."),
+            child:
+                DescText(description: LocaleKeys.searching_for_locations.tr()),
           );
         }
       },
-    );
-  }
-
-  locationServicesOff() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "Devam Etmek İçin Konum Servislerini Aktifleştirmeniz Gerekmektedir.",
-            textAlign: TextAlign.center,
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await Geolocator.openLocationSettings().then((value) async {
-                _serviceEnabled = await Geolocator.isLocationServiceEnabled();
-              });
-              setState(() {});
-            },
-            child: Text("Konum Servisini Etkinleştir"),
-          ),
-        ],
-      ),
     );
   }
 
@@ -198,14 +186,40 @@ class _MapsPageState extends State<MapsPage> {
         : locationOff();
   }
 
+  locationServicesOff() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            LocaleKeys.enable_location_access_to_see_nearby_cinemas.tr(),
+            textAlign: TextAlign.center,
+          ),
+          _locationElevatedButton(
+            LocaleKeys.enable_location_access.tr(),
+            () async {
+              await Geolocator.openLocationSettings().then((value) async {
+                _serviceEnabled = await Geolocator.isLocationServiceEnabled();
+              });
+              setState(() {});
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   locationOff() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Lütfen Konum İzinlerini Veriniz"),
-          ElevatedButton(
-            onPressed: () async {
+          Text(
+            LocaleKeys.please_grant_location_permissions.tr(),
+          ),
+          _locationElevatedButton(
+            LocaleKeys.allow_location.tr(),
+            () async {
               await _determinePosition().then((value) {
                 _currentLocation = LatLng(
                   value.latitude,
@@ -221,10 +235,19 @@ class _MapsPageState extends State<MapsPage> {
                 }
               });
             },
-            child: Text("Konum İzni Ver"),
-          ),
+          )
         ],
       ),
+    );
+  }
+
+  _locationElevatedButton(String text, Function onPressed) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(backgroundColor: Style.primaryColor),
+      onPressed: () async {
+        onPressed();
+      },
+      child: Text(text),
     );
   }
 

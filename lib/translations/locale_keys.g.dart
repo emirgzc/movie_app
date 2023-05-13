@@ -1,6 +1,6 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
-abstract class LocaleKeys {
+abstract class  LocaleKeys {
   static const movie = 'movie';
   static const tv_series = 'tv_series';
   static const favorites = 'favorites';
@@ -20,16 +20,12 @@ abstract class LocaleKeys {
   static const popular_series = 'popular_series';
   static const serials_on_air = 'serials_on_air';
   static const time_not_specified = 'time_not_specified';
-  static const no_producer_company_information_about_this_series_has_been_entered =
-      'no_producer_company_information_about_this_series_has_been_entered';
+  static const no_producer_company_information_about_this_series_has_been_entered = 'no_producer_company_information_about_this_series_has_been_entered';
   static const no_description_text_entered_with_the_serie = 'no_description_text_entered_with_the_serie';
-  static const no_watch_to_description = 'no_watch_to_description';
   static const screenshots = 'screenshots';
   static const you_may_like = 'you_may_like';
   static const other_movies_in_the_series = 'other_movies_in_the_series';
   static const relase_date = 'relase_date';
-  static const light_mode = 'light_mode';
-  static const dark_mode = 'dark_mode';
   static const country = 'country';
   static const rating = 'rating';
   static const cast_players = 'cast_players';
@@ -39,8 +35,6 @@ abstract class LocaleKeys {
   static const episodes = 'episodes';
   static const read = 'read';
   static const production_companies = 'production_companies';
-  static const where_to_watch = 'where_to_watch';
-  static const where_to_watch_buy = 'where_to_watch_buy';
   static const there_are_x_trailers_total = 'there_are_x_trailers_total';
   static const january = 'january';
   static const february = 'february';
@@ -63,4 +57,17 @@ abstract class LocaleKeys {
   static const seral_actor = 'seral_actor';
   static const next_page = 'next_page';
   static const previous_page = 'previous_page';
+  static const no_watch_to_description = 'no_watch_to_description';
+  static const light_mode = 'light_mode';
+  static const dark_mode = 'dark_mode';
+  static const where_to_watch_buy = 'where_to_watch_buy';
+  static const where_to_watch = 'where_to_watch';
+  static const movie_of_the_day = 'movie_of_the_day';
+  static const see_the_movie = 'see_the_movie';
+  static const enable_location_access_to_see_nearby_cinemas = 'enable_location_access_to_see_nearby_cinemas';
+  static const enable_location_access = 'enable_location_access';
+  static const please_grant_location_permissions = 'please_grant_location_permissions';
+  static const allow_location = 'allow_location';
+  static const searching_for_locations = 'searching_for_locations';
+
 }
