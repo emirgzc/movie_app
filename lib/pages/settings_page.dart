@@ -15,20 +15,21 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMixin {
+class _SettingsPageState extends State<SettingsPage>
+    with TickerProviderStateMixin {
   late final AnimationController _animationController;
   bool _isChange = false;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
   }
 
   @override
   Widget build(BuildContext context) {
     ThemeDataProvider _themeProvider = Provider.of<ThemeDataProvider>(context);
-    debugPrint('** ' + _isChange.toString());
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -46,8 +47,12 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 8),
                 child: SwitchFowSettings(
-                  text: context.locale.languageCode == LanguageCodes.tr.name ? 'Türkçe' : 'English',
-                  value: context.locale.languageCode == LanguageCodes.tr.name ? true : false,
+                  text: context.locale.languageCode == LanguageCodes.tr.name
+                      ? 'Türkçe'
+                      : 'English',
+                  value: context.locale.languageCode == LanguageCodes.tr.name
+                      ? true
+                      : false,
                   onChanged: (value) {
                     context.locale == const Locale("tr")
                         ? context.setLocale(
@@ -63,7 +68,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (_themeProvider.brightness == Brightness.light || _themeProvider.brightness == null)
+                    (_themeProvider.brightness == Brightness.light ||
+                            _themeProvider.brightness == null)
                         ? LocaleKeys.light_mode.tr()
                         : LocaleKeys.dark_mode.tr(),
                     style: context.textThemeContext().titleMedium,
@@ -97,7 +103,11 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
 
 // ignore: must_be_immutable
 class SwitchFowSettings extends StatefulWidget {
-  SwitchFowSettings({super.key, required this.value, required this.onChanged, required this.text});
+  SwitchFowSettings(
+      {super.key,
+      required this.value,
+      required this.onChanged,
+      required this.text});
   final bool value;
   final void Function(bool)? onChanged;
   final String text;

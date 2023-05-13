@@ -2,15 +2,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/nearby_places.dart';
+import 'package:movie_app/theme/theme_data_provider.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/maps_page/custom_modal_bottom_sheet.dart';
 import 'package:movie_app/widgets/text/desc_text.dart';
+import 'package:provider/provider.dart';
 
 class MapsPage extends StatefulWidget {
   const MapsPage({super.key});
@@ -26,10 +29,14 @@ class _MapsPageState extends State<MapsPage> {
   LatLng _currentLocation = const LatLng(0.0, 0.0);
   LocationPermission _permission = LocationPermission.denied;
   bool _serviceEnabled = false;
+  String _mapTheme = "[]";
 
   @override
   void initState() {
     getCurrentLocation();
+    DefaultAssetBundle.of(context)
+        .loadString("assets/map_theme/aubergine_theme.json")
+        .then((value) => _mapTheme = value);
     super.initState();
   }
 
@@ -43,17 +50,16 @@ class _MapsPageState extends State<MapsPage> {
     }).onError((error, stackTrace) {
       setState(() {});
     });
-
-    /*
-      await Geolocator.checkPermission().then((value) {
-        _permission = value;
-        setState(() {});
-      });
-    */
   }
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<ThemeDataProvider>(context).brightness ==
+            Brightness.light ||
+        Provider.of<ThemeDataProvider>(context).brightness == null) {
+      _mapTheme = "[]";
+    }
+
     return Scaffold(
       body: StreamBuilder(
         stream: Geolocator.getServiceStatusStream(),
@@ -128,6 +134,9 @@ class _MapsPageState extends State<MapsPage> {
                   () => new EagerGestureRecognizer(),
                 ),
               ].toSet(),
+              onMapCreated: (controller) {
+                controller.setMapStyle(_mapTheme);
+              },
               mapType: MapType.normal,
               myLocationEnabled: true,
               myLocationButtonEnabled: true,
@@ -149,6 +158,9 @@ class _MapsPageState extends State<MapsPage> {
             );
           } else {
             return GoogleMap(
+              onMapCreated: (controller) {
+                controller.setMapStyle(_mapTheme);
+              },
               padding: EdgeInsets.all(12),
               mapType: MapType.normal,
               myLocationEnabled: true,
