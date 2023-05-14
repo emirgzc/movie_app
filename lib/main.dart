@@ -8,9 +8,9 @@ import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/detail_tv.dart';
 import 'package:movie_app/route_generator.dart';
-import 'package:movie_app/theme/theme_dark.dart';
-import 'package:movie_app/theme/theme_data_provider.dart';
-import 'package:movie_app/theme/theme_light.dart';
+import 'package:movie_app/providers/theme/theme_dark.dart';
+import 'package:movie_app/providers/theme/theme_data_provider.dart';
+import 'package:movie_app/providers/theme/theme_light.dart';
 import 'package:movie_app/translations/codegen_loader.g.dart';
 import 'package:provider/provider.dart';
 

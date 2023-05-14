@@ -1,10 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:movie_app/cache/shared_manager.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/locator.dart';
+import 'package:movie_app/providers/theme/theme_data_provider.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:provider/provider.dart';
 
@@ -15,22 +17,44 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage>
-    with TickerProviderStateMixin {
+class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMixin {
   late final AnimationController _animationController;
+  late SharedAbstract _sharedAbstract;
   bool _isChange = false;
+  bool _isShould = false;
 
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _animationController = AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _sharedAbstract = locator<SharedAbstract>();
+    _initShared();
+  }
+
+  Future<void> _initShared() async {
+    await _sharedAbstract.init();
+    _getDefaultShould();
+  }
+
+  Future<void> _getDefaultShould() async {
+    _onChangedValue(_sharedAbstract.getItem(SharedKeys.shouldWatch) ?? false);
+  }
+
+  void _onChangedValue(bool value) {
+    setState(() {
+      _isShould = value;
+    });
+    _changeShould(value);
+  }
+
+  Future<void> _changeShould(bool value) async {
+    await _sharedAbstract.setItem(SharedKeys.shouldWatch, value);
   }
 
   @override
   Widget build(BuildContext context) {
     ThemeDataProvider _themeProvider = Provider.of<ThemeDataProvider>(context);
-
+    print(_sharedAbstract.getItem(SharedKeys.shouldWatch) ?? false);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -45,14 +69,11 @@ class _SettingsPageState extends State<SettingsPage>
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 8),
-                child: SwitchFowSettings(
-                  text: context.locale.languageCode == LanguageCodes.tr.name
-                      ? 'Türkçe'
-                      : 'English',
-                  value: context.locale.languageCode == LanguageCodes.tr.name
-                      ? true
-                      : false,
+                padding: EdgeInsets.only(top: Style.defaultPaddingSize, bottom: Style.defaultPaddingSize / 2),
+                child: SwitchForSettings(
+                  subTitle: 'Dil değişimi için bu kısımdan ayarlama yapabilirsiniz',
+                  text: context.locale.languageCode == LanguageCodes.tr.name ? 'Türkçe' : 'English',
+                  value: context.locale.languageCode == LanguageCodes.tr.name ? true : false,
                   onChanged: (value) {
                     context.locale == const Locale("tr")
                         ? context.setLocale(
@@ -68,8 +89,7 @@ class _SettingsPageState extends State<SettingsPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (_themeProvider.brightness == Brightness.light ||
-                            _themeProvider.brightness == null)
+                    (_themeProvider.brightness == Brightness.light || _themeProvider.brightness == null)
                         ? LocaleKeys.light_mode.tr()
                         : LocaleKeys.dark_mode.tr(),
                     style: context.textThemeContext().titleMedium,
@@ -93,6 +113,22 @@ class _SettingsPageState extends State<SettingsPage>
                   ),
                 ],
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SwitchForSettings(
+                      subTitle: 'Film önerisi almak için bu kısımdan ayarlama yapabilirsiniz',
+                      text: 'Film Önerisi',
+                      value: _isShould ? true : false,
+                      onChanged: (value) {
+                        _onChangedValue(value);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -102,34 +138,48 @@ class _SettingsPageState extends State<SettingsPage>
 }
 
 // ignore: must_be_immutable
-class SwitchFowSettings extends StatefulWidget {
-  SwitchFowSettings(
-      {super.key,
-      required this.value,
-      required this.onChanged,
-      required this.text});
+class SwitchForSettings extends StatefulWidget {
+  SwitchForSettings({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    required this.text,
+    required this.subTitle,
+  });
   final bool value;
   final void Function(bool)? onChanged;
   final String text;
+  final String subTitle;
 
   @override
-  State<SwitchFowSettings> createState() => _SwitchFowSettingsState();
+  State<SwitchForSettings> createState() => _SwitchForSettingsState();
 }
 
-class _SwitchFowSettingsState extends State<SwitchFowSettings> {
+class _SwitchForSettingsState extends State<SwitchForSettings> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.text,
-          style: context.textThemeContext().titleMedium,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              widget.text,
+              style: context.textThemeContext().titleMedium,
+            ),
+            Switch.adaptive(
+              activeColor: Style.primaryColor,
+              value: widget.value,
+              onChanged: widget.onChanged,
+            ),
+          ],
         ),
-        Switch.adaptive(
-          activeColor: Style.primaryColor,
-          value: widget.value,
-          onChanged: widget.onChanged,
+        Text(
+          widget.subTitle,
+          style: TextStyle(
+            fontSize: 12,
+          ),
         ),
       ],
     );

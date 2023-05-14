@@ -9,7 +9,7 @@ import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/nearby_places.dart';
-import 'package:movie_app/theme/theme_data_provider.dart';
+import 'package:movie_app/providers/theme/theme_data_provider.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/maps_page/custom_modal_bottom_sheet.dart';
 import 'package:movie_app/widgets/text/desc_text.dart';
