@@ -21,22 +21,16 @@ import 'package:movie_app/models/trend_movie.dart';
 
 abstract class IApiClient {
   Future<List<Result>?> trendData(String mediaType, Locale locale);
-  Future<List<Result>?> getMovieData(Locale locale,
-      {int page = 1, String dataWay = 'popular', String type = 'movie'});
-  Future<List<Result>?> similarMoviesData(int movieId, Locale locale,
-      {int page = 1, String type = 'movie'});
+  Future<List<Result>?> getMovieData(Locale locale, {int page = 1, String dataWay = 'popular', String type = 'movie'});
+  Future<List<Result>?> similarMoviesData(int movieId, Locale locale, {int page = 1, String type = 'movie'});
   Future<Images?> getImages(int movieId, {String type = 'movie'});
-  Future<Trailer?> getTrailer(int movieId, Locale locale,
-      {String type = 'movie'});
+  Future<Trailer?> getTrailer(int movieId, Locale locale, {String type = 'movie'});
   Future<DetailMovie?> detailMovieData(int movieId, Locale locale);
-  Future<Comment?> getComment(int movieId, Locale locale,
-      {String type = 'movie'});
+  Future<Comment?> getComment(int movieId, Locale locale, {String type = 'movie'});
   Future<Genres?> genres(Locale locale);
   Future<Collection?> collectionData(int collectionId, Locale locale);
-  Future<Credits?> getCredits(int movieId, Locale locale,
-      {String type = 'movie'});
-  Future<CastPersonsMovies?> castPersonsCombined(int personId, Locale locale,
-      {String personType = 'combined_credits'});
+  Future<Credits?> getCredits(int movieId, Locale locale, {String type = 'movie'});
+  Future<CastPersonsMovies?> castPersonsCombined(int personId, Locale locale, {String personType = 'combined_credits'});
   Future<Search?> search(Locale locale, {String query = "a", int page = 1});
   Future<TvDetail?> detailTvData(int movieId, Locale locale);
   Future<WhereToWatch?> getToWatch(int movieId, {String type = 'movie'});
@@ -51,8 +45,7 @@ class ApiClient implements IApiClient {
 
   Future<List<Result>?> trendData(String mediaType, Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
-    String baseUrl =
-        '$_baseuRL/trending/$mediaType/week?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/trending/$mediaType/week?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -64,8 +57,7 @@ class ApiClient implements IApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
-        mapApiModel.results
-            ?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
         mapApiModel.results?.sort((a, b) {
           return b.releaseDate?.compareTo(a.releaseDate ?? DateTime.now()) ?? 0;
         });
@@ -75,16 +67,13 @@ class ApiClient implements IApiClient {
         throw Exception('trendData apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Trend Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
-  Future<List<Result>?> getMovieData(Locale locale,
-      {int page = 1, String dataWay = 'popular', String type = 'movie'}) async {
-    String _languageKey =
-        locale.languageCode == LanguageCodes.tr.name ? "tr-TR" : "en-US";
-    String baseUrl =
-        '$_baseuRL/$type/$dataWay?api_key=$_apiKey&language=$_languageKey&page=$page';
+  Future<List<Result>?> getMovieData(Locale locale, {int page = 1, String dataWay = 'popular', String type = 'movie'}) async {
+    String _languageKey = locale.languageCode == LanguageCodes.tr.name ? "tr-TR" : "en-US";
+    String baseUrl = '$_baseuRL/$type/$dataWay?api_key=$_apiKey&language=$_languageKey&page=$page';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -96,8 +85,7 @@ class ApiClient implements IApiClient {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
         //debugPrint(responseJson.toString());
         Trend mapApiModel = Trend.fromMap(responseJson);
-        mapApiModel.results
-            ?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
         mapApiModel.results?.sort((a, b) {
           return b.releaseDate?.compareTo(a.releaseDate ?? DateTime.now()) ?? 0;
         });
@@ -107,7 +95,7 @@ class ApiClient implements IApiClient {
         throw Exception('(get movie data) ($dataWay)($type) apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get Movie Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
@@ -119,8 +107,7 @@ class ApiClient implements IApiClient {
   }) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/$type/$movieId/recommendations?api_key=$_apiKey&language=$_languageKey&page=$page';
+    String baseUrl = '$_baseuRL/$type/$movieId/recommendations?api_key=$_apiKey&language=$_languageKey&page=$page';
 
     try {
       final response = await http.get(
@@ -137,23 +124,21 @@ class ApiClient implements IApiClient {
         });
 
         // resmi olmayan filmeleri kaldır
-        mapApiModel.results
-            ?.removeWhere((element) => element.posterPath == null);
+        mapApiModel.results?.removeWhere((element) => element.posterPath == null);
 
         return mapApiModel.results;
       } else {
         throw Exception('similarMoviesData ($type) apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Similar Movies Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
   Future<DetailMovie?> detailMovieData(int movieId, Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/movie/$movieId?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/movie/$movieId?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -170,7 +155,7 @@ class ApiClient implements IApiClient {
         throw Exception('detailMovieData apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Detail Movie Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
@@ -196,7 +181,7 @@ class ApiClient implements IApiClient {
         throw Exception('getImages apide ($type) hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get Images Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
@@ -207,8 +192,7 @@ class ApiClient implements IApiClient {
   }) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/$type/$movieId/videos?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/$type/$movieId/videos?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -226,16 +210,14 @@ class ApiClient implements IApiClient {
         throw Exception('getTrailer ($type) apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get Trailer Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
-  Future<Comment?> getComment(int movieId, Locale locale,
-      {String type = 'movie'}) async {
+  Future<Comment?> getComment(int movieId, Locale locale, {String type = 'movie'}) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/$type/$movieId/reviews?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/$type/$movieId/reviews?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -253,15 +235,14 @@ class ApiClient implements IApiClient {
         throw Exception('getComment ($type) apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get Comment Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
   Future<Genres?> genres(Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/genre/movie/list?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/genre/movie/list?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -279,15 +260,14 @@ class ApiClient implements IApiClient {
         throw Exception('genres apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Genres Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
   Future<Collection?> collectionData(int collectionId, Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/collection/$collectionId?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/collection/$collectionId?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -305,7 +285,7 @@ class ApiClient implements IApiClient {
         throw Exception('collection apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Collection Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
@@ -316,8 +296,7 @@ class ApiClient implements IApiClient {
   }) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/$type/$movieId/credits?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/$type/$movieId/credits?api_key=$_apiKey&language=$_languageKey';
 
     try {
       final response = await http.get(
@@ -341,7 +320,7 @@ class ApiClient implements IApiClient {
         throw Exception('credits ($type) apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get Credits Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
@@ -353,8 +332,7 @@ class ApiClient implements IApiClient {
   }) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/person/$personId/$personType?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/person/$personId/$personType?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -365,11 +343,9 @@ class ApiClient implements IApiClient {
       if (response.statusCode == 200) {
         var responseJson = json.decode(response.body) as Map<String, dynamic>;
 
-        CastPersonsMovies mapApiModel =
-            CastPersonsMovies.fromJson(responseJson);
+        CastPersonsMovies mapApiModel = CastPersonsMovies.fromJson(responseJson);
         if (mapApiModel.cast != null) {
-          mapApiModel.cast
-              ?.removeWhere((element) => element.posterPath == null);
+          mapApiModel.cast?.removeWhere((element) => element.posterPath == null);
           mapApiModel.cast?.sort((a, b) {
             return b.releaseDate?.compareTo(a.releaseDate ?? '05.05.2022') ?? 0;
           });
@@ -380,16 +356,14 @@ class ApiClient implements IApiClient {
         throw Exception('CastPersonsMovies ($personType) apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Cast Person Combined Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
-  Future<Search?> search(Locale locale,
-      {String query = "a", int page = 1}) async {
+  Future<Search?> search(Locale locale, {String query = "a", int page = 1}) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/search/multi?api_key=$_apiKey&language=$_languageKey&query=$query&page=$page&include_adult=false';
+    String baseUrl = '$_baseuRL/search/multi?api_key=$_apiKey&language=$_languageKey&query=$query&page=$page&include_adult=false';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -407,15 +381,14 @@ class ApiClient implements IApiClient {
         throw Exception('search apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Search Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
   Future<TvDetail?> detailTvData(int movieId, Locale locale) async {
     String _languageKey = locale.languageCode == "tr" ? "tr-TR" : "en-US";
 
-    String baseUrl =
-        '$_baseuRL/tv/$movieId?api_key=$_apiKey&language=$_languageKey';
+    String baseUrl = '$_baseuRL/tv/$movieId?api_key=$_apiKey&language=$_languageKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -432,13 +405,12 @@ class ApiClient implements IApiClient {
         throw Exception('detailMovieData apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Detail Tv Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
   Future<WhereToWatch?> getToWatch(int movieId, {String type = 'movie'}) async {
-    String baseUrl =
-        '$_baseuRL/$type/$movieId/watch/providers?api_key=$_apiKey';
+    String baseUrl = '$_baseuRL/$type/$movieId/watch/providers?api_key=$_apiKey';
     try {
       final response = await http.get(
         Uri.parse(baseUrl),
@@ -454,12 +426,11 @@ class ApiClient implements IApiClient {
         throw Exception('getToWatch ($type) apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get To Watch Data').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
-  Future<NearbyPlaces?> getNearbyPlaces(
-      double lat, double lng, double radius) async {
+  Future<NearbyPlaces?> getNearbyPlaces(double lat, double lng, double radius) async {
     var url = Uri.parse(
       "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=cinema&location=$lat,$lng&radius=$radius&key=$googleApiKey",
     );
@@ -474,7 +445,7 @@ class ApiClient implements IApiClient {
         throw Exception('nearbyplaces apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get Nearby Places').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 
@@ -493,7 +464,7 @@ class ApiClient implements IApiClient {
         throw Exception('place details apide hata var');
       }
     } catch (e) {
-      throw ApiExceptions('Get Place Details').toString();
+      throw ApiException.fromMessage(title: 'Hata', message: 'mesaj');
     }
   }
 }

@@ -21,7 +21,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
   late final AnimationController _animationController;
   late SharedAbstract _sharedAbstract;
   bool _isChange = false;
-  bool _isShould = false;
+  bool _isShould = true;
 
   @override
   void initState() {
