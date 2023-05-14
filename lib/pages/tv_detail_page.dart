@@ -25,6 +25,7 @@ import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/tv/opened_text_for_overview.dart';
 import 'package:movie_app/widgets/detail_page/watch_card.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
+import 'package:share_plus/share_plus.dart';
 
 class TVDetailPage extends StatefulWidget {
   const TVDetailPage({super.key, required this.movieId});
@@ -450,20 +451,15 @@ class _TVDetailPageState extends State<TVDetailPage> {
           ),
         ),
         const Spacer(),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (Style.defaultPaddingSizeHorizontal / 4) * 3,
-          ),
+        InkWell(
+          onTap: () async {
+            await Share.share(data.homepage??'https://www.themoviedb.org/');
+          },
           child: SvgPicture.asset(
-            IconPath.plus_square.iconPath(),
+            IconPath.share.iconPath(),
             height: Style.defaullIconHeight * 0.8,
             color: context.iconThemeContext().color,
           ),
-        ),
-        SvgPicture.asset(
-          IconPath.share.iconPath(),
-          height: Style.defaullIconHeight * 0.8,
-          color: context.iconThemeContext().color,
         ),
       ],
     );
