@@ -80,6 +80,8 @@
     "enable_location_access": "Konum Erişimini Etkinleştir",
     "please_grant_location_permissions": "Lütfen konum izinlerini veriniz",
     "allow_location": "Konum İzni Ver",
-    "searching_for_locations": "Konumlar aranıyor..."
-
+    "searching_for_locations": "Konumlar aranıyor...",
+    "should_watch" : "Film önerisi almak için bu kısımdan ayarlama yapabilirsiniz",
+    "change_language":"Dil değişimi için bu kısımdan ayarlama yapabilirsiniz",
+    "movie_recommendation":"Film Önerisi"
 }

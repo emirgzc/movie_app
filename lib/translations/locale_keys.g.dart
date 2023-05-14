@@ -1,6 +1,6 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
-abstract class  LocaleKeys {
+abstract class LocaleKeys {
   static const movie = 'movie';
   static const tv_series = 'tv_series';
   static const favorites = 'favorites';
@@ -20,7 +20,8 @@ abstract class  LocaleKeys {
   static const popular_series = 'popular_series';
   static const serials_on_air = 'serials_on_air';
   static const time_not_specified = 'time_not_specified';
-  static const no_producer_company_information_about_this_series_has_been_entered = 'no_producer_company_information_about_this_series_has_been_entered';
+  static const no_producer_company_information_about_this_series_has_been_entered =
+      'no_producer_company_information_about_this_series_has_been_entered';
   static const no_description_text_entered_with_the_serie = 'no_description_text_entered_with_the_serie';
   static const screenshots = 'screenshots';
   static const you_may_like = 'you_may_like';
@@ -69,5 +70,7 @@ abstract class  LocaleKeys {
   static const please_grant_location_permissions = 'please_grant_location_permissions';
   static const allow_location = 'allow_location';
   static const searching_for_locations = 'searching_for_locations';
-
+  static const should_watch = 'should_watch';
+  static const change_language = 'change_language';
+  static const movie_recommendation = 'movie_recommendation';
 }

@@ -79,12 +79,8 @@
     "enable_location_access": "Enable Location Access",
     "please_grant_location_permissions": "Please grant location permissions",
     "allow_location": "Allow Location",
-    "searching_for_locations": "Searching for locations..."
-
-    
-
-
-    
-
-
+    "searching_for_locations": "Searching for locations...",
+    "should_watch" : "You can adjust this section to get movie suggestions.",
+    "change_language":"You can adjust the language change from this section.",
+    "movie_recommendation":"Movie Recommendation"
 }

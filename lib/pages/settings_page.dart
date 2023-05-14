@@ -71,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
               Padding(
                 padding: EdgeInsets.only(top: Style.defaultPaddingSize, bottom: Style.defaultPaddingSize / 2),
                 child: SwitchForSettings(
-                  subTitle: 'Dil değişimi için bu kısımdan ayarlama yapabilirsiniz',
+                  subTitle: LocaleKeys.change_language.tr(),
                   text: context.locale.languageCode == LanguageCodes.tr.name ? 'Türkçe' : 'English',
                   value: context.locale.languageCode == LanguageCodes.tr.name ? true : false,
                   onChanged: (value) {
@@ -119,8 +119,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SwitchForSettings(
-                      subTitle: 'Film önerisi almak için bu kısımdan ayarlama yapabilirsiniz',
-                      text: 'Film Önerisi',
+                      subTitle: LocaleKeys.should_watch.tr(),
+                      text: LocaleKeys.movie_recommendation.tr(),
                       value: _isShould ? true : false,
                       onChanged: (value) {
                         _onChangedValue(value);
