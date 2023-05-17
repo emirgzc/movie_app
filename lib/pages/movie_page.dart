@@ -18,6 +18,9 @@ import 'package:movie_app/models/genres.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/create_poster_list.dart';
+import 'package:movie_app/widgets/shimmer/shimmers.dart';
+import 'package:movie_app/widgets/shimmer/page_shimmers/movie_page_shimmers.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({super.key});
@@ -76,16 +79,19 @@ class _MoviePageState extends State<MoviePage> {
                 listName: LocaleKeys.popular_movies.tr(),
                 listType: ListType.popular_movies,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale),
+                futureGetDataFunc: ApiClient().getMovieData(
+                    dataWay: MovieApiType.popular.name, context.locale),
               ),
 
               Padding(
-                padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical),
+                padding: EdgeInsets.symmetric(
+                    vertical: Style.defaultPaddingSizeVertical),
                 child: CreatePosterList(
                   listName: LocaleKeys.top_rated_movies.tr(),
                   listType: ListType.top_rated_movies,
                   width: context.getSize().width,
-                  futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale),
+                  futureGetDataFunc: ApiClient().getMovieData(
+                      dataWay: MovieApiType.top_rated.name, context.locale),
                 ),
               ),
 
@@ -93,7 +99,8 @@ class _MoviePageState extends State<MoviePage> {
                 listName: LocaleKeys.upcoming_movies.tr(),
                 listType: ListType.upcoming_movies,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale),
+                futureGetDataFunc: ApiClient().getMovieData(
+                    dataWay: MovieApiType.upcoming.name, context.locale),
               ),
 
               SizedBox(height: 600.h),
@@ -108,7 +115,9 @@ class _MoviePageState extends State<MoviePage> {
     return FutureBuilder(
       future: ApiClient().genres(context.locale),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var genresData = snapshot.data as Genres;
           return SizedBox(
             width: double.infinity,
@@ -130,7 +139,9 @@ class _MoviePageState extends State<MoviePage> {
             ),
           );
         } else {
-          return const SizedBox.shrink();
+          return Shimmers()
+              .moviePageShimmers
+              .categoriesShimmer(height / 13, (height / 12) * 2.4);
         }
       },
     );
@@ -140,7 +151,9 @@ class _MoviePageState extends State<MoviePage> {
     return FutureBuilder(
       future: ApiClient().trendData(MediaTypes.movie.name, context.locale),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var data = snapshot.data as List<Result?>;
           return CarouselSlider.builder(
             itemCount: data.length,
@@ -159,13 +172,14 @@ class _MoviePageState extends State<MoviePage> {
             ),
           );
         } else {
-          return const Text("Yükleniyor...");
+          return Shimmers().moviePageShimmers.topSliderShimmer();
         }
       },
     );
   }
 
-  createCategoriesItem(double categoryItemWidth, String categoryName, int? genreId) {
+  createCategoriesItem(
+      double categoryItemWidth, String categoryName, int? genreId) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
         "/categoryPage",
@@ -203,15 +217,19 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  createTopSliderItem(String? movieName, String? pathImage, List<Result?> data, int index) {
+  createTopSliderItem(
+      String? movieName, String? pathImage, List<Result?> data, int index) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        (data[index]?.title != null) ? NavigatorType.movieDetailPage.nameGet : NavigatorType.tvDetailPage.nameGet,
+        (data[index]?.title != null)
+            ? NavigatorType.movieDetailPage.nameGet
+            : NavigatorType.tvDetailPage.nameGet,
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(
         margin: EdgeInsets.all(Style.defaultPaddingSize / 4),
-        padding: EdgeInsets.fromLTRB(0, Style.defaultPaddingSizeVertical / 2, 0, Style.defaultPaddingSizeVertical),
+        padding: EdgeInsets.fromLTRB(0, Style.defaultPaddingSizeVertical / 2, 0,
+            Style.defaultPaddingSizeVertical),
         child: Material(
           elevation: Style.defaultElevation,
           color: Style.transparentColor,
@@ -235,7 +253,10 @@ class _MoviePageState extends State<MoviePage> {
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Color.fromARGB(200, 0, 0, 0), Color.fromARGB(0, 0, 0, 0)],
+                        colors: [
+                          Color.fromARGB(200, 0, 0, 0),
+                          Color.fromARGB(0, 0, 0, 0)
+                        ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
@@ -302,7 +323,8 @@ class _MoviePageState extends State<MoviePage> {
                   _allData?.posterPath == null
                       ? Text('resim yok')
                       : CachedNetworkImage(
-                          imageUrl: "https://image.tmdb.org/t/p/w500${_allData?.posterPath.toString()}",
+                          imageUrl:
+                              "https://image.tmdb.org/t/p/w500${_allData?.posterPath.toString()}",
                           fit: BoxFit.contain,
                           height: 700.h,
                         ),
@@ -326,7 +348,8 @@ class _MoviePageState extends State<MoviePage> {
                     style: TextStyle(fontSize: 36.sp),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize),
+                    padding: EdgeInsets.symmetric(
+                        vertical: Style.defaultPaddingSize),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -334,7 +357,10 @@ class _MoviePageState extends State<MoviePage> {
                           ignoreGestures: true,
                           itemSize: 36.r,
                           glowColor: Style.starColor,
-                          unratedColor: context.publicThemeContext().shadowColor.withOpacity(0.4),
+                          unratedColor: context
+                              .publicThemeContext()
+                              .shadowColor
+                              .withOpacity(0.4),
                           initialRating: (_allData?.voteAverage ?? 0.0) / 2,
                           minRating: 1,
                           direction: Axis.horizontal,
@@ -347,7 +373,8 @@ class _MoviePageState extends State<MoviePage> {
                           onRatingUpdate: (double value) {},
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: Style.defaultPaddingSize / 4),
+                          padding: EdgeInsets.only(
+                              left: Style.defaultPaddingSize / 4),
                           child: Text(
                             _allData?.voteAverage.toString() ?? '---',
                             textAlign: TextAlign.center,
@@ -360,12 +387,14 @@ class _MoviePageState extends State<MoviePage> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shadowColor: Style.blackColor,
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
                       side: BorderSide(
                         width: 1,
                         color: Style.primaryColor,
                       ),
-                      padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize / 2),
+                      padding: EdgeInsets.symmetric(
+                          vertical: Style.defaultPaddingSize / 2),
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(
@@ -376,7 +405,8 @@ class _MoviePageState extends State<MoviePage> {
                     child: Center(
                       child: Text(
                         LocaleKeys.see_the_movie.tr(),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(),
+                        style:
+                            Theme.of(context).textTheme.titleSmall?.copyWith(),
                       ),
                     ),
                   ),
@@ -392,7 +422,10 @@ class _MoviePageState extends State<MoviePage> {
   Future<void> getTodayWacthShouldData() async {
     //Random rand = Random();
     //int randomInt = rand.nextInt(1);
-    await ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale, page: 1).then((value) {
+    await ApiClient()
+        .getMovieData(
+            dataWay: MovieApiType.popular.name, context.locale, page: 1)
+        .then((value) {
       return datas = value;
     });
     setState(() {});

@@ -1,10 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/models/place_details.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/widgets/shimmer/shimmers.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
 import 'package:movie_app/widgets/text/desc_text.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -108,8 +114,8 @@ class CustomModalBottomSheet extends StatelessWidget {
                 color: Colors.grey.shade400,
               ),
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: 20.w,
             ),
 
             // image slider
@@ -140,8 +146,8 @@ class CustomModalBottomSheet extends StatelessWidget {
                               child: SizedBox(
                                 width: 1000.w,
                                 height: 300.h,
-                                child: Image.network(
-                                  placePhotoUrls[index],
+                                child: CachedNetworkImage(
+                                  imageUrl: placePhotoUrls[index],
                                   fit: BoxFit.fill,
                                   width: 372,
                                   height: 124,
@@ -155,15 +161,21 @@ class CustomModalBottomSheet extends StatelessWidget {
                           ),
                         )
                       : DescText(
-                          description: "Resim Bulunamadı",
+                          description: LocaleKeys.cinema_picture_not_found.tr(),
                           color: Colors.grey.shade400,
                         );
                 } else {
                   return CarouselSlider(
                     items: [
-                      SizedBox(
-                        width: 1000.w,
-                        height: 300.h,
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(Style.defaultRadiusSize / 3),
+                        ),
+                        child: SizedBox(
+                          width: 1000.w,
+                          height: 300.h,
+                          child: Shimmers().customProgressIndicatorBuilder(),
+                        ),
                       ),
                     ],
                     options: CarouselOptions(
@@ -188,13 +200,23 @@ class CustomModalBottomSheet extends StatelessWidget {
                 children: [
                   _modalBottomSheetButton(
                     Icons.rotate_90_degrees_ccw,
-                    "Yol Tarifi",
+                    LocaleKeys.get_directions.tr(),
                     () {
                       _launchMapsUrl(lat, lng);
                     },
                   ),
                   _modalBottomSheetButton(
-                      Icons.ads_click_outlined, "Adresi Kopyala", () {})
+                      Icons.ads_click_outlined, LocaleKeys.copy_address.tr(),
+                      () {
+                    Clipboard.setData(ClipboardData(text: "$vicinity"));
+                    Navigator.of(context).pop();
+                    Uihelper.showSnackBarDialogForInfo(
+                      context: context,
+                      type: UiType.positive,
+                      title: LocaleKeys.address_copied.tr(),
+                      message: "$vicinity",
+                    );
+                  })
                 ],
               ),
             ),
