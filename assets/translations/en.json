@@ -82,5 +82,15 @@
     "searching_for_locations": "Searching for locations...",
     "should_watch" : "You can adjust this section to get movie suggestions.",
     "change_language":"You can adjust the language change from this section.",
-    "movie_recommendation":"Movie Recommendation"
+    "movie_recommendation":"Movie Recommendation",
+
+    "copy_address": "Copy Address",
+    "get_directions": "Get Directions",
+    "cinema_picture_not_found": "Cinema picture not found",
+    "address_copied": "Address copied",
+
+    "movie_added_to_favorites" : "Movie added to favorites",
+    "series_added_to_favorites" : "Series added to favorites"
+
+
 }

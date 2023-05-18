@@ -16,6 +16,7 @@ import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 import 'package:movie_app/widgets/custom_appbar.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
+import 'package:movie_app/widgets/shimmer/shimmers.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -58,7 +59,9 @@ class _CategoryPageState extends State<CategoryPage> {
     return FutureBuilder(
       future: getCategory(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var data = snapshot.data as List<Result>;
           return ListView(
             physics: BouncingScrollPhysics(),
@@ -87,12 +90,7 @@ class _CategoryPageState extends State<CategoryPage> {
             ],
           );
         } else {
-          return buildLastProcessCardEffect(
-            const SizedBox(
-              child: CircularProgressIndicator(),
-            ),
-            context,
-          );
+          return Shimmers().listPageShimmer.listPageShimmer(width, context);
         }
       },
     );
@@ -123,7 +121,9 @@ class _CategoryPageState extends State<CategoryPage> {
       ),
       trailing: [
         Image.asset(
-          Util.isDarkMode(context) ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+          Util.isDarkMode(context)
+              ? LogoPath.png_logo_1_dark.iconPath()
+              : LogoPath.png_logo_1_day.iconPath(),
           width: 300.w,
           fit: BoxFit.contain,
         ),
@@ -207,7 +207,9 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  Visibility indicatorArrow(String title, void Function()? onPressed, IconData icon, {bool isVisible = true}) {
+  Visibility indicatorArrow(
+      String title, void Function()? onPressed, IconData icon,
+      {bool isVisible = true}) {
     return Visibility(
       visible: isVisible,
       child: Padding(

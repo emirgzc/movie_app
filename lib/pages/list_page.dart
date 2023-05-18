@@ -11,12 +11,10 @@ import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/trend_movie.dart';
-import 'package:movie_app/providers/theme/theme_data_provider.dart';
-import 'package:movie_app/providers/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
-import 'package:provider/provider.dart';
+import 'package:movie_app/widgets/shimmer/shimmers.dart';
 
 // ignore: must_be_immutable
 class ListPage extends StatefulWidget {
@@ -69,7 +67,9 @@ class _ListPageState extends State<ListPage> {
         ),
       ),
       title: Image.asset(
-        Util.isDarkMode(context) ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+        Util.isDarkMode(context)
+            ? LogoPath.png_logo_1_dark.iconPath()
+            : LogoPath.png_logo_1_day.iconPath(),
         width: 300.w,
         fit: BoxFit.contain,
       ),
@@ -82,7 +82,9 @@ class _ListPageState extends State<ListPage> {
       // 2 tane future bekliyor, future icinde future de yapilabilir
       future: Future.wait([_listDataFuture]),
       builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null) {
           var data = snapshot.data![0] as List<Result>;
 
           return Padding(
@@ -104,9 +106,10 @@ class _ListPageState extends State<ListPage> {
                             id: data[index].id,
                             posterPath: data[index].posterPath,
                             voteAverageNumber: data[index].voteAverage,
-                            dateCard: data[index].releaseDate.toString() == "null"
-                                ? data[index].firstAirDate.toString()
-                                : data[index].releaseDate.toString(),
+                            dateCard:
+                                data[index].releaseDate.toString() == "null"
+                                    ? data[index].firstAirDate.toString()
+                                    : data[index].releaseDate.toString(),
                             width: width,
                             name: data[index].name,
                           );
@@ -121,7 +124,7 @@ class _ListPageState extends State<ListPage> {
             ),
           );
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return Shimmers().listPageShimmer.listPageShimmer(width, context);
         }
       },
     );
@@ -211,7 +214,8 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  Widget indicatorArrow(String title, void Function()? onPressed, IconData icon, {bool isVisible = true}) {
+  Widget indicatorArrow(String title, void Function()? onPressed, IconData icon,
+      {bool isVisible = true}) {
     return Visibility(
       visible: isVisible,
       child: Padding(
@@ -264,36 +268,48 @@ class _ListPageState extends State<ListPage> {
         );
         break;
       case ListType.upcoming_movies:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
+        _listDataFuture = ApiClient().getMovieData(
+            dataWay: MovieApiType.upcoming.name, context.locale, page: _page);
         break;
       case ListType.popular_movies:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.popular.name, context.locale, page: _page);
+        _listDataFuture = ApiClient().getMovieData(
+            dataWay: MovieApiType.popular.name, context.locale, page: _page);
         break;
       case ListType.movies_in_cinemas:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.now_playing.name, context.locale, page: _page);
+        _listDataFuture = ApiClient().getMovieData(
+            dataWay: MovieApiType.now_playing.name,
+            context.locale,
+            page: _page);
         break;
       case ListType.trend_movies:
         _listDataFuture = ApiClient().trendData("movie", context.locale);
         break;
       case ListType.top_rated_series:
-        _listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.top_rated.name, type: MediaTypes.tv.name);
+        _listDataFuture = ApiClient().getMovieData(context.locale,
+            page: _page,
+            dataWay: MovieApiType.top_rated.name,
+            type: MediaTypes.tv.name);
         break;
       case ListType.popular_series:
-        _listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.popular.name, type: MediaTypes.tv.name);
+        _listDataFuture = ApiClient().getMovieData(context.locale,
+            page: _page,
+            dataWay: MovieApiType.popular.name,
+            type: MediaTypes.tv.name);
 
         break;
       case ListType.series_on_air:
-        _listDataFuture =
-            ApiClient().getMovieData(context.locale, page: _page, dataWay: MovieApiType.on_the_air.name, type: MediaTypes.tv.name);
+        _listDataFuture = ApiClient().getMovieData(context.locale,
+            page: _page,
+            dataWay: MovieApiType.on_the_air.name,
+            type: MediaTypes.tv.name);
         break;
       case ListType.trending_series_of_the_week:
         _listDataFuture = ApiClient().trendData("tv", context.locale);
         break;
 
       default:
-        _listDataFuture = ApiClient().getMovieData(dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
+        _listDataFuture = ApiClient().getMovieData(
+            dataWay: MovieApiType.top_rated.name, context.locale, page: _page);
     }
   }
 }
