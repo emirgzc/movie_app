@@ -4,6 +4,11 @@ enum MediaTypes {
   person,
 }
 
+enum HiveEnums{
+  movies,
+  tv,
+}
+
 enum NavigatorType {
   movieDetailPage,
   tvDetailPage,

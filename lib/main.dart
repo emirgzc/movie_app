@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/detail_tv.dart';
@@ -12,14 +13,15 @@ import 'package:movie_app/providers/theme/theme_dark.dart';
 import 'package:movie_app/providers/theme/theme_data_provider.dart';
 import 'package:movie_app/providers/theme/theme_light.dart';
 import 'package:movie_app/translations/codegen_loader.g.dart';
+import 'package:movie_app/viewmodels/movie_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 Future<void> setupHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(DetailMovieAdapter());
-  await Hive.openBox<DetailMovie>('movies');
+  await Hive.openBox<DetailMovie>(HiveEnums.movies.name);
   Hive.registerAdapter(TvDetailAdapter());
-  await Hive.openBox<TvDetail>('tv');
+  await Hive.openBox<TvDetail>(HiveEnums.tv.name);
 }
 
 void main() async {
@@ -71,20 +73,23 @@ class _MyAppState extends State<MyApp> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          debugShowCheckedModeBanner: false,
-          title: 'Movie Go',
-          theme: LightTheme().lightTheme,
-          darkTheme: DarkTheme().darkTheme,
-          themeMode: _provider.brightness == null
-              ? ThemeMode.system
-              : _provider.brightness == Brightness.light
-                  ? ThemeMode.light
-                  : ThemeMode.dark,
-          onGenerateRoute: RouteGenerator.routeGenrator,
+        return ChangeNotifierProvider<MovieViewModel>(
+          create: (context) => MovieViewModel(),
+          child: MaterialApp(
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            debugShowCheckedModeBanner: false,
+            title: 'Movie Go',
+            theme: LightTheme().lightTheme,
+            darkTheme: DarkTheme().darkTheme,
+            themeMode: _provider.brightness == null
+                ? ThemeMode.system
+                : _provider.brightness == Brightness.light
+                    ? ThemeMode.light
+                    : ThemeMode.dark,
+            onGenerateRoute: RouteGenerator.routeGenrator,
+          ),
         );
       },
     );

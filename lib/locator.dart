@@ -3,13 +3,19 @@ import 'package:movie_app/cache/hive/hive_abstract.dart';
 import 'package:movie_app/cache/hive/hive_movie_manager.dart';
 import 'package:movie_app/cache/hive/hive_tv_manager.dart';
 import 'package:movie_app/cache/shared_manager.dart';
+import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/detail_tv.dart';
+import 'package:movie_app/repository/movie_repository.dart';
+import 'package:movie_app/viewmodels/movie_viewmodel.dart';
 
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
+  locator.registerSingleton<ApiClient>(ApiClient());
   locator.registerSingleton<HiveAbstract<DetailMovie>>(HiveMovieManager());
   locator.registerSingleton<HiveAbstract<TvDetail>>(HiveTvManager());
   locator.registerSingleton<SharedAbstract>(SharedManager());
+  locator.registerSingleton<MovieRepository>(MovieRepository.instance);
+  locator.registerFactory(() => MovieViewModel());
 }

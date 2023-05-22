@@ -5,15 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/models/search.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/viewmodels/movie_viewmodel.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/person/person_detail_dialog.dart';
+import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -25,6 +27,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   late TextEditingController _textEditingController;
   late TextEditingController _textEditingControllerForPage;
+  MovieViewModel? _movieViewModel;
 
   int _page = 1;
   late final ScrollController _scrollController;
@@ -51,6 +54,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    _movieViewModel ??= Provider.of<MovieViewModel>(context, listen: false);
     return Scaffold(
       appBar: getAppBar(),
       body: Padding(
@@ -59,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FutureBuilder(
-              future: ApiClient().search(context.locale, query: _searchValue.isNotEmpty ? _searchValue : "", page: _page),
+              future: _movieViewModel!.search(context.locale, query: _searchValue.isNotEmpty ? _searchValue : "", page: _page),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   var data = snapshot.data as Search;
@@ -74,16 +78,21 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   );
                 } else {
-                  return const Center(
-                    child: LinearProgressIndicator(
-                      color: Colors.grey,
-                      backgroundColor: Style.primaryColor,
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize * 2),
+                      child: Lottie.asset('assets/lottie/loading3.json', height: 250.h),
                     ),
                   );
                 }
               },
             ),
-            _textEditingController.text.isEmpty ? const SizedBox.shrink() : pageIndicator(),
+            _textEditingController.text.isEmpty
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: EdgeInsets.only(bottom: Style.defaultPaddingSize * 2),
+                    child: pageIndicator(),
+                  ),
           ],
         ),
       ),
@@ -297,7 +306,7 @@ class _SearchPageState extends State<SearchPage> {
         } else if (data.results?[index].posterPath == null) {
         } else {
           Navigator.of(context).pushNamed(
-            mediaType == MediaTypes.movie.name ? NavigatorType.movieDetailPage.nameGet: NavigatorType.tvDetailPage.nameGet,
+            mediaType == MediaTypes.movie.name ? NavigatorType.movieDetailPage.nameGet : NavigatorType.tvDetailPage.nameGet,
             arguments: data.results?[index].id,
           );
         }

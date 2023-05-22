@@ -1,13 +1,13 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:movie_app/cache/hive/hive_abstract.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/models/detail_movie.dart';
 
 class HiveMovieManager extends HiveAbstract<DetailMovie> {
   late Box<DetailMovie> _movieBox;
 
   HiveMovieManager() {
-    _movieBox = Hive.box<DetailMovie>('movies');
-    //_movieBox.clear();
+    _movieBox = Hive.box<DetailMovie>(HiveEnums.movies.name);
   }
 
   @override
@@ -22,7 +22,7 @@ class HiveMovieManager extends HiveAbstract<DetailMovie> {
   }
 
   @override
-  Future<List<DetailMovie>> getAll() async {
+  List<DetailMovie> getAll()  {
     List<DetailMovie> _allMovie = <DetailMovie>[];
     _allMovie = _movieBox.values.toList();
     if (_allMovie.isNotEmpty) {

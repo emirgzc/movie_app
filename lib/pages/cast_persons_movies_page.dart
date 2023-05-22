@@ -8,13 +8,15 @@ import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/models/cast_persons_movies.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/viewmodels/movie_viewmodel.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 import 'package:movie_app/widgets/custom_appbar.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class CastPersonsMoviesPage extends StatelessWidget {
+class CastPersonsMoviesPage extends StatefulWidget {
   CastPersonsMoviesPage({
     super.key,
     required this.personId,
@@ -24,7 +26,14 @@ class CastPersonsMoviesPage extends StatelessWidget {
   final String personName;
 
   @override
+  State<CastPersonsMoviesPage> createState() => _CastPersonsMoviesPageState();
+}
+
+class _CastPersonsMoviesPageState extends State<CastPersonsMoviesPage> {
+  MovieViewModel? _movieViewModel;
+  @override
   Widget build(BuildContext context) {
+    _movieViewModel ??= Provider.of<MovieViewModel>(context, listen: false);
     return Scaffold(
       appBar: _getAppBar(context),
       body: Padding(
@@ -37,7 +46,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
   //appbar
   PreferredSizeWidget _getAppBar(BuildContext context) {
     return CustomAppBar(
-      title: BigText(title: "${LocaleKeys.actor.tr()}: $personName"),
+      title: BigText(title: "${LocaleKeys.actor.tr()}: ${widget.personName}"),
       leading: IconButton(
         padding: EdgeInsets.zero,
         onPressed: () {
@@ -87,7 +96,7 @@ class CastPersonsMoviesPage extends StatelessWidget {
 
   //apiden istek atılması
   Future<CastPersonsMovies?> getCastPerson(BuildContext context) async {
-    return await ApiClient().castPersonsCombined(personId, context.locale);
+    return await _movieViewModel!.castPersonsCombined(widget.personId, context.locale);
   }
 
   //filmleri listeleme

@@ -6,7 +6,9 @@ import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/viewmodels/movie_viewmodel.dart';
 import 'package:movie_app/widgets/create_poster_list.dart';
+import 'package:provider/provider.dart';
 
 class TVPage extends StatefulWidget {
   const TVPage({super.key});
@@ -16,8 +18,10 @@ class TVPage extends StatefulWidget {
 }
 
 class _TVPageState extends State<TVPage> {
+  MovieViewModel? _movieViewModel;
   @override
   Widget build(BuildContext context) {
+    _movieViewModel = Provider.of<MovieViewModel>(context,listen: false);
     return Scaffold(
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -29,13 +33,13 @@ class _TVPageState extends State<TVPage> {
                 listName: LocaleKeys.trending_series_of_the_week.tr(),
                 listType: ListType.trending_series_of_the_week,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().trendData("tv", context.locale),
+                futureGetDataFunc: _movieViewModel!.trendData("tv", context.locale),
               ),
               CreatePosterList(
                 listName: LocaleKeys.top_rated_series.tr(),
                 listType: ListType.top_rated_series,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().getMovieData(
+                futureGetDataFunc: _movieViewModel!.getMovieData(
                   context.locale,
                   dataWay: MovieApiType.top_rated.name,
                   type: MediaTypes.tv.name,
@@ -45,7 +49,7 @@ class _TVPageState extends State<TVPage> {
                 listName: LocaleKeys.popular_series.tr(),
                 listType: ListType.popular_series,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().getMovieData(
+                futureGetDataFunc: _movieViewModel!.getMovieData(
                   context.locale,
                   dataWay: MovieApiType.popular.name,
                   type: MediaTypes.tv.name,
@@ -55,7 +59,7 @@ class _TVPageState extends State<TVPage> {
                 listName: LocaleKeys.serials_on_air.tr(),
                 listType: ListType.series_on_air,
                 width: context.getSize().width,
-                futureGetDataFunc: ApiClient().getMovieData(
+                futureGetDataFunc: _movieViewModel!.getMovieData(
                   context.locale,
                   dataWay: MovieApiType.on_the_air.name,
                   type: MediaTypes.tv.name,

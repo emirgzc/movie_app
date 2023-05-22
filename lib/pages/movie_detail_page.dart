@@ -12,7 +12,6 @@ import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/collection.dart';
@@ -24,6 +23,7 @@ import 'package:movie_app/models/to_watch.dart';
 import 'package:movie_app/models/trailer.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
+import 'package:movie_app/viewmodels/movie_viewmodel.dart';
 import 'package:movie_app/widgets/card/brochure_item.dart';
 import 'package:movie_app/widgets/detail_page/blurry_image.dart';
 import 'package:movie_app/widgets/detail_page/movie/button_for_detail_movie.dart';
@@ -33,6 +33,7 @@ import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/shimmer/shimmers.dart';
 import 'package:movie_app/widgets/text/big_text.dart';
 import 'package:movie_app/widgets/text/desc_text.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MovieDetailPage extends StatefulWidget {
@@ -46,7 +47,7 @@ class MovieDetailPage extends StatefulWidget {
 class _MovieDetailPageState extends State<MovieDetailPage> {
   late PageController _pageController;
   late HiveAbstract<DetailMovie> _hiveAbstract;
-  final IApiClient _apiClient = ApiClient();
+  MovieViewModel? _movieViewModel;
   Future<DetailMovie?>? _detailFuture;
   Future<Images?>? _imagesFuture;
   Future<WhereToWatch?>? _watchBuyFuture;
@@ -71,35 +72,19 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     super.dispose();
   }
 
-  _getFutures() {
-    _detailFuture =
-        _apiClient.detailMovieData(widget.movieId ?? 0, context.locale);
-    _imagesFuture = _apiClient.getImages(widget.movieId ?? 0);
-    _watchBuyFuture =
-        _apiClient.getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name);
-    _watchFuture =
-        _apiClient.getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name);
-    _onerilerFuture =
-        _apiClient.similarMoviesData(widget.movieId ?? 0, context.locale);
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
+    _movieViewModel ??= Provider.of<MovieViewModel>(context, listen: false);
     return Scaffold(
-      body:
-          bodyList(context, context.getSize().width, context.getSize().height),
+      body: bodyList(context, context.getSize().width, context.getSize().height),
     );
   }
 
-  FutureBuilder<DetailMovie?> bodyList(
-      BuildContext context, double width, double height) {
+  FutureBuilder<DetailMovie?> bodyList(BuildContext context, double width, double height) {
     return FutureBuilder(
       future: _detailFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as DetailMovie;
           return Stack(
             children: [
@@ -154,11 +139,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             ),
 
                             // butonlar
-                            buttons(
-                                width,
-                                height,
-                                (data.homepage ??
-                                    'https://www.themoviedb.org/')),
+                            buttons(width, height, (data.homepage ?? 'https://www.themoviedb.org/')),
 
                             // ekran goruntuleri text
                             Padding(
@@ -206,8 +187,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               child: Row(
                                 children: [
                                   BigText(
-                                    title: LocaleKeys.other_movies_in_the_series
-                                        .tr(),
+                                    title: LocaleKeys.other_movies_in_the_series.tr(),
                                     color: Style.whiteColor,
                                   ),
                                 ],
@@ -267,12 +247,19 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ],
           );
         } else {
-          return Shimmers()
-              .movieDetailPageShimmer
-              .movieDetailPageShimmer(height, width);
+          return Shimmers().movieDetailPageShimmer.movieDetailPageShimmer(height, width);
         }
       },
     );
+  }
+
+  _getFutures() {
+    _detailFuture = _movieViewModel!.detailMovieData(widget.movieId ?? 0, context.locale);
+    _imagesFuture = _movieViewModel!.getImages(widget.movieId ?? 0);
+    _watchBuyFuture = _movieViewModel!.getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name);
+    _watchFuture = _movieViewModel!.getToWatch(widget.movieId ?? 0, type: MediaTypes.movie.name);
+    _onerilerFuture = _movieViewModel!.similarMoviesData(widget.movieId ?? 0, context.locale);
+    setState(() {});
   }
 
   Widget serininDigerFilmleri(
@@ -280,11 +267,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     int collectionId,
   ) {
     return FutureBuilder<Collection?>(
-      future: ApiClient().collectionData(collectionId, context.locale),
+      future: _movieViewModel!.collectionData(collectionId, context.locale),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           Collection collectionData = snapshot.data as Collection;
 
           return Padding(
@@ -309,18 +294,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               NavigatorType.movieDetailPage.nameGet,
                               arguments: (collectionData.parts?[index].id),
                             ),
-                            child: (collectionData.parts?[index].posterPath ==
-                                    null)
+                            child: (collectionData.parts?[index].posterPath == null)
                                 ? Container(
                                     width: 360.w,
-                                    margin: EdgeInsets.only(
-                                        right:
-                                            Style.defaultPaddingSizeHorizontal),
+                                    margin: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal),
                                     child: Placeholder(),
                                   )
                                 : BrochureItem(
-                                    brochureUrl:
-                                        "https://image.tmdb.org/t/p/w500${collectionData.parts?[index].posterPath}",
+                                    brochureUrl: "https://image.tmdb.org/t/p/w500${collectionData.parts?[index].posterPath}",
                                     width: width,
                                   ),
                           );
@@ -345,9 +326,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return FutureBuilder(
       future: _onerilerFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var similarMoviesData = snapshot.data as List<Result?>;
           return Padding(
             padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 2),
@@ -369,8 +348,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             arguments: (similarMoviesData[index]?.id ?? 0),
                           ),
                           child: BrochureItem(
-                            brochureUrl:
-                                "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
+                            brochureUrl: "https://image.tmdb.org/t/p/w500${similarMoviesData[index]?.posterPath ?? ""}",
                             width: width,
                           ),
                         );
@@ -394,9 +372,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return FutureBuilder(
       future: _watchFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var watchResult = snapshot.data as WhereToWatch;
           late List<Flatrate> result;
           if (context.locale.languageCode == LanguageCodes.tr.name) {
@@ -421,9 +397,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return FutureBuilder(
       future: _watchBuyFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var watchResult = snapshot.data as WhereToWatch;
           late List<Flatrate> result;
           if (context.locale.languageCode == LanguageCodes.tr.name) {
@@ -448,9 +422,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return FutureBuilder(
       future: _imagesFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
           var data = snapshot.data as Images;
 
           return Padding(
@@ -527,17 +499,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           children: [
             // oynat butonu
             FutureBuilder(
-              future:
-                  ApiClient().getTrailer(widget.movieId ?? 0, context.locale),
+              future: _movieViewModel!.getTrailer(widget.movieId ?? 0, context.locale),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData &&
-                    snapshot.data != null) {
+                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                   var data = snapshot.data as Trailer;
                   return ButtonForDetailMovie(
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed("/trailerPage", arguments: [
+                      Navigator.of(context).pushNamed("/trailerPage", arguments: [
                         widget.movieId,
                         [data.results],
                       ]);
@@ -558,9 +526,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ),
             ButtonForDetailMovie(
               onPressed: () {
-                _pageController.animateToPage(0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut);
+                _pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
               icondata: IconPath.file.iconPath(),
               width: width,
@@ -568,9 +534,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ),
             ButtonForDetailMovie(
               onPressed: () {
-                _pageController.animateToPage(1,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut);
+                _pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
               icondata: IconPath.info.iconPath(),
               width: width,
@@ -578,9 +542,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ),
             ButtonForDetailMovie(
               onPressed: () {
-                _pageController.animateToPage(2,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut);
+                _pageController.animateToPage(2, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
               icondata: IconPath.users.iconPath(),
               width: width,
@@ -588,9 +550,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ),
             ButtonForDetailMovie(
               onPressed: () {
-                _pageController.animateToPage(3,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut);
+                _pageController.animateToPage(3, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
               },
               icondata: IconPath.comment.iconPath(),
               width: width,
@@ -620,8 +580,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // geri
-          appBarButton(context, () => Navigator.pop(context),
-              IconPath.arrow_left.iconPath(), Style.whiteColor),
+          appBarButton(context, () => Navigator.pop(context), IconPath.arrow_left.iconPath(), Style.whiteColor),
 
           //logo
           Image.asset(
@@ -664,8 +623,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               IconPath.favorite.iconPath(),
               Style.primaryColor,
             ),
-            crossFadeState:
-                isFavori ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            crossFadeState: isFavori ? CrossFadeState.showFirst : CrossFadeState.showSecond,
             duration: Duration(seconds: 1),
           ),
         ],
@@ -673,8 +631,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 
-  Widget appBarButton(
-      BuildContext context, void Function()? onTap, String icon, Color color) {
+  Widget appBarButton(BuildContext context, void Function()? onTap, String icon, Color color) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -720,15 +677,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       color: Style.whiteColor,
                     ),
                     FutureBuilder(
-                      future: ApiClient().getComment(movieId, context.locale),
+                      future: _movieViewModel!.getComment(movieId, context.locale),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            snapshot.data != null) {
+                        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                           var creditsData = snapshot.data as Comment;
                           return ListView.builder(
-                            padding: EdgeInsets.symmetric(
-                                vertical: Style.defaultPaddingSizeVertical / 2),
+                            padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 2),
                             physics: const BouncingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: creditsData.results?.length,
@@ -766,14 +720,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding:
-                EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
+            padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(
-                      top: Style.defaultPaddingSizeVertical / 4),
+                  padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -785,8 +737,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       ),
                       Text(
                         toRevolveDate(
-                          creditsData.results?[index].createdAt.toString() ??
-                              DateTime.now().toString(),
+                          creditsData.results?[index].createdAt.toString() ?? DateTime.now().toString(),
                         ),
                         style: context.textThemeContext().labelSmall!.copyWith(
                               color: Style.whiteColor,
@@ -798,8 +749,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 ),
                 Row(
                   children: [
-                    (creditsData.results?[index].authorDetails?.avatarPath ==
-                            null)
+                    (creditsData.results?[index].authorDetails?.avatarPath == null)
                         ? SvgPicture.asset(
                             IconPath.comment_card.iconPath(),
                             height: Style.defaullIconHeight * 0.7,
@@ -807,17 +757,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             color: Style.whiteColor,
                           )
                         : CachedNetworkImage(
-                            imageUrl:
-                                "https://www.gravatar.com/avatar/${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
+                            imageUrl: "https://www.gravatar.com/avatar/${creditsData.results?[index].authorDetails?.avatarPath ?? ""}",
                             fit: BoxFit.cover,
                             width: 120.w,
                             height: 120.h,
                           ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(
-                            top: Style.defaultPaddingSizeVertical / 4,
-                            left: Style.defaultPaddingSizeHorizontal / 2.5),
+                        padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4, left: Style.defaultPaddingSizeHorizontal / 2.5),
                         child: Text(
                           "${creditsData.results?[index].content ?? "-"} (${creditsData.results?[index].authorDetails?.rating ?? 0})",
                           style: TextStyle(
@@ -863,26 +810,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       color: Style.whiteColor,
                     ),
                     FutureBuilder(
-                      future: ApiClient().getCredits(movieId, context.locale),
+                      future: _movieViewModel!.getCredits(movieId, context.locale),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            snapshot.data != null) {
+                        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                           var creditsData = snapshot.data as Credits;
                           return MasonryGrid(
-                            padding: EdgeInsets.symmetric(
-                                vertical: Style.defaultPaddingSizeVertical / 2),
+                            padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 2),
                             crossAxisCount: 3,
                             length: creditsData.cast.length,
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                      "/castPersonsMoviesPage",
-                                      arguments: [
-                                        creditsData.cast[index].id,
-                                        creditsData.cast[index].name,
-                                      ]);
+                                  Navigator.of(context).pushNamed("/castPersonsMoviesPage", arguments: [
+                                    creditsData.cast[index].id,
+                                    creditsData.cast[index].name,
+                                  ]);
                                 },
                                 child: playersCard(creditsData, index),
                               );
@@ -919,26 +861,20 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         children: [
           CachedNetworkImage(
             height: 220.h,
-            imageUrl:
-                "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
+            imageUrl: "https://image.tmdb.org/t/p/w500${creditsData.cast[index].profilePath}",
             fit: BoxFit.cover,
           ),
           Padding(
-            padding:
-                EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
+            padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(
-                      top: Style.defaultPaddingSizeVertical / 4),
+                  padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
                   child: Text(
                     creditsData.cast[index].originalName,
                     textAlign: TextAlign.center,
-                    style: context
-                        .textThemeContext()
-                        .bodySmall!
-                        .copyWith(color: Style.whiteColor, fontSize: 30.sp),
+                    style: context.textThemeContext().bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
                   ),
                 ),
                 Padding(
@@ -948,10 +884,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   child: Text(
                     "(${creditsData.cast[index].character})",
                     textAlign: TextAlign.center,
-                    style: context
-                        .textThemeContext()
-                        .bodySmall!
-                        .copyWith(color: Style.whiteColor, fontSize: 30.sp),
+                    style: context.textThemeContext().bodySmall!.copyWith(color: Style.whiteColor, fontSize: 30.sp),
                   ),
                 ),
               ],
@@ -968,8 +901,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         top: Style.defaultPaddingSizeVertical / 1.25,
       ),
       child: ClipRRect(
-        borderRadius:
-            BorderRadius.all(Radius.circular(Style.defaultRadiusSize / 2)),
+        borderRadius: BorderRadius.all(Radius.circular(Style.defaultRadiusSize / 2)),
         child: Container(
           color: Style.widgetBackgroundColor,
           child: Padding(
@@ -988,8 +920,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 ),
                 DescText(
                   description: data.overview.toString().isEmpty
-                      ? LocaleKeys.no_description_text_entered_with_the_movie
-                          .tr()
+                      ? LocaleKeys.no_description_text_entered_with_the_movie.tr()
                       : data.overview.toString(),
                   color: Style.whiteColor.withOpacity(0.8),
                 ),
@@ -1007,8 +938,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         top: Style.defaultPaddingSizeVertical / 1.25,
       ),
       child: ClipRRect(
-        borderRadius:
-            BorderRadius.all(Radius.circular(Style.defaultRadiusSize / 2)),
+        borderRadius: BorderRadius.all(Radius.circular(Style.defaultRadiusSize / 2)),
         child: Container(
           color: Style.widgetBackgroundColor,
           child: Padding(
@@ -1020,8 +950,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 children: [
                   // categories
                   Container(
-                    margin: EdgeInsets.only(
-                        bottom: Style.defaultPaddingSizeVertical / 2),
+                    margin: EdgeInsets.only(bottom: Style.defaultPaddingSizeVertical / 2),
                     height: width / 20,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -1035,16 +964,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: EdgeInsets.only(
-                                    right:
-                                        Style.defaultPaddingSizeHorizontal / 4),
+                                padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 4),
                                 child: Text(
                                   "${data?.genres?[index].name.toString() ?? "---"},",
                                   textAlign: TextAlign.center,
-                                  style: context
-                                      .textThemeContext()
-                                      .bodySmall!
-                                      .copyWith(
+                                  style: context.textThemeContext().bodySmall!.copyWith(
                                         color: Style.whiteColor,
                                       ),
                                 ),
@@ -1068,8 +992,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             data,
                             "${LocaleKeys.relase_date.tr()} : ",
                             toRevolveDate(
-                              (data?.releaseDate.toString().split(" ")[0] ??
-                                  DateTime.now().toString()),
+                              (data?.releaseDate.toString().split(" ")[0] ?? DateTime.now().toString()),
                             ),
                           ),
                           movieDetailItem(
@@ -1077,8 +1000,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             "${LocaleKeys.country.tr()} : ",
                             (data?.productionCountries?.isEmpty ?? false)
                                 ? "Belirtilmemiş"
-                                : (data?.productionCountries?[0].name ?? "-")
-                                    .toString(),
+                                : (data?.productionCountries?[0].name ?? "-").toString(),
                           ),
 
                           movieDetailItem(
@@ -1086,9 +1008,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             "${LocaleKeys.rating.tr()} : ",
                             (data?.voteAverage.toString().isEmpty ?? false)
                                 ? "Belirtilmemiş"
-                                : ((data?.voteAverage))
-                                    .toString()
-                                    .substring(0, 3),
+                                : ((data?.voteAverage)).toString().substring(0, 3),
                           ),
                         ],
                       ),
@@ -1163,9 +1083,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ),
             child: CarouselSlider(
               items: data.backdrops
-                  ?.map((backdrop) => screenshotItem(
-                      "https://image.tmdb.org/t/p/w500${backdrop.filePath.toString()}",
-                      width))
+                  ?.map((backdrop) => screenshotItem("https://image.tmdb.org/t/p/w500${backdrop.filePath.toString()}", width))
                   .toList(),
               options: CarouselOptions(
                 initialPage: clickedIndex,

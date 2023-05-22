@@ -1,13 +1,13 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:movie_app/cache/hive/hive_abstract.dart';
+import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/models/detail_tv.dart';
 
 class HiveTvManager extends HiveAbstract<TvDetail> {
   late Box<TvDetail> _tvBox;
 
   HiveTvManager() {
-    _tvBox = Hive.box<TvDetail>('tv');
-    //_tvBox.clear();
+    _tvBox = Hive.box<TvDetail>(HiveEnums.tv.name);
   }
 
   @override
@@ -22,7 +22,7 @@ class HiveTvManager extends HiveAbstract<TvDetail> {
   }
 
   @override
-  Future<List<TvDetail>> getAll() async {
+  List<TvDetail> getAll()  {
     List<TvDetail> _allTv = <TvDetail>[];
     _allTv = _tvBox.values.toList();
     if (_allTv.isNotEmpty) {
