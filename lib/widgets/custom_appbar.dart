@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({
     Key? key,
     required this.title,
@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final Widget title;
   final Widget? leading;
   final List<Widget>? trailing;
-  bool isCenter;
+  final bool isCenter;
 
   @override
   Widget build(BuildContext context) {
