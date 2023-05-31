@@ -1,17 +1,12 @@
-
-
-
-
 part of './../pages/home_page.dart';
 
 //sadece özelleştirilmiş home page için kullanılabilir part of app bar
 
-class PartOfHomePageAppBar extends StatelessWidget with PreferredSizeWidget {
+class PartOfHomePageAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PartOfHomePageAppBar({super.key, required this.drawerController});
   final ZoomDrawerController drawerController;
   @override
   Widget build(BuildContext context) {
-
     return CustomAppBar(
       leading: appBarButton(
         () {
