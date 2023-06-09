@@ -45,7 +45,9 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   late PageController _pageController;
+
   late HiveAbstract<DetailMovie> _hiveAbstract;
+
   final IApiClient _apiClient = ApiClient();
   Future<DetailMovie?>? _detailFuture;
   Future<Images?>? _imagesFuture;
@@ -60,7 +62,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _getFutures();
     });
+
     _hiveAbstract = locator<HiveAbstract<DetailMovie>>();
+
     isFavori = _hiveAbstract.get(id: widget.movieId ?? 0) != null;
     super.initState();
   }

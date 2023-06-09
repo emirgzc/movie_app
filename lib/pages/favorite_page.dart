@@ -17,8 +17,10 @@ class FavoritePage extends StatefulWidget {
   State<FavoritePage> createState() => _FavoritePageState();
 }
 
-class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMixin {
+class _FavoritePageState extends State<FavoritePage>
+    with TickerProviderStateMixin {
   late TabController _tabController;
+
   late HiveAbstract<DetailMovie> _hiveMovie;
   late HiveAbstract<TvDetail> _hiveTv;
   late List<DetailMovie> _allMovie;
@@ -114,15 +116,20 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
                               child: _deleteButton(
                                 index,
                                 () async {
-                                  await _hiveMovie.delete(detail: _allMovie[index]).then((value) {
+                                  await _hiveMovie
+                                      .delete(detail: _allMovie[index])
+                                      .then((value) {
                                     return Uihelper.showSnackBarDialogForInfo(
                                       context: context,
                                       type: UiType.info,
-                                      title: '${_allMovie[index].title.toString()}',
-                                      message: 'Film başarılı bir şekilde favorilerden kaldırıldı.',
+                                      title:
+                                          '${_allMovie[index].title.toString()}',
+                                      message:
+                                          'Film başarılı bir şekilde favorilerden kaldırıldı.',
                                     );
                                   });
-                                  debugPrint('silindi -> ${_allMovie[index].title.toString()}');
+                                  debugPrint(
+                                      'silindi -> ${_allMovie[index].title.toString()}');
                                   _allMovie.removeAt(index);
                                   setState(() {});
                                 },
@@ -161,15 +168,19 @@ class _FavoritePageState extends State<FavoritePage> with TickerProviderStateMix
                               child: _deleteButton(
                                 index,
                                 () async {
-                                  await _hiveTv.delete(detail: _allTv[index]).then((value) {
+                                  await _hiveTv
+                                      .delete(detail: _allTv[index])
+                                      .then((value) {
                                     return Uihelper.showSnackBarDialogForInfo(
                                       context: context,
                                       type: UiType.info,
                                       title: '${_allTv[index].name.toString()}',
-                                      message: 'Dizi başarılı bir şekilde favorilerden kaldırıldı.',
+                                      message:
+                                          'Dizi başarılı bir şekilde favorilerden kaldırıldı.',
                                     );
                                   });
-                                  debugPrint('silindi -> ${_allTv[index].name.toString()}');
+                                  debugPrint(
+                                      'silindi -> ${_allTv[index].name.toString()}');
                                   _allTv.removeAt(index);
 
                                   setState(() {});

@@ -13,7 +13,7 @@ DetailMovie trendFromMap(String str) => DetailMovie.fromMap(json.decode(str));
 String trendToMap(DetailMovie data) => json.encode(data.toMap());
 
 @HiveType(typeId: 1)
-class DetailMovie extends HiveObject{
+class DetailMovie extends HiveObject {
   DetailMovie({
     this.adult,
     this.backdropPath,
@@ -45,7 +45,7 @@ class DetailMovie extends HiveObject{
   bool? adult;
   @HiveField(0)
   String? backdropPath;
-  
+
   BelongsToCollection? belongsToCollection;
   int? budget;
   List<Genre>? genres;
@@ -83,7 +83,9 @@ class DetailMovie extends HiveObject{
   factory DetailMovie.fromMap(Map<String, dynamic> json) => DetailMovie(
         adult: json["adult"],
         backdropPath: json["backdrop_path"],
-        belongsToCollection: json["belongs_to_collection"] == null ? null : BelongsToCollection.fromJson(json["belongs_to_collection"]),
+        belongsToCollection: json["belongs_to_collection"] == null
+            ? null
+            : BelongsToCollection.fromJson(json["belongs_to_collection"]),
         budget: json["budget"],
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromMap(x))),
         homepage: json["homepage"],
@@ -94,8 +96,12 @@ class DetailMovie extends HiveObject{
         overview: json["overview"],
         popularity: json["popularity"].toDouble(),
         posterPath: json["poster_path"],
-        productionCompanies: List<ProductionCompany>.from(json["production_companies"].map((x) => ProductionCompany.fromMap(x))),
-        productionCountries: List<ProductionCountry>.from(json["production_countries"].map((x) => ProductionCountry.fromMap(x))),
+        productionCompanies: List<ProductionCompany>.from(
+            json["production_companies"]
+                .map((x) => ProductionCompany.fromMap(x))),
+        productionCountries: List<ProductionCountry>.from(
+            json["production_countries"]
+                .map((x) => ProductionCountry.fromMap(x))),
         releaseDate: json["release_date"] == null
             ? null
             : json["release_date"].toString().isEmpty
@@ -103,7 +109,8 @@ class DetailMovie extends HiveObject{
                 : DateTime.parse(json["release_date"]),
         revenue: json["revenue"],
         runtime: json["runtime"],
-        spokenLanguages: List<SpokenLanguage>.from(json["spoken_languages"].map((x) => SpokenLanguage.fromMap(x))),
+        spokenLanguages: List<SpokenLanguage>.from(
+            json["spoken_languages"].map((x) => SpokenLanguage.fromMap(x))),
         status: json["status"],
         tagline: json["tagline"],
         title: json["title"],
@@ -115,7 +122,7 @@ class DetailMovie extends HiveObject{
   Map<String, dynamic> toMap() => {
         "adult": adult,
         "backdrop_path": backdropPath,
-          "belongs_to_collection": belongsToCollection?.toJson(),
+        "belongs_to_collection": belongsToCollection?.toJson(),
         "budget": budget,
         "genres": List<dynamic>.from(genres!.map((x) => x.toMap())),
         "homepage": homepage,
@@ -126,13 +133,16 @@ class DetailMovie extends HiveObject{
         "overview": overview,
         "popularity": popularity,
         "poster_path": posterPath,
-        "production_companies": List<dynamic>.from(productionCompanies!.map((x) => x.toMap())),
-        "production_countries": List<dynamic>.from(productionCountries!.map((x) => x.toMap())),
+        "production_companies":
+            List<dynamic>.from(productionCompanies!.map((x) => x.toMap())),
+        "production_countries":
+            List<dynamic>.from(productionCountries!.map((x) => x.toMap())),
         "release_date":
             "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
         "revenue": revenue,
         "runtime": runtime,
-        "spoken_languages": List<dynamic>.from(spokenLanguages!.map((x) => x.toMap())),
+        "spoken_languages":
+            List<dynamic>.from(spokenLanguages!.map((x) => x.toMap())),
         "status": status,
         "tagline": tagline,
         "title": title,
@@ -143,31 +153,32 @@ class DetailMovie extends HiveObject{
 }
 
 class BelongsToCollection {
-    BelongsToCollection({
-        this.id,
-        this.name,
-        this.posterPath,
-        this.backdropPath,
-    });
+  BelongsToCollection({
+    this.id,
+    this.name,
+    this.posterPath,
+    this.backdropPath,
+  });
 
-    int? id;
-    String? name;
-    String? posterPath;
-    String? backdropPath;
+  int? id;
+  String? name;
+  String? posterPath;
+  String? backdropPath;
 
-    factory BelongsToCollection.fromJson(Map<String, dynamic> json) => BelongsToCollection(
+  factory BelongsToCollection.fromJson(Map<String, dynamic> json) =>
+      BelongsToCollection(
         id: json["id"],
         name: json["name"],
         posterPath: json["poster_path"],
         backdropPath: json["backdrop_path"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "poster_path": posterPath,
         "backdrop_path": backdropPath,
-    };
+      };
 }
 
 class Genre {
@@ -203,7 +214,8 @@ class ProductionCompany {
   String? name;
   String? originCountry;
 
-  factory ProductionCompany.fromMap(Map<String, dynamic> json) => ProductionCompany(
+  factory ProductionCompany.fromMap(Map<String, dynamic> json) =>
+      ProductionCompany(
         id: json["id"],
         logoPath: json["logo_path"],
         name: json["name"],
@@ -227,7 +239,8 @@ class ProductionCountry {
   String? iso31661;
   String? name;
 
-  factory ProductionCountry.fromMap(Map<String, dynamic> json) => ProductionCountry(
+  factory ProductionCountry.fromMap(Map<String, dynamic> json) =>
+      ProductionCountry(
         iso31661: json["iso_3166_1"],
         name: json["name"],
       );

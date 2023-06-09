@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:movie_app/constants/enums.dart';
@@ -26,6 +25,7 @@ class _MapsPageState extends State<MapsPage> {
   final double _radius = 30000;
   final double _zoom = 10.5;
   Set<Marker> _markers = <Marker>{};
+
   LatLng _currentLocation = const LatLng(0.0, 0.0);
   LocationPermission _permission = LocationPermission.denied;
   bool _serviceEnabled = false;
@@ -34,9 +34,11 @@ class _MapsPageState extends State<MapsPage> {
   @override
   void initState() {
     getCurrentLocation();
+
     DefaultAssetBundle.of(context)
         .loadString("assets/map_theme/aubergine_theme.json")
         .then((value) => _mapTheme = value);
+
     super.initState();
   }
 

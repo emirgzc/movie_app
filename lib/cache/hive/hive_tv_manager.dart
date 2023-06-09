@@ -7,7 +7,6 @@ class HiveTvManager extends HiveAbstract<TvDetail> {
 
   HiveTvManager() {
     _tvBox = Hive.box<TvDetail>('tv');
-    //_tvBox.clear();
   }
 
   @override
@@ -27,7 +26,8 @@ class HiveTvManager extends HiveAbstract<TvDetail> {
     _allTv = _tvBox.values.toList();
     if (_allTv.isNotEmpty) {
       _allTv.sort(
-        (TvDetail a, TvDetail b) => b.firstAirDate?.compareTo(a.firstAirDate ?? DateTime.now()) ?? 0,
+        (TvDetail a, TvDetail b) =>
+            b.firstAirDate?.compareTo(a.firstAirDate ?? DateTime.now()) ?? 0,
       );
     }
     return _allTv;

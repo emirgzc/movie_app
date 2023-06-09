@@ -7,7 +7,6 @@ class HiveMovieManager extends HiveAbstract<DetailMovie> {
 
   HiveMovieManager() {
     _movieBox = Hive.box<DetailMovie>('movies');
-    //_movieBox.clear();
   }
 
   @override
@@ -27,7 +26,8 @@ class HiveMovieManager extends HiveAbstract<DetailMovie> {
     _allMovie = _movieBox.values.toList();
     if (_allMovie.isNotEmpty) {
       _allMovie.sort(
-        (DetailMovie a, DetailMovie b) => b.releaseDate?.compareTo(a.releaseDate ?? DateTime.now()) ?? 0,
+        (DetailMovie a, DetailMovie b) =>
+            b.releaseDate?.compareTo(a.releaseDate ?? DateTime.now()) ?? 0,
       );
     }
     return _allMovie;
