@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 
 enum UiType {
@@ -164,7 +166,8 @@ class Uihelper {
     } else {
       final messenger = ScaffoldMessenger.maybeOf(context);
       if (messenger == null) {
-        log('"ScaffoldMessenger.maybeOf(context)" is null. UIType is "$type", content is "$message"', name: 'UIHelper-showSnackBar');
+        log('"ScaffoldMessenger.maybeOf(context)" is null. UIType is "$type", content is "$message"',
+            name: 'UIHelper-showSnackBar');
         return;
       }
       messenger.clearSnackBars();
@@ -178,6 +181,22 @@ class Uihelper {
         ),
       );
     }
+  }
+
+  static showSnackBarDialogBasic(
+      {required BuildContext context,
+      required String text,
+      required int duration}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        duration: Duration(seconds: duration),
+        content: Text(
+          text,
+          style: context.textThemeContext().bodyMedium,
+        ),
+      ),
+    );
   }
 }
 
@@ -194,10 +213,13 @@ class AssetsPath {
 class DefaultColors {
   /// help
   static const Color helpBlue = Color(0xff3282B8);
+
   /// failure
   static const Color failureRed = Color(0xffc72c41);
+
   /// success
   static const Color successGreen = Color(0xff2D6A4F);
+
   /// warning
   static const Color warningYellow = Color(0xffFCA652);
 }

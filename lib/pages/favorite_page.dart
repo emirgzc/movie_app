@@ -7,6 +7,7 @@ import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/models/detail_movie.dart';
 import 'package:movie_app/models/detail_tv.dart';
+import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/favori_card.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
 
@@ -124,12 +125,12 @@ class _FavoritePageState extends State<FavoritePage>
                                       type: UiType.info,
                                       title:
                                           '${_allMovie[index].title.toString()}',
-                                      message:
-                                          'Film başarılı bir şekilde favorilerden kaldırıldı.',
+                                      message: LocaleKeys
+                                          .movie_removed_from_favorites
+                                          .tr(),
                                     );
                                   });
-                                  debugPrint(
-                                      'silindi -> ${_allMovie[index].title.toString()}');
+
                                   _allMovie.removeAt(index);
                                   setState(() {});
                                 },
@@ -175,14 +176,13 @@ class _FavoritePageState extends State<FavoritePage>
                                       context: context,
                                       type: UiType.info,
                                       title: '${_allTv[index].name.toString()}',
-                                      message:
-                                          'Dizi başarılı bir şekilde favorilerden kaldırıldı.',
+                                      message: LocaleKeys
+                                          .series_removed_from_favorites
+                                          .tr(),
                                     );
                                   });
-                                  debugPrint(
-                                      'silindi -> ${_allTv[index].name.toString()}');
-                                  _allTv.removeAt(index);
 
+                                  _allTv.removeAt(index);
                                   setState(() {});
                                 },
                               ),

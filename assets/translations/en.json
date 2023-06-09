@@ -90,7 +90,11 @@
     "address_copied": "Address copied",
 
     "movie_added_to_favorites" : "Movie added to favorites",
-    "series_added_to_favorites" : "Series added to favorites"
+    "series_added_to_favorites" : "Series added to favorites",
+    "movie_removed_from_favorites": "Movie removed from favorites",
+    "series_removed_from_favorites": "Series removed from favorites",
 
-
+    "you_are_offline_now": "You are offline now",
+    "more": "More",
+    "no_suitable_movies_found_on_page_x":"No suitable movies found on page {}"
 }

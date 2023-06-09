@@ -78,5 +78,10 @@ abstract class  LocaleKeys {
   static const address_copied = 'address_copied';
   static const movie_added_to_favorites = 'movie_added_to_favorites';
   static const series_added_to_favorites = 'series_added_to_favorites';
+  static const movie_removed_from_favorites = 'movie_removed_from_favorites';
+  static const series_removed_from_favorites = 'series_removed_from_favorites';
+  static const you_are_offline_now = 'you_are_offline_now';
+  static const more = 'more';
+  static const no_suitable_movies_found_on_page_x = 'no_suitable_movies_found_on_page_x';
 
 }

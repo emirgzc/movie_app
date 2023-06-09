@@ -11,22 +11,11 @@ class ListPageShimmer {
   Widget listPageShimmer(double width, BuildContext context) {
     return Padding(
       padding: Style.pagePadding,
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                MasonryGrid(
-                  length: 6,
-                  itemBuilder: (BuildContext context, int index) {
-                    return movieCard(context, width);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
+      child: MasonryGrid(
+        length: 6,
+        itemBuilder: (BuildContext context, int index) {
+          return movieCard(context, width);
+        },
       ),
     );
   }
