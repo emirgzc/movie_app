@@ -79,7 +79,6 @@ class _HomePageState extends State<HomePage> {
     return FloatingActionButton(
       onPressed: () {
         _pageController.jumpToPage(4);
-        // Navigator.of(context).pushNamed("/mapsPage");
       },
       elevation: 0,
       backgroundColor: Style.fabColor,
