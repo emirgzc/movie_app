@@ -1,13 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:movie_app/cache/hive/hive_abstract.dart';
-import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/models/detail_tv.dart';
 
 class HiveTvManager extends HiveAbstract<TvDetail> {
   late Box<TvDetail> _tvBox;
 
   HiveTvManager() {
-    _tvBox = Hive.box<TvDetail>(HiveEnums.tv.name);
+    _tvBox = Hive.box<TvDetail>('tv');
   }
 
   @override
@@ -22,12 +21,13 @@ class HiveTvManager extends HiveAbstract<TvDetail> {
   }
 
   @override
-  List<TvDetail> getAll()  {
+  Future<List<TvDetail>> getAll() async {
     List<TvDetail> _allTv = <TvDetail>[];
     _allTv = _tvBox.values.toList();
     if (_allTv.isNotEmpty) {
       _allTv.sort(
-        (TvDetail a, TvDetail b) => b.firstAirDate?.compareTo(a.firstAirDate ?? DateTime.now()) ?? 0,
+        (TvDetail a, TvDetail b) =>
+            b.firstAirDate?.compareTo(a.firstAirDate ?? DateTime.now()) ?? 0,
       );
     }
     return _allTv;

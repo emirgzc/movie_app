@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:movie_app/constants/base_key.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/helper/ui_helper.dart';
@@ -132,7 +131,7 @@ class CustomModalBottomSheet extends StatelessWidget {
                       placeDetails.result!.photos != null) {
                     for (var element in placeDetails.result!.photos!) {
                       placePhotoUrls.add(
-                          "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=800&photo_reference=${element.photoReference}&key=${BaseKey.googleApiKey}");
+                          "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=800&photo_reference=${element.photoReference}&key=${ApiClient().googleApiKey}");
                     }
                   }
 

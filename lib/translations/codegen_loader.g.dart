@@ -91,7 +91,12 @@ class CodegenLoader extends AssetLoader{
   "cinema_picture_not_found": "Cinema picture not found",
   "address_copied": "Address copied",
   "movie_added_to_favorites": "Movie added to favorites",
-  "series_added_to_favorites": "Series added to favorites"
+  "series_added_to_favorites": "Series added to favorites",
+  "movie_removed_from_favorites": "Movie removed from favorites",
+  "series_removed_from_favorites": "Series removed from favorites",
+  "you_are_offline_now": "You are offline now",
+  "more": "More",
+  "no_suitable_movies_found_on_page_x": "No suitable movies found on page {}"
 };
 static const Map<String,dynamic> tr = {
   "movie": "Film",
@@ -170,7 +175,12 @@ static const Map<String,dynamic> tr = {
   "cinema_picture_not_found": "Sinema resimi bulunamadı",
   "address_copied": "Adres koyalandı",
   "movie_added_to_favorites": "Film favorilere eklendi",
-  "series_added_to_favorites": "Dizi favorilere eklendi"
+  "series_added_to_favorites": "Dizi favorilere eklendi",
+  "movie_removed_from_favorites": "Film favorilerden kaldırıldı",
+  "series_removed_from_favorites": "Dizi favorilerden kaldırıldı",
+  "you_are_offline_now": "Şuan çevrimdışısınız",
+  "more": "Daha fazla",
+  "no_suitable_movies_found_on_page_x": "{}. sayfada uygun bir film bulunamadı."
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en, "tr": tr};
 }

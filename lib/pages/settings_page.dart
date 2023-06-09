@@ -8,7 +8,6 @@ import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/locator.dart';
 import 'package:movie_app/providers/theme/theme_data_provider.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
-import 'package:movie_app/widgets/switch_for_settings.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -54,6 +53,8 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    ThemeDataProvider _themeProvider = Provider.of<ThemeDataProvider>(context);
+    print(_sharedAbstract.getItem(SharedKeys.shouldWatch) ?? false);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -88,15 +89,19 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (context.read<ThemeDataProvider>().brightness == Brightness.light ||
-                            context.read<ThemeDataProvider>().brightness == null)
+                    (_themeProvider.brightness == Brightness.light || _themeProvider.brightness == null)
                         ? LocaleKeys.light_mode.tr()
                         : LocaleKeys.dark_mode.tr(),
                     style: context.textThemeContext().titleMedium,
                   ),
                   InkWell(
                     onTap: () {
-                      _onChangeTheme();
+                      debugPrint('-- ' + _isChange.toString());
+                      _isChange = !_isChange;
+                      _themeProvider.setThemeData(
+                        _isChange ? true : false,
+                      );
+                      _animationController.animateTo(_isChange ? 0.5 : 0.0);
                     },
                     child: Lottie.asset(
                       'assets/lottie/theme_change.json',
@@ -130,12 +135,53 @@ class _SettingsPageState extends State<SettingsPage> with TickerProviderStateMix
       ),
     );
   }
+}
 
-  void _onChangeTheme() {
-    _isChange = !_isChange;
-    context.read<ThemeDataProvider>().setThemeData(
-          _isChange ? true : false,
-        );
-    _animationController.animateTo(_isChange ? 0.5 : 0.0);
+// ignore: must_be_immutable
+class SwitchForSettings extends StatefulWidget {
+  SwitchForSettings({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    required this.text,
+    required this.subTitle,
+  });
+  final bool value;
+  final void Function(bool)? onChanged;
+  final String text;
+  final String subTitle;
+
+  @override
+  State<SwitchForSettings> createState() => _SwitchForSettingsState();
+}
+
+class _SwitchForSettingsState extends State<SwitchForSettings> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              widget.text,
+              style: context.textThemeContext().titleMedium,
+            ),
+            Switch.adaptive(
+              activeColor: Style.primaryColor,
+              value: widget.value,
+              onChanged: widget.onChanged,
+            ),
+          ],
+        ),
+        Text(
+          widget.subTitle,
+          style: TextStyle(
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
   }
 }

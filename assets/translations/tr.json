@@ -91,5 +91,11 @@
     "address_copied": "Adres koyalandı",
 
     "movie_added_to_favorites" : "Film favorilere eklendi",
-    "series_added_to_favorites" : "Dizi favorilere eklendi"
+    "series_added_to_favorites" : "Dizi favorilere eklendi",
+    "movie_removed_from_favorites": "Film favorilerden kaldırıldı",
+    "series_removed_from_favorites": "Dizi favorilerden kaldırıldı",
+
+    "you_are_offline_now": "Şuan çevrimdışısınız",
+    "more": "Daha fazla",
+    "no_suitable_movies_found_on_page_x":"{}. sayfada uygun bir film bulunamadı."
 }

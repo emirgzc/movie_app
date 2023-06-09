@@ -1,23 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
-
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/data/api_client.dart';
+import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/models/trend_movie.dart';
-import 'package:movie_app/providers/theme/theme_data_provider.dart';
-import 'package:movie_app/providers/theme/theme_light.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
 import 'package:movie_app/widgets/custom_appbar.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/shimmer/shimmers.dart';
-import 'package:provider/provider.dart';
+import 'package:movie_app/widgets/text/big_text.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key, required this.genreId});
@@ -29,70 +27,110 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   int _page = 1;
-  late TextEditingController _textEditingController;
-
-  @override
-  void initState() {
-    _textEditingController = TextEditingController();
-    _textEditingController.text = _page.toString();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
+  List<Result> data = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
-      body: Padding(
-        padding: Style.pagePadding,
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: bodyList(context, context.getSize().width),
       ),
     );
   }
 
-  FutureBuilder<List<Result>?> bodyList(BuildContext context, double width) {
-    return FutureBuilder(
-      future: getCategory(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null) {
-          var data = snapshot.data as List<Result>;
-          return ListView(
-            physics: BouncingScrollPhysics(),
-            children: [
-              MasonryGrid(
-                length: data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (data[index].genreIds?.contains(widget.genreId) ?? false) {
-                    return ImageDetailCard(
-                      title: data[index].title,
-                      id: data[index].id,
-                      posterPath: data[index].posterPath,
-                      voteAverageNumber: data[index].voteAverage,
-                      dateCard: data[index].releaseDate.toString() == "null"
-                          ? data[index].firstAirDate.toString()
-                          : data[index].releaseDate.toString(),
-                      width: width,
-                      name: data[index].name,
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
-              pageIndicator(),
-            ],
-          );
-        } else {
-          return Shimmers().listPageShimmer.listPageShimmer(width, context);
-        }
+  Widget bodyList(BuildContext context, double width) {
+    return _page == 1
+        ? FutureBuilder(
+            future: getCategory(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData &&
+                  snapshot.data != null) {
+                data.addAll(snapshot.data as List<Result>);
+
+                return bodyListItem(width, context);
+              } else {
+                return Shimmers()
+                    .listPageShimmer
+                    .listPageShimmer(width, context);
+              }
+            },
+          )
+        : bodyListItem(width, context);
+  }
+
+  Padding bodyListItem(double width, BuildContext context) {
+    return Padding(
+      padding: Style.pagePadding,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MasonryGrid(
+            length: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (data[index].genreIds?.contains(widget.genreId) ?? false) {
+                return ImageDetailCard(
+                  title: data[index].title,
+                  id: data[index].id,
+                  posterPath: data[index].posterPath,
+                  voteAverageNumber: data[index].voteAverage,
+                  dateCard: data[index].releaseDate.toString() == "null"
+                      ? data[index].firstAirDate.toString()
+                      : data[index].releaseDate.toString(),
+                  width: width,
+                  name: data[index].name,
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
+          moreButton(context),
+        ],
+      ),
+    );
+  }
+
+  MaterialButton moreButton(BuildContext context) {
+    return MaterialButton(
+      onPressed: () async {
+        _page = _page + 1;
+        await ApiClient()
+            .getMovieData(
+          dataWay: MovieApiType.now_playing.name,
+          context.locale,
+          page: _page,
+          type: MediaTypes.movie.name,
+        )
+            .then((value) {
+          data.addAll(value as List<Result>);
+          setState(() {});
+          if (!value
+              .any((element) => element.genreIds!.contains(widget.genreId))) {
+            Uihelper.showSnackBarDialogBasic(
+              context: context,
+              text: LocaleKeys.no_suitable_movies_found_on_page_x
+                  .tr(args: [_page.toString()]),
+              duration: 1,
+            );
+          }
+        });
       },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            LocaleKeys.more.tr(),
+            style: context.textThemeContext().bodySmall,
+          ),
+          Icon(
+            Icons.refresh,
+            color: context.iconThemeContext().color,
+          ),
+        ],
+      ),
     );
   }
 
@@ -104,7 +142,7 @@ class _CategoryPageState extends State<CategoryPage> {
       type: MediaTypes.movie.name,
     );
   }
-
+/*
   PreferredSizeWidget getAppBar() {
     return CustomAppBar(
       title: widget,
@@ -130,125 +168,5 @@ class _CategoryPageState extends State<CategoryPage> {
       ],
     );
   }
-
-  Widget pageIndicator() {
-    String arrowLeft = LocaleKeys.previous_page.tr();
-    String arrowRight = LocaleKeys.next_page.tr();
-
-    return Padding(
-      padding: EdgeInsets.only(
-        top: Style.defaultPaddingSizeVertical * 0.75,
-        bottom: Style.defaultPaddingSizeHorizontal * 0.75,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // onceki sayfa
-          indicatorArrow(
-            arrowLeft,
-            () {
-              if (_page > 1) {
-                setState(() {
-                  _page--;
-                  _textEditingController.text = _page.toString();
-                });
-              }
-            },
-            Icons.arrow_back_ios,
-            isVisible: _page > 1,
-          ),
-
-          // page number
-          Expanded(
-            child: indicatorField(),
-          ),
-          // sonraki sayfa
-          indicatorArrow(
-            arrowRight,
-            () {
-              if (_page < 101) {
-                setState(() {
-                  _page++;
-                  _textEditingController.text = _page.toString();
-                });
-              }
-            },
-            Icons.arrow_forward_ios,
-            isVisible: true,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget indicatorField() {
-    return TextField(
-      controller: _textEditingController,
-      keyboardType: TextInputType.number,
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-        LengthLimitingTextInputFormatter(
-          2,
-        ),
-      ],
-      textAlign: TextAlign.center,
-      decoration: InputDecoration(
-        fillColor: Style.blackColor.withOpacity(0.1),
-        filled: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
-          borderSide: BorderSide.none,
-        ),
-        contentPadding: EdgeInsets.zero,
-      ),
-      onTap: () {},
-      onChanged: (value) {},
-      onSubmitted: (value) {},
-    );
-  }
-
-  Visibility indicatorArrow(
-      String title, void Function()? onPressed, IconData icon,
-      {bool isVisible = true}) {
-    return Visibility(
-      visible: isVisible,
-      child: Padding(
-        padding: EdgeInsets.all(Style.defaultPaddingSize / 2),
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            padding: EdgeInsets.all((Style.defaultPaddingSize / 4) * 4),
-            elevation: 0,
-            shadowColor: Style.primaryColor,
-          ),
-          child: title == LocaleKeys.previous_page.tr()
-              ? Row(
-                  children: [
-                    Icon(
-                      icon,
-                      color: context.iconThemeContext().color,
-                    ),
-                    Text(
-                      title,
-                      style: context.textThemeContext().bodySmall,
-                    ),
-                  ],
-                )
-              : Row(
-                  children: [
-                    Text(
-                      title,
-                      style: context.textThemeContext().bodySmall,
-                    ),
-                    Icon(
-                      icon,
-                      color: context.iconThemeContext().color,
-                    ),
-                  ],
-                ),
-        ),
-      ),
-    );
-  }
+*/
 }
