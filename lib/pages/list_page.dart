@@ -27,21 +27,7 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   int _page = 1;
-  late TextEditingController _textEditingController;
   late Future<List<Result>?> _listDataFuture;
-
-  @override
-  void initState() {
-    _textEditingController = TextEditingController();
-    _textEditingController.text = _page.toString();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +135,6 @@ class _ListPageState extends State<ListPage> {
               if (_page > 1) {
                 setState(() {
                   _page--;
-                  _textEditingController.text = _page.toString();
                 });
               }
             },
@@ -168,7 +153,6 @@ class _ListPageState extends State<ListPage> {
               if (_page < 101) {
                 setState(() {
                   _page++;
-                  _textEditingController.text = _page.toString();
                 });
               }
             },
@@ -182,7 +166,7 @@ class _ListPageState extends State<ListPage> {
 
   Widget indicatorField() {
     return TextField(
-      controller: _textEditingController,
+      enabled: false,
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -200,17 +184,6 @@ class _ListPageState extends State<ListPage> {
         ),
         contentPadding: EdgeInsets.zero,
       ),
-      onTap: () {},
-      onChanged: (value) {},
-      onSubmitted: (value) {
-        /*
-                                if (100 > int.parse(value) &&
-                                    0 < int.parse(value)) {
-                                  setState(() {
-                                    page = int.parse(value);
-                                  });
-                                  */
-      },
     );
   }
 
