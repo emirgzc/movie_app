@@ -1,21 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
-import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/models/trend_movie.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 import 'package:movie_app/widgets/card/image_detail_card.dart';
-import 'package:movie_app/widgets/custom_appbar.dart';
 import 'package:movie_app/widgets/packages/masonry_grid.dart';
 import 'package:movie_app/widgets/shimmer/shimmers.dart';
-import 'package:movie_app/widgets/text/big_text.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key, required this.genreId});
@@ -45,16 +39,12 @@ class _CategoryPageState extends State<CategoryPage> {
         ? FutureBuilder(
             future: getCategory(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData &&
-                  snapshot.data != null) {
+              if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                 data.addAll(snapshot.data as List<Result>);
 
                 return bodyListItem(width, context);
               } else {
-                return Shimmers()
-                    .listPageShimmer
-                    .listPageShimmer(width, context);
+                return Shimmers().listPageShimmer.listPageShimmer(width, context);
               }
             },
           )
@@ -87,7 +77,10 @@ class _CategoryPageState extends State<CategoryPage> {
               }
             },
           ),
-          moreButton(context),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSize),
+            child: moreButton(context),
+          ),
         ],
       ),
     );
@@ -107,12 +100,10 @@ class _CategoryPageState extends State<CategoryPage> {
             .then((value) {
           data.addAll(value as List<Result>);
           setState(() {});
-          if (!value
-              .any((element) => element.genreIds!.contains(widget.genreId))) {
+          if (!value.any((element) => element.genreIds!.contains(widget.genreId))) {
             Uihelper.showSnackBarDialogBasic(
               context: context,
-              text: LocaleKeys.no_suitable_movies_found_on_page_x
-                  .tr(args: [_page.toString()]),
+              text: LocaleKeys.no_suitable_movies_found_on_page_x.tr(args: [_page.toString()]),
               duration: 1,
             );
           }
