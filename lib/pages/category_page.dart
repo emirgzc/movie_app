@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
 import 'package:movie_app/constants/style.dart';
+import 'package:movie_app/constants/util.dart';
 import 'package:movie_app/data/api_client.dart';
 import 'package:movie_app/helper/ui_helper.dart';
 import 'package:movie_app/models/trend_movie.dart';
@@ -26,10 +28,21 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: bodyList(context, context.getSize().width),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Image.asset(
+          Util.isDarkMode(context)
+              ? LogoPath.png_logo_1_dark.iconPath()
+              : LogoPath.png_logo_1_day.iconPath(),
+          width: 300.w,
+          fit: BoxFit.contain,
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: bodyList(context, context.getSize().width),
+        ),
       ),
     );
   }
@@ -133,31 +146,4 @@ class _CategoryPageState extends State<CategoryPage> {
       type: MediaTypes.movie.name,
     );
   }
-/*
-  PreferredSizeWidget getAppBar() {
-    return CustomAppBar(
-      title: widget,
-      leading: IconButton(
-        padding: EdgeInsets.zero,
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: SvgPicture.asset(
-          IconPath.arrow_left.iconPath(),
-          height: Style.defaullIconHeight,
-          color: context.iconThemeContext().color,
-        ),
-      ),
-      trailing: [
-        Image.asset(
-          Util.isDarkMode(context)
-              ? LogoPath.png_logo_1_dark.iconPath()
-              : LogoPath.png_logo_1_day.iconPath(),
-          width: 300.w,
-          fit: BoxFit.contain,
-        ),
-      ],
-    );
-  }
-*/
 }

@@ -182,6 +182,7 @@ class _ListPageState extends State<ListPage> {
 
   Widget indicatorField() {
     return TextField(
+      enabled: false,
       controller: _textEditingController,
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
@@ -200,17 +201,6 @@ class _ListPageState extends State<ListPage> {
         ),
         contentPadding: EdgeInsets.zero,
       ),
-      onTap: () {},
-      onChanged: (value) {},
-      onSubmitted: (value) {
-        /*
-                                if (100 > int.parse(value) &&
-                                    0 < int.parse(value)) {
-                                  setState(() {
-                                    page = int.parse(value);
-                                  });
-                                  */
-      },
     );
   }
 

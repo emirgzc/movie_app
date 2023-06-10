@@ -34,8 +34,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late PageController _pageController;
   late ZoomDrawerController _drawerController;
-  late StreamSubscription<InternetConnectionStatus> internetConnectionListener;
   int _currentPage = 0;
+
+  late StreamSubscription<InternetConnectionStatus> internetConnectionListener;
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _HomePageState extends State<HomePage> {
       ScaffoldMessenger.of(context).clearSnackBars();
       setState(() {});
     });
+
     _pageController = PageController(keepPage: true);
     _drawerController = ZoomDrawerController();
     super.initState();
@@ -96,7 +98,7 @@ class _HomePageState extends State<HomePage> {
         if (!value) {
           Uihelper.showSnackBarDialogBasic(
               context: context,
-              text: LocaleKeys.you_are_offline_now,
+              text: LocaleKeys.you_are_offline_now.tr(),
               duration: 100);
         }
       },
