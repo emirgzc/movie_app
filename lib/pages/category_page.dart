@@ -38,9 +38,11 @@ class _CategoryPageState extends State<CategoryPage> {
           fit: BoxFit.contain,
         ),
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: bodyList(context, context.getSize().width),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: bodyList(context, context.getSize().width),
+        ),
       ),
     );
   }
