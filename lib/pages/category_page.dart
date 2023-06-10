@@ -32,7 +32,16 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Image.asset(
+          Util.isDarkMode(context)
+              ? LogoPath.png_logo_1_dark.iconPath()
+              : LogoPath.png_logo_1_day.iconPath(),
+          width: 300.w,
+          fit: BoxFit.contain,
+        ),
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: bodyList(context, context.getSize().width),
@@ -142,31 +151,4 @@ class _CategoryPageState extends State<CategoryPage> {
       type: MediaTypes.movie.name,
     );
   }
-/*
-  PreferredSizeWidget getAppBar() {
-    return CustomAppBar(
-      title: widget,
-      leading: IconButton(
-        padding: EdgeInsets.zero,
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: SvgPicture.asset(
-          IconPath.arrow_left.iconPath(),
-          height: Style.defaullIconHeight,
-          color: context.iconThemeContext().color,
-        ),
-      ),
-      trailing: [
-        Image.asset(
-          Util.isDarkMode(context)
-              ? LogoPath.png_logo_1_dark.iconPath()
-              : LogoPath.png_logo_1_day.iconPath(),
-          width: 300.w,
-          fit: BoxFit.contain,
-        ),
-      ],
-    );
-  }
-*/
 }
