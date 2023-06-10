@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
         if (!value) {
           Uihelper.showSnackBarDialogBasic(
               context: context,
-              text: LocaleKeys.you_are_offline_now,
+              text: LocaleKeys.you_are_offline_now.tr(),
               duration: 100);
         }
       },
