@@ -47,7 +47,7 @@ class ListPageShimmer {
             child: SizedBox(
               height: width / 1.8,
               width: width / 2.2,
-              child: Shimmers().customProgressIndicatorBuilder(),
+              child: Shimmers.customProgressIndicatorBuilder(),
             ),
           ),
 
@@ -109,7 +109,7 @@ class ListPageShimmer {
       child: SizedBox(
         width: width,
         height: height,
-        child: Shimmers().customProgressIndicatorBuilder(),
+        child: Shimmers.customProgressIndicatorBuilder(),
       ),
     );
   }

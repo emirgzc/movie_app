@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -167,7 +166,7 @@ class TvDetailPageShimmer {
               ),
               child: Material(
                 elevation: Style.defaultElevation,
-                child: Shimmers().customProgressIndicatorBuilder(),
+                child: Shimmers.customProgressIndicatorBuilder(),
               ),
             ),
           ),
@@ -192,7 +191,7 @@ class TvDetailPageShimmer {
     return SizedBox(
       width: width,
       height: height,
-      child: Shimmers().customProgressIndicatorBuilder(),
+      child: Shimmers.customProgressIndicatorBuilder(),
     );
   }
 
@@ -217,7 +216,7 @@ class TvDetailPageShimmer {
         child: SizedBox(
           height: 42.h,
           width: width,
-          child: Shimmers().customProgressIndicatorBuilder(),
+          child: Shimmers.customProgressIndicatorBuilder(),
         ),
       ),
     );

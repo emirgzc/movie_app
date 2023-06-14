@@ -24,7 +24,7 @@ class MoviePageShimmers {
                 children: [
                   Container(
                     width: 1000,
-                    child: Shimmers().customProgressIndicatorBuilder(),
+                    child: Shimmers.customProgressIndicatorBuilder(),
                   ),
                 ],
               ),
@@ -65,7 +65,7 @@ class MoviePageShimmers {
                 child: Container(
                   width: width,
                   height: height,
-                  child: Shimmers().customProgressIndicatorBuilder(),
+                  child: Shimmers.customProgressIndicatorBuilder(),
                 ),
               ),
             ),
@@ -99,7 +99,7 @@ class MoviePageShimmers {
                 child: Container(
                   width: width / 3,
                   height: (width / 3) * 1.5,
-                  child: Shimmers().customProgressIndicatorBuilder(),
+                  child: Shimmers.customProgressIndicatorBuilder(),
                 ),
               ),
             ),

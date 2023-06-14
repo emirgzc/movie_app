@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -36,7 +35,7 @@ class MovieDetailPageShimmers {
                   child: SizedBox(
                     width: width * 0.56,
                     height: width * 1.5 * 0.56,
-                    child: Shimmers().customProgressIndicatorBuilder(),
+                    child: Shimmers.customProgressIndicatorBuilder(),
                   ),
                 ),
               ),
@@ -53,85 +52,7 @@ class MovieDetailPageShimmers {
                   child: SizedBox(
                     width: double.infinity,
                     height: 500.h,
-                    child: Shimmers().customProgressIndicatorBuilder(),
-                    //
-                    /*
-                  child: Container(
-                    color: Style.widgetBackgroundColor,
-                    child: Padding(
-                      padding: EdgeInsets.all(Style.defaultPaddingSize),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: Style.defaultPaddingSizeVertical / 2,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(Style.defaultRadiusSize / 2),
-                              ),
-                              child: SizedBox(
-                                width: 400.w,
-                                height: 60.h,
-                                child: Shimmers()
-                                    .customProgressIndicatorBuilder(),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: Style.defaultPaddingSize / 4,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(Style.defaultRadiusSize / 2),
-                              ),
-                              child: SizedBox(
-                                width: 600.w,
-                                height: 36.h,
-                                child: Shimmers()
-                                    .customProgressIndicatorBuilder(),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: Style.defaultPaddingSize / 4,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(Style.defaultRadiusSize / 2),
-                              ),
-                              child: SizedBox(
-                                width: 800.w,
-                                height: 36.h,
-                                child: Shimmers()
-                                    .customProgressIndicatorBuilder(),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: Style.defaultPaddingSize / 4,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(Style.defaultRadiusSize / 2),
-                              ),
-                              child: SizedBox(
-                                width: 600.w,
-                                height: 36.h,
-                                child: Shimmers()
-                                    .customProgressIndicatorBuilder(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  */
+                    child: Shimmers.customProgressIndicatorBuilder(),
                   ),
                 ),
               ),
@@ -219,7 +140,7 @@ class MovieDetailPageShimmers {
                     width: width / 2,
                     // 281 / 500 : resim cozunurlugu
                     height: (width / 2) * (281 / 500),
-                    child: Shimmers().customProgressIndicatorBuilder(),
+                    child: Shimmers.customProgressIndicatorBuilder(),
                   ),
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/pages.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
@@ -34,7 +35,7 @@ class ImageDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        (title != null) ? NavigatorType.movieDetailPage.nameGet: NavigatorType.tvDetailPage.nameGet,
+        (title != null) ? Pages.movieDetailPage : Pages.tvDetailPage,
         arguments: (id ?? 0),
       ),
       child: Card(
@@ -101,7 +102,8 @@ class ImageDetailCard extends StatelessWidget {
             color: Style.starColor,
           ),
           Padding(
-            padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 6),
+            padding:
+                EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 6),
             child: Text(
               "${LocaleKeys.score.tr()} : ${voteAverage.toString().substring(0, 3)}",
               style: context.textThemeContext().bodySmall,
@@ -112,7 +114,8 @@ class ImageDetailCard extends StatelessWidget {
     );
   }
 
-  Widget titleAndDate(String? titleCard, String? name, String? dateCard, BuildContext context) {
+  Widget titleAndDate(
+      String? titleCard, String? name, String? dateCard, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -132,7 +135,9 @@ class ImageDetailCard extends StatelessWidget {
         (mediaType == null)
             ? SizedBox.shrink()
             : Text(
-                (mediaType ?? "") == MediaTypes.movie.name ? LocaleKeys.movie_actor.tr() : LocaleKeys.seral_actor.tr(),
+                (mediaType ?? "") == MediaTypes.movie.name
+                    ? LocaleKeys.movie_actor.tr()
+                    : LocaleKeys.seral_actor.tr(),
                 style: context.textThemeContext().bodySmall!.copyWith(
                       fontWeight: FontWeight.w400,
                     ),
@@ -143,7 +148,9 @@ class ImageDetailCard extends StatelessWidget {
             top: Style.defaultPaddingSizeVertical / 3,
           ),
           child: Text(
-            (dateCard ?? DateTime.now()).toString().isNotEmpty ? toRevolveDate((dateCard ?? DateTime.now()).toString()) : "-",
+            (dateCard ?? DateTime.now()).toString().isNotEmpty
+                ? toRevolveDate((dateCard ?? DateTime.now()).toString())
+                : "-",
             style: TextStyle(color: Style.dateColor, fontSize: 30.sp),
             textAlign: TextAlign.center,
           ),

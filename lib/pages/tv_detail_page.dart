@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/cache/hive/hive_abstract.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/pages.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
@@ -288,7 +289,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () => Navigator.of(context).pushNamed(
-                      "/tvDetailPage",
+                      Pages.tvDetailPage,
                       arguments: (similarMoviesData[index]?.id),
                     ),
                     child: BrochureItem(
@@ -537,7 +538,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 child: circleItem(
                   context,
                   () {
-                    Navigator.of(context).pushNamed("/trailerPage", arguments: [
+                    Navigator.of(context)
+                        .pushNamed(Pages.trailerPage, arguments: [
                       widget.movieId ?? 0,
                       [data.results],
                     ]);
@@ -730,7 +732,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
   Widget peopleCard(BuildContext context, Credits creditsData, int index) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed("/castPersonsMoviesPage", arguments: [
+        Navigator.of(context)
+            .pushNamed(Pages.castPersonsMoviesPage, arguments: [
           creditsData.cast[index].id,
           creditsData.cast[index].name,
         ]);

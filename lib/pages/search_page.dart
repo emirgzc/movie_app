@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/pages.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
@@ -59,9 +60,13 @@ class _SearchPageState extends State<SearchPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FutureBuilder(
-              future: ApiClient().search(context.locale, query: _searchValue.isNotEmpty ? _searchValue : "", page: _page),
+              future: ApiClient().search(context.locale,
+                  query: _searchValue.isNotEmpty ? _searchValue : "",
+                  page: _page),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData &&
+                    snapshot.data != null) {
                   var data = snapshot.data as Search;
                   _totalPage = data.totalPages ?? 1;
                   return Expanded(
@@ -69,7 +74,8 @@ class _SearchPageState extends State<SearchPage> {
                       crossAxisCount: 2,
                       length: data.results?.length,
                       itemBuilder: (context, index) {
-                        return searcItemCard(context, data, index, data.results?[index].mediaType);
+                        return searcItemCard(context, data, index,
+                            data.results?[index].mediaType);
                       },
                     ),
                   );
@@ -83,7 +89,9 @@ class _SearchPageState extends State<SearchPage> {
                 }
               },
             ),
-            _textEditingController.text.isEmpty ? const SizedBox.shrink() : pageIndicator(),
+            _textEditingController.text.isEmpty
+                ? const SizedBox.shrink()
+                : pageIndicator(),
           ],
         ),
       ),
@@ -192,10 +200,14 @@ class _SearchPageState extends State<SearchPage> {
                       color: context.iconThemeContext().color,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: Style.defaultPaddingSizeHorizontal / 2),
+                      padding: EdgeInsets.only(
+                          left: Style.defaultPaddingSizeHorizontal / 2),
                       child: Text(
                         arrowLeft,
-                        style: context.textThemeContext().bodySmall!.copyWith(fontSize: 34.sp),
+                        style: context
+                            .textThemeContext()
+                            .bodySmall!
+                            .copyWith(fontSize: 34.sp),
                       ),
                     ),
                   ],
@@ -221,7 +233,8 @@ class _SearchPageState extends State<SearchPage> {
                 fillColor: Style.blackColor.withOpacity(0.1),
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(Style.defaultRadiusSize / 2),
+                  borderRadius:
+                      BorderRadius.circular(Style.defaultRadiusSize / 2),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.zero,
@@ -262,10 +275,14 @@ class _SearchPageState extends State<SearchPage> {
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(right: Style.defaultPaddingSizeHorizontal / 2),
+                      padding: EdgeInsets.only(
+                          right: Style.defaultPaddingSizeHorizontal / 2),
                       child: Text(
                         arrowRight,
-                        style: context.textThemeContext().bodySmall!.copyWith(fontSize: 34.sp),
+                        style: context
+                            .textThemeContext()
+                            .bodySmall!
+                            .copyWith(fontSize: 34.sp),
                       ),
                     ),
                     SvgPicture.asset(
@@ -283,7 +300,8 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget searcItemCard(BuildContext context, Search data, int index, String? mediaType) {
+  Widget searcItemCard(
+      BuildContext context, Search data, int index, String? mediaType) {
     int _starCount = 5;
     return GestureDetector(
       onTap: () {
@@ -292,12 +310,15 @@ class _SearchPageState extends State<SearchPage> {
           currentFocus.unfocus();
         }
 
-        if (mediaType == MediaTypes.person.name && data.results?[index].profilePath != null) {
+        if (mediaType == MediaTypes.person.name &&
+            data.results?[index].profilePath != null) {
           showPersonDetail(data.results?[index]);
         } else if (data.results?[index].posterPath == null) {
         } else {
           Navigator.of(context).pushNamed(
-            mediaType == MediaTypes.movie.name ? NavigatorType.movieDetailPage.nameGet: NavigatorType.tvDetailPage.nameGet,
+            mediaType == MediaTypes.movie.name
+                ? Pages.movieDetailPage
+                : Pages.tvDetailPage,
             arguments: data.results?[index].id,
           );
         }
@@ -314,10 +335,12 @@ class _SearchPageState extends State<SearchPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // resim
-              (data.results?[index].posterPath != null || data.results?[index].profilePath != null)
+              (data.results?[index].posterPath != null ||
+                      data.results?[index].profilePath != null)
                   ? image(data, index, mediaType)
                   : Padding(
-                      padding: EdgeInsets.only(bottom: Style.defaultPaddingSize / 2),
+                      padding:
+                          EdgeInsets.only(bottom: Style.defaultPaddingSize / 2),
                       child: Placeholder(
                         fallbackHeight: 600.h,
                       ),
@@ -325,7 +348,9 @@ class _SearchPageState extends State<SearchPage> {
 
               // isim, tarih, derecelendirme, kategoriler
               Text(
-                mediaType == MediaTypes.movie.name ? (data.results?[index].title ?? '-') : (data.results?[index].name ?? '-'),
+                mediaType == MediaTypes.movie.name
+                    ? (data.results?[index].title ?? '-')
+                    : (data.results?[index].name ?? '-'),
                 style: context.textThemeContext().bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -334,9 +359,12 @@ class _SearchPageState extends State<SearchPage> {
               (mediaType == MediaTypes.person.name)
                   ? const SizedBox.shrink()
                   : Padding(
-                      padding: EdgeInsets.symmetric(vertical: Style.defaultPaddingSizeVertical / 4),
+                      padding: EdgeInsets.symmetric(
+                          vertical: Style.defaultPaddingSizeVertical / 4),
                       child: Text(
-                        toRevolveDate(checkDateType(mediaType, data.results?[index]) ?? DateTime.now().toString()),
+                        toRevolveDate(
+                            checkDateType(mediaType, data.results?[index]) ??
+                                DateTime.now().toString()),
                         style: context.textThemeContext().bodySmall!.copyWith(
                               color: Colors.grey.shade600,
                               fontSize: 30.sp,
@@ -349,8 +377,12 @@ class _SearchPageState extends State<SearchPage> {
                       ignoreGestures: true,
                       itemSize: 36.r,
                       glowColor: Style.starColor,
-                      unratedColor: context.publicThemeContext().shadowColor.withOpacity(0.4),
-                      initialRating: (data.results?[index].voteAverage ?? 0.0) / 2,
+                      unratedColor: context
+                          .publicThemeContext()
+                          .shadowColor
+                          .withOpacity(0.4),
+                      initialRating:
+                          (data.results?[index].voteAverage ?? 0.0) / 2,
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: true,

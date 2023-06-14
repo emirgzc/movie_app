@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/pages.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/translations/locale_keys.g.dart';
 
@@ -31,7 +32,7 @@ class DrawerMenuScreen extends StatelessWidget {
                       IconPath.camera.iconPath(),
                       () {
                         Navigator.of(context).pushNamed(
-                          "/listPage",
+                          Pages.listPage,
                           arguments: ListType.movies_in_cinemas,
                         );
                       },
@@ -42,7 +43,7 @@ class DrawerMenuScreen extends StatelessWidget {
                       IconPath.star.iconPath(),
                       () {
                         Navigator.of(context).pushNamed(
-                          "/listPage",
+                          Pages.listPage,
                           arguments: ListType.trend_movies,
                         );
                       },
@@ -53,16 +54,10 @@ class DrawerMenuScreen extends StatelessWidget {
                       IconPath.times.iconPath(),
                       () {
                         Navigator.of(context).pushNamed(
-                          "/listPage",
+                          Pages.listPage,
                           arguments: ListType.upcoming_movies,
                         );
                       },
-                      context,
-                    ),
-                    drawerListItem(
-                      LocaleKeys.favorites.tr(),
-                      IconPath.favorite.iconPath(),
-                      () {},
                       context,
                     ),
                     const Spacer(
@@ -78,7 +73,8 @@ class DrawerMenuScreen extends StatelessWidget {
     );
   }
 
-  Widget drawerListItem(String text, String? icon, void Function()? onTap, BuildContext context) {
+  Widget drawerListItem(
+      String text, String? icon, void Function()? onTap, BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: Style.defaultPaddingSizeVertical / 4),
       child: ListTile(

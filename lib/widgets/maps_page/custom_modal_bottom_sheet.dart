@@ -174,7 +174,7 @@ class CustomModalBottomSheet extends StatelessWidget {
                         child: SizedBox(
                           width: 1000.w,
                           height: 300.h,
-                          child: Shimmers().customProgressIndicatorBuilder(),
+                          child: Shimmers.customProgressIndicatorBuilder(),
                         ),
                       ),
                     ],

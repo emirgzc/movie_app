@@ -1,7 +1,3 @@
-
-
-
-
 part of './../pages/home_page.dart';
 
 //sadece özelleştirilmiş home page için kullanılabilir part of app bar
@@ -11,7 +7,6 @@ class PartOfHomePageAppBar extends StatelessWidget with PreferredSizeWidget {
   final ZoomDrawerController drawerController;
   @override
   Widget build(BuildContext context) {
-
     return CustomAppBar(
       leading: appBarButton(
         () {
@@ -30,7 +25,9 @@ class PartOfHomePageAppBar extends StatelessWidget with PreferredSizeWidget {
         ),
       ],
       title: Image.asset(
-        Util.isDarkMode(context) ? LogoPath.png_logo_1_dark.iconPath() : LogoPath.png_logo_1_day.iconPath(),
+        Util.isDarkMode(context)
+            ? LogoPath.png_logo_1_dark.iconPath()
+            : LogoPath.png_logo_1_day.iconPath(),
         width: 300.w,
         fit: BoxFit.contain,
       ),
@@ -38,7 +35,8 @@ class PartOfHomePageAppBar extends StatelessWidget with PreferredSizeWidget {
     );
   }
 
-  Widget appBarButton(void Function()? onPressed, String iconPath, BuildContext context) {
+  Widget appBarButton(
+      void Function()? onPressed, String iconPath, BuildContext context) {
     return IconButton(
       onPressed: onPressed,
       icon: SvgPicture.asset(

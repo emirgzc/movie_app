@@ -11,7 +11,7 @@ class Shimmers {
   TvDetailPageShimmer tvDetailPageShimmer = TvDetailPageShimmer();
   ListPageShimmer listPageShimmer = ListPageShimmer();
 
-  Widget customProgressIndicatorBuilder() {
+  static Widget customProgressIndicatorBuilder() {
     return Shimmer.fromColors(
       baseColor: Colors.grey.withOpacity(0.4),
       highlightColor: Colors.grey.withOpacity(0.1),

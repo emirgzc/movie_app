@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_app/cache/shared_manager.dart';
 import 'package:movie_app/constants/enums.dart';
 import 'package:movie_app/constants/extension.dart';
+import 'package:movie_app/constants/pages.dart';
 import 'package:movie_app/constants/revolve_date.dart';
 import 'package:movie_app/constants/style.dart';
 import 'package:movie_app/data/api_client.dart';
@@ -182,7 +183,7 @@ class _MoviePageState extends State<MoviePage> {
       double categoryItemWidth, String categoryName, int? genreId) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
-        "/categoryPage",
+        Pages.categoryPage,
         arguments: genreId,
       ),
       child: Padding(
@@ -222,8 +223,8 @@ class _MoviePageState extends State<MoviePage> {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(
         (data[index]?.title != null)
-            ? NavigatorType.movieDetailPage.nameGet
-            : NavigatorType.tvDetailPage.nameGet,
+            ? Pages.movieDetailPage
+            : Pages.tvDetailPage,
         arguments: (data[index]?.id ?? 0),
       ),
       child: Container(
@@ -398,7 +399,7 @@ class _MoviePageState extends State<MoviePage> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(
-                        NavigatorType.movieDetailPage.nameGet,
+                        Pages.movieDetailPage,
                         arguments: _allData?.id,
                       );
                     },
